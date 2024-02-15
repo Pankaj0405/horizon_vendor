@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import './Category/category.dart';
 
 class HomePage extends StatefulWidget {
@@ -52,21 +54,39 @@ class _TopPartState extends State<TopPart> {
             left: 0,
             child: Container(
               height: 250,
-              color: const Color.fromARGB(
-                255,
-                152,
-                249,
-                157,
-              ),
-              child: const Center(
-                child: Text(
-                  "Manage Sea Events",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+              width: double.maxFinite,
+              color: const Color(0xFF7A98E5),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    'assets/images/beach.jpg',
+                    width: double.maxFinite,
+                    // height: 200,
+                    fit: BoxFit.fitWidth,
                   ),
-                ),
+                  const Center(
+                    child: Text(
+                      "Manage Sea Events",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // Positioned(
+                  //   bottom: 16.0,
+                  //   left: 16.0,
+                  //   child: Text(
+                  //     'Manage Sea Events',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 20.0,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
             ),
           ),
@@ -158,6 +178,7 @@ class UpcomingEvents extends StatefulWidget {
 }
 
 class _UpcomingEventsState extends State<UpcomingEvents> {
+  final _authController = Get.put(AuthController());
   List upcomingEventsCards = [
     // color will be replaced by images
     ["Title", "description", true, Colors.red.shade300],
@@ -169,6 +190,7 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
 
   @override
   Widget build(BuildContext context) {
+    _authController.getEvent();
     return Column(
       children: [
         const Padding(
@@ -192,12 +214,13 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
             padding: const EdgeInsets.only(left: 12.0),
             child: Row(
               children: List.generate(
-                upcomingEventsCards.length,
-                    (index) => EventCard(
-                  inputText1: upcomingEventsCards[index][0],
-                  inputText2: upcomingEventsCards[index][1],
-                  like: upcomingEventsCards[index][2],
-                ),
+                _authController.eventData.length,
+                    (index) {
+                  final events = _authController.eventData[index];
+                  return EventCard(
+                  inputText1: events.eventName,
+                  inputText2: events.address,
+                );}
               ),
             ),
           ),
@@ -213,12 +236,10 @@ class EventCard extends StatefulWidget {
     Key? key,
     required this.inputText1,
     required this.inputText2,
-    required this.like,
   }) : super(key: key);
 
   String inputText1;
   String inputText2;
-  bool like;
 
   @override
   State<EventCard> createState() => _EventCardState();
@@ -239,70 +260,31 @@ class _EventCardState extends State<EventCard> {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              InkWell(
-                onDoubleTap: () {
-                  if (widget.like == false) {
-                    setState(() {
-                      widget.like = true;
-                    });
-                  } else {
-                    setState(() {
-                      widget.like = false;
-                    });
-                  }
-                },
-                child: Container(
-                  height: 120,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.green,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          if (widget.like == false) {
-                            setState(() {
-                              widget.like = true;
-                            });
-                          } else {
-                            setState(() {
-                              widget.like = false;
-                            });
-                          }
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: InkWell(
-                              onTap: () {
-                                if (widget.like == false) {
-                                  setState(() {
-                                    widget.like = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    widget.like = false;
-                                  });
-                                }
-                              },
-                              child: Icon(Icons.favorite,
-                                  color:
-                                  widget.like ? Colors.red : Colors.black),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+              Container(
+                height: 120,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: Colors.green,
                 ),
+                // child: Align(
+                //   alignment: Alignment.topRight,
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //         color: Colors.white.withOpacity(0.8),
+                //         borderRadius: BorderRadius.circular(6),
+                //       ),
+                //       child: Padding(
+                //         padding: const EdgeInsets.all(5),
+                //         child: Icon(Icons.favorite,
+                //             color:
+                //             widget.like ? Colors.red : Colors.black),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ),
               const SizedBox(
                 height: 7,
@@ -311,13 +293,16 @@ class _EventCardState extends State<EventCard> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.inputText1,
-                  style: const TextStyle(fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.inputText2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
             ],

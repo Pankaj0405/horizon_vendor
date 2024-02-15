@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ocean_vendors_app/main.dart';
+import 'package:get/get.dart';
+import 'package:horizon_vendor/Controllers/auth_controller.dart';
+import 'package:horizon_vendor/Widgets/text_fields.dart';
+import 'package:horizon_vendor/models/add_events.dart';
+import './main.dart';
 
 class AddVolunteer extends StatefulWidget {
   const AddVolunteer({super.key});
@@ -9,298 +13,456 @@ class AddVolunteer extends StatefulWidget {
 }
 
 class _AddVolunteerState extends State<AddVolunteer> {
+  final _authController = Get.put(AuthController());
+  List<String> items = [];
+  String eventDropDown = 'Events and Tours';
+  String selectedEventId = '';
+  final _volunteerController = TextEditingController();
+  final _roleController = TextEditingController();
+
+
+  var textStyle = TextStyle(
+    overflow: TextOverflow.fade,
+    color: Colors.black,
+    fontSize: 15,
+  );
+
+  emptyFields() {
+    _roleController.text = "";
+    _volunteerController.text = "";
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.deepPurple,
-      appBar: AppBar(
-        leading: BackButton(
-          style: const ButtonStyle(
-            iconSize: MaterialStatePropertyAll(30),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const MyApp();
-                },
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    populateEventsDropdown();
+  }
+
+  void populateEventsDropdown() async {
+    List<AddEvent> events = await _authController.getAllEvents();
+    setState(() {
+      items = events.map((event) => event.eventName).toList();
+      print(items);
+      eventDropDown = items[0]; // Set the default value
+    });
+  }
+
+  openBottomSheet() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: ((context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 30,
+                horizontal: 20,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(left: 8.0),
+                  //     child: BackButton(
+                  //       onPressed: () {
+                  //         Navigator.pop(context);
+                  //       },
+                  //       style: const ButtonStyle(
+                  //           iconSize: MaterialStatePropertyAll(30)),
+                  //     ),
+                  //   ),
+                  // ),
+                  Text(
+                    'Events and Tours',
+                    style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                  ),
+                  Center(
+                    child: Container(
+                      width: double.maxFinite,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          border: Border.all(width: 1)),
+                      child: DropdownButton(
+                        dropdownColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        isExpanded: true,
+                        // Initial Value
+                        value: eventDropDown,
+                        style: textStyle,
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        hint: const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
+                          child: Text('Events and tours'),
+                        ),
+                        // Array list of items
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Text(items, maxLines: 2,),
+                            ),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setModalState(() {
+                            eventDropDown = newValue!;
+                            selectedEventId = _authController.eventData
+                                .firstWhere((event) => event.eventName == newValue)
+                                .id;
+                            print(selectedEventId);
+                          });
+                        },
+                      ),
+                      // const EventDropdown(), // event dropdown
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  textField('No. of Volunteers required: ', _volunteerController, TextInputType.number),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Role Description',
+                    style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                  ),
+                  TextField(
+                    controller: _roleController,
+                    // expands: true,
+                    maxLines: 3,
+                    // enabled: false,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(
+                  //       left: 20.0, right: 20.0),
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //       border: Border.all(width: 1),
+                  //     ),
+                  //     child: const Row(
+                  //       mainAxisAlignment:
+                  //       MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         Text(
+                  //           "No. of volunteers required:",
+                  //           style: TextStyle(
+                  //             fontSize: 18,
+                  //           ),
+                  //         ),
+                  //         SizedBox(height: 40),
+                  //         MyDropdown(),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 10),
+                  // const Align(
+                  //     alignment: Alignment.centerLeft,
+                  //     child: Padding(
+                  //       padding: EdgeInsets.only(left: 20.0),
+                  //       child: Text(
+                  //         "Role description",
+                  //         style: TextStyle(
+                  //             fontSize: 20,
+                  //             fontWeight: FontWeight.bold),
+                  //       ),
+                  //     )),
+                  // const SizedBox(height: 20),
+                  // const RoleDescription(),
+                  // SizedBox(height: 20),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _authController.addVolunteers(eventDropDown, _volunteerController.text, _roleController.text);
+                          emptyFields();
+                          Get.back();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                          ),
+                          child: const Text(
+                            'ADD',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600,),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           },
-        ),
-        title: const Text(
-          "Volunteers",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+        );
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _authController.getVolunteers();
+    // _authController.getEvent();
+    return SafeArea(
+      child: Scaffold(
+        // backgroundColor: Colors.deepPurple,
+        appBar: AppBar(
+          leading: BackButton(
+            style: const ButtonStyle(
+              iconSize: MaterialStatePropertyAll(30),
+            ),
+            onPressed: () {
+              // Get.back();
+            },
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          "Add Volunteers",
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.white,
+          title: const Text(
+            "Volunteers",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: FloatingActionButton(
-                backgroundColor: Colors.green,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: const Text(
-                  'Add Volunteers',
-                  style: TextStyle(
-                    fontSize: 16,
+        body: Obx(() => ListView.builder(
+            itemCount: _authController.volunteerData.length,
+            itemBuilder: (BuildContext context, int index){
+              final volunteers = _authController.volunteerData[index];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Image.asset(
+                          "", // Replace 'image.png' with your image asset path
+                          width: 100,
+                          height: 200,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      SizedBox(width: 20.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 8,),
+                          Text(
+                            volunteers.eventName,
+                            style: TextStyle(
+                                fontSize: 28, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Volunteers: ${volunteers.volNumber}',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 8.0),
+                          // cardListTile('', events.description),
+                          Container(
+                            height: 80,
+                            width: 150,
+                            child: Text(
+                              volunteers.role,
+                              maxLines: 2,
+                              style: TextStyle(fontSize: 18, overflow: TextOverflow.ellipsis, fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    // child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     Container(
+                    //       height: 400,
+                    //       width: 200,
+                    //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                    //     ),
+                    //     Column(
+                    //       // crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: [
+                    //         cardListTile('Event: ', events.eventName),
+                    //         cardListTile('Organized By: ', events.organizationName),
+                    //         cardListTile('Description: ', events.description),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
-                onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: ((context) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 60.0),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: BackButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  style: const ButtonStyle(
-                                      iconSize: MaterialStatePropertyAll(30)),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Container(
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(width: 1)),
-                                  child:
-                                      const EventDropdown(), // event dropdown
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(width: 1),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      "No. of volunteers required:",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    SizedBox(height: 40),
-                                    MyDropdown(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 20.0),
-                                  child: Text(
-                                    "Role description",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )),
-                            const SizedBox(height: 20),
-                            const RoleDescription(),
-                            // SizedBox(height: 20),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Colors.deepPurple.shade300)),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    "Submit",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  );
-                },
-              ),
-            ),
-          ],
+              );
+            }),),
+
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            openBottomSheet();
+          },
         ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
 //------------------Event drop down menu---------------------
-class EventDropdown extends StatefulWidget {
-  const EventDropdown({super.key});
+// class EventDropdown extends StatefulWidget {
+//   const EventDropdown({super.key});
+//
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _EventDropdownState createState() => _EventDropdownState();
+// }
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _EventDropdownState createState() => _EventDropdownState();
-}
-
-class _EventDropdownState extends State<EventDropdown> {
-  String eventSelectedValue = ''; // Initialize with an empty string
-  List<String> eventsOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: eventSelectedValue.isNotEmpty
-          ? eventSelectedValue
-          : null, // Adjusted value to show hint
-      onChanged: (String? newValue) {
-        setState(() {
-          eventSelectedValue = newValue ?? '';
-        });
-      },
-      hint: const Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Text('Events and tours'),
-      ), // Set the hint text
-      items: eventsOptions.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
+// class _EventDropdownState extends State<EventDropdown> {
+//   String eventSelectedValue = ''; // Initialize with an empty string
+//   List<String> eventsOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<String>(
+//       value: eventSelectedValue.isNotEmpty
+//           ? eventSelectedValue
+//           : null, // Adjusted value to show hint
+//       onChanged: (String? newValue) {
+//         setState(() {
+//           eventSelectedValue = newValue ?? '';
+//         });
+//       },
+//       hint: const Padding(
+//         padding: EdgeInsets.only(left: 20.0, right: 20.0),
+//         child: Text('Events and tours'),
+//       ), // Set the hint text
+//       items: eventsOptions.map<DropdownMenuItem<String>>((String value) {
+//         return DropdownMenuItem<String>(
+//           value: value,
+//           child: Text(value),
+//         );
+//       }).toList(),
+//     );
+//   }
+// }
 
 //--------------------Tour drop down---------------
 
-class ToursDropdown extends StatefulWidget {
-  const ToursDropdown({super.key});
+// class ToursDropdown extends StatefulWidget {
+//   const ToursDropdown({super.key});
+//
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _ToursDropdownState createState() => _ToursDropdownState();
+// }
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _ToursDropdownState createState() => _ToursDropdownState();
-}
+// class _ToursDropdownState extends State<ToursDropdown> {
+//   String tourSelectedValue = ''; // Initialize with an empty string
+//   List<String> toursOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<String>(
+//       value: tourSelectedValue.isNotEmpty
+//           ? tourSelectedValue
+//           : null, // Adjusted value to show hint
+//       onChanged: (String? newValue) {
+//         setState(() {
+//           tourSelectedValue = newValue ?? '';
+//         });
+//       },
+//       hint: const Text('Tours'), // Set the hint text
+//       items: toursOptions.map<DropdownMenuItem<String>>((String value) {
+//         return DropdownMenuItem<String>(
+//           value: value,
+//           child: Text(value),
+//         );
+//       }).toList(),
+//     );
+//   }
+// }
 
-class _ToursDropdownState extends State<ToursDropdown> {
-  String tourSelectedValue = ''; // Initialize with an empty string
-  List<String> toursOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+// class MyDropdown extends StatefulWidget {
+//   const MyDropdown({super.key});
+//
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _MyDropdownState createState() => _MyDropdownState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: tourSelectedValue.isNotEmpty
-          ? tourSelectedValue
-          : null, // Adjusted value to show hint
-      onChanged: (String? newValue) {
-        setState(() {
-          tourSelectedValue = newValue ?? '';
-        });
-      },
-      hint: const Text('Tours'), // Set the hint text
-      items: toursOptions.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class MyDropdown extends StatefulWidget {
-  const MyDropdown({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _MyDropdownState createState() => _MyDropdownState();
-}
-
-class _MyDropdownState extends State<MyDropdown> {
-  int? selectedValue;
-  List<int> options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<int>(
-      value: selectedValue,
-      onChanged: (int? newValue) {
-        setState(() {
-          selectedValue = newValue;
-        });
-      },
-      hint: const Text('        '), // Set the hint text
-      items: options.map<DropdownMenuItem<int>>((int value) {
-        return DropdownMenuItem<int>(
-          value: value,
-          child: Text(value.toString()),
-        );
-      }).toList(),
-    );
-  }
-}
+// class _MyDropdownState extends State<MyDropdown> {
+//   int? selectedValue;
+//   List<int> options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<int>(
+//       value: selectedValue,
+//       onChanged: (int? newValue) {
+//         setState(() {
+//           selectedValue = newValue;
+//         });
+//       },
+//       hint: const Text('        '), // Set the hint text
+//       items: options.map<DropdownMenuItem<int>>((int value) {
+//         return DropdownMenuItem<int>(
+//           value: value,
+//           child: Text(value.toString()),
+//         );
+//       }).toList(),
+//     );
+//   }
+// }
 
 //--------------------------Role description-------------------------
 
-class RoleDescription extends StatefulWidget {
-  const RoleDescription({super.key});
+// class RoleDescription extends StatefulWidget {
+//   const RoleDescription({super.key});
+//
+//   @override
+//   State<RoleDescription> createState() => _RoleDescriptionState();
+// }
 
-  @override
-  State<RoleDescription> createState() => _RoleDescriptionState();
-}
-
-class _RoleDescriptionState extends State<RoleDescription> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 1),
-        ),
-        child: const TextField(
-          maxLines: 4,
-        ),
-      ),
-    );
-  }
-}
+// class _RoleDescriptionState extends State<RoleDescription> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+//       child: Container(
+//         decoration: BoxDecoration(
+//           border: Border.all(width: 1),
+//         ),
+//         child: const TextField(
+//           maxLines: 4,
+//         ),
+//       ),
+//     );
+//   }
+// }

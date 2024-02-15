@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget textField(String label, TextEditingController controller) {
+Widget textField(String label, TextEditingController controller, TextInputType keyboardType) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 8.0),
     child: Column(
@@ -13,6 +13,7 @@ Widget textField(String label, TextEditingController controller) {
         TextField(
           controller: controller,
           // enabled: false,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey[300],
