@@ -37,10 +37,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.24.2
   get: ^4.6.6
+  camera: ^0.10.5+8
+  animated_bottom_navigation_bar: ^1.0.1
+  cached_network_image: ^3.3.0
   cloud_firestore: ^4.15.4
   uuid: ^4.3.3
   firebase_auth: ^4.17.4
   image_picker: ^1.0.7
+  firebase_storage:
+  shared_preferences: ^2.0.12
 
 dev_dependencies:
   flutter_test:

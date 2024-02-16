@@ -1,8 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Widgets/cards.dart';
+import 'package:horizon_vendor/camera_screen3.dart';
 import 'package:image_picker/image_picker.dart';
 import './Widgets/text_fields.dart';
 import './Controllers/auth_controller.dart';
@@ -20,6 +25,7 @@ class _AddNewEventState extends State<AddNewEvent> {
   ImagePicker _imagePicker = ImagePicker();
   bool isLoading = false;
   XFile? imagePath;
+  String? link;
   final _authController = Get.put(AuthController());
   final _eventNameController = TextEditingController();
   final _organizationController = TextEditingController();
@@ -27,13 +33,170 @@ class _AddNewEventState extends State<AddNewEvent> {
   final _descController = TextEditingController();
   final _slotsController = TextEditingController();
   final _priceController = TextEditingController();
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.21,
+          maxWidth: double.infinity,
+        ),
+        context: context,
+        builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                height: 5,
+                width: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 60),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _getImageFromCamera();
+                        print("a");
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: Icon(Icons.camera_alt)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text("Camera")
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _getImageFromGallery();
+                        print("b");
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: Icon(Icons.browse_gallery_outlined)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text("Gallery")
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          );
+        });
+  }
+  File? image;
+  Future _getImageFromGallery() async {
+    Get.back();
+    try {
+      final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      link = await upload(imageTemp!);
+      setState(() {
+        this.image = imageTemp;
+        // _infoController.uploadToStorage(this.image!);
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+  List<CameraDescription> cameras = [];
 
+  Future<void> _initializeCamera() async {
+    cameras = await availableCameras();
+  }
+  Future<void> _getImageFromCamera() async {
+    Get.back();
+
+    if (cameras.isEmpty) {
+      // Initialize cameras if not already done
+      await _initializeCamera();
+    }
+
+    // final CameraController controller = CameraController(
+    //   cameras[0], // Use the first camera
+    //   ResolutionPreset.medium,
+    // );
+    //
+    // await controller.initialize();
+    final result = await Get.to(()=>CameraScreen3(camera: cameras[0]));
+
+    try {
+      if (result != null) {
+        final imageTemp = File(result);
+        link = await upload(imageTemp);
+
+        setState(() {
+          this.image = imageTemp;
+        });
+      }
+      // final XFile image = await controller.takePicture();
+      //
+      // final imageTemp = File(image.path);
+      // link = await upload(imageTemp);
+      //
+      // setState(() {
+      //   this.image = imageTemp;
+      // });
+    } catch (e) {
+      print('Failed to take picture: $e');
+    }
+    // finally {
+    //   await controller.dispose();
+    // }
+  }
   @override
   void initState() {
     super.initState();
     _imagePicker = new ImagePicker();
   }
+  Future<String> upload(File imageFile) async {
+    try {
+      // Create a unique filename for the uploaded image
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
+      // Reference to the Firebase Storage bucket
+      Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+
+      // Upload the image to Firebase Storage
+      UploadTask uploadTask = storageReference.putFile(imageFile);
+
+      // Get the download URL once the image is uploaded
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+      // Return the download URL
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return '';
+    }
+  }
   pickImage() async {
     try {
       setState(() {
@@ -78,6 +241,19 @@ class _AddNewEventState extends State<AddNewEvent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    GestureDetector(
+                      onTap: () {
+                        // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
+                        _showBottomSheet();
+                      },
+                      child: (image != null)
+                          ?   CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 60,
+                          backgroundImage:FileImage(image!)
+                      )
+                          :Icon(Icons.person,size: 60,),
+                    ),
                     textField('Event or Tour Name', _eventNameController,
                         TextInputType.text),
                     textField('Organization Name', _organizationController,
@@ -100,7 +276,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                       ),
                     ),
                     TextField(
-                      maxLines: 3,
+                      maxLines: 1,
                       // expands: true,
                       controller: _descController,
                       decoration: InputDecoration(
@@ -108,54 +284,54 @@ class _AddNewEventState extends State<AddNewEvent> {
                         fillColor: Colors.grey[300],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Image: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          isLoading
-                              ? CircularProgressIndicator(
-                                  color: Colors.blue,
-                                )
-                              : GestureDetector(
-                                  onTap: () {
-                                    setModalState(() {
-                                      pickImage();
-                                      print(imagePath!.name);
-                                    });
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Text('Select'),
-                                  ),
-                                ),
-                          if (imagePath != null)
-                            SizedBox(
-                              width: 70,
-                              child: Text(
-                                imagePath!.name,
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Expanded(
+                    //   flex: 0,
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //     children: [
+                    //       Text(
+                    //         'Image: ',
+                    //         style: TextStyle(
+                    //           fontSize: 20,
+                    //           fontWeight: FontWeight.bold,
+                    //         ),
+                    //       ),
+                    //       isLoading
+                    //           ? CircularProgressIndicator(
+                    //               color: Colors.blue,
+                    //             )
+                    //           : GestureDetector(
+                    //               onTap: () {
+                    //                 setModalState(() {
+                    //                   pickImage();
+                    //                   print(imagePath!.name);
+                    //                 });
+                    //               },
+                    //               child: Container(
+                    //                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    //                 decoration: BoxDecoration(
+                    //                   border: Border.all(),
+                    //                   borderRadius: BorderRadius.circular(10),
+                    //                 ),
+                    //                 child: const Text('Select'),
+                    //               ),
+                    //             ),
+                    //       if (imagePath != null)
+                    //         SizedBox(
+                    //           width: 70,
+                    //           child: Text(
+                    //             imagePath!.name,
+                    //             style: TextStyle(
+                    //                 fontSize: 16, color: Colors.black),
+                    //             overflow: TextOverflow.ellipsis,
+                    //           ),
+                    //         ),
+                    //     ],
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20,
@@ -169,7 +345,7 @@ class _AddNewEventState extends State<AddNewEvent> {
                               _descController.text,
                               _slotsController.text,
                               _priceController.text,
-                              imagePath!.path);
+                              link!);
                           Get.back();
                           emptyFields();
                         },
@@ -230,14 +406,13 @@ class _AddNewEventState extends State<AddNewEvent> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(10),
-                        child: Image.asset(
-                          "", // Replace 'image.png' with your image asset path
-                          width: 100,
-                          height: 200,
+                        child: Image.network(
+                          events.imagePath, // Replace 'image.png' with your image asset path
+                          width: 150,
+                          height: 150,
                           fit: BoxFit.fill,
                         ),
                       ),
-                      SizedBox(width: 20.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // mainAxisAlignment: MainAxisAlignment.center,
