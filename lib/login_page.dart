@@ -1,13 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Controllers/auth_controller1.dart';
 import 'package:horizon_vendor/constants.dart';
 
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Form(
         key: _formKey,
         child: Container(
-          margin: EdgeInsets.only(left: 25, right: 25),
+          margin: const EdgeInsets.only(left: 25, right: 25),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 Image.asset(
                   'assets/images/beach.jpg',
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 70,
                 ),
                 Container(
@@ -58,20 +58,20 @@ class _LoginPageState extends State<LoginPage> {
                   child: Obx(() => Column(
                     children: [
                       TextFormField(
-                        autofillHints: [AutofillHints.telephoneNumberDevice],
+                        autofillHints: const [AutofillHints.telephoneNumberDevice],
                         controller: phonenoController,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                         onChanged: (val) {
                           authController.phoneNo.value = val;
-                          authController.showPrefix.value = val.length > 0;
+                          authController.showPrefix.value = val.isNotEmpty;
                         },
                         onSaved: (val) => authController.phoneNo.value = val!,
-                        validator: (val) => (val!.isEmpty || val!.length < 10)
+                        validator: (val) => (val!.isEmpty || val.length < 10)
                             ? "Enter valid number"
                             : null,
                         decoration: InputDecoration(
@@ -79,13 +79,13 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: "Mobile Number",
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
+                              borderSide: const BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.circular(10)),
                           prefix: authController.showPrefix.value
-                              ? Padding(
+                              ? const Padding(
                             padding:
                             EdgeInsets.symmetric(horizontal: 8),
                             child: Text(
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                           suffixIcon: _buildSuffixIcon(),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 22,
                       ),
                       SizedBox(
@@ -128,8 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(14.0),
-                            child: authController.isLoading.value==true?Center(child: CircularProgressIndicator(color: Colors.white,),): Text(
+                            padding: const EdgeInsets.all(14.0),
+                            child: authController.isLoading.value==true?const Center(child: CircularProgressIndicator(color: Colors.white,),): const Text(
                               'Login',
                               style: TextStyle(fontSize: 20),
                             ),
@@ -169,44 +169,44 @@ class _LoginPageState extends State<LoginPage> {
 
 
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
             color: Colors.black,
           ),
         ),
         elevation: 0,
-        title: Text("Sign In",style: TextStyle(
+        title: const Text("Sign In",style: TextStyle(
             color: Colors.black
         ),),
 
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 25, right: 25),
+        margin: const EdgeInsets.only(left: 25, right: 25),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Center(
+              const Center(
                 child: Image(
                     height: 150,
                     image: AssetImage('assets/images/beach.jpg')),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
-              Text(
+              const Text(
                 "Phone Verification",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "Please enter the code",
                 style: TextStyle(
                     fontSize: 16,
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
@@ -258,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: authController.statusMessageColor.value,
                           fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 22,
                     ),
                     SizedBox(
@@ -270,9 +270,9 @@ class _LoginPageState extends State<LoginPage> {
                               authController.isLoading.value=true;
                             });
                             authController.otp.value = "";
-                            otpFieldsControler.forEach((controller) {
+                            for (var controller in otpFieldsControler) {
                               authController.otp.value += controller.text;
-                            });
+                            }
                             authController.verifyOTP();
                           }
 
@@ -293,8 +293,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(14.0),
-                            child: authController.isLoading.value==true?Center(child: CircularProgressIndicator(color: Colors.white,),) :Text(
+                          padding: const EdgeInsets.all(14.0),
+                            child: authController.isLoading.value==true?const Center(child: CircularProgressIndicator(color: Colors.white,),) :const Text(
                             'Verify',
                             style: TextStyle(fontSize: 16),
                           ),
@@ -304,13 +304,13 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Having Problem?",
                     style: TextStyle(
                       fontSize: 14,
@@ -349,14 +349,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildSuffixIcon() {
     return AnimatedOpacity(
-        opacity: authController.phoneNo?.value.length == 10 ? 1.0 : 0.0,
+        opacity: authController.phoneNo.value.length == 10 ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 250),
         child: Icon(Icons.check_circle, color: buttonColor, size: 32));
   }
 
   Widget _textFieldOTP({bool first = true, last, controller}) {
     var height = (Get.width - 82) / 6;
-    return Container(
+    return SizedBox(
       height: height,
       child: AspectRatio(
         aspectRatio: 1,
@@ -367,7 +367,7 @@ class _LoginPageState extends State<LoginPage> {
             if (value.length == 1 && last == false) {
               Get.focusScope?.nextFocus();
             }
-            if (value.length == 0 && first == false) {
+            if (value.isEmpty && first == false) {
               Get.focusScope?.previousFocus();
             }
           },
@@ -379,10 +379,10 @@ class _LoginPageState extends State<LoginPage> {
           maxLength: 1,
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            counter: Offstage(),
+            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            counter: const Offstage(),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2, color: Colors.black12),
+                borderSide: const BorderSide(width: 2, color: Colors.black12),
                 borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(width: 2, color: buttonColor),

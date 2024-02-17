@@ -12,7 +12,7 @@ class _EventSearchBarState extends State<EventSearchBar> {
   Widget build(BuildContext context) {
     return SearchAnchor(
       isFullScreen: false,
-      viewConstraints: BoxConstraints(
+      viewConstraints: const BoxConstraints(
         maxHeight: 200,
       ),
       builder: (BuildContext context, SearchController controller) {

@@ -10,12 +10,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final auth=Get.put(AuthController1());
+  final auth = Get.put(AuthController1());
+  String guestName = "Guest";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Profile Page",
           style: TextStyle(
             fontSize: 30,
@@ -23,15 +24,54 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: (){
-            auth.logout();
-          },
-          child: Text(
-            'Log out'
-          ),
-        )
+      // body: Center(
+      //   child: ElevatedButton(
+      //     onPressed: (){
+      //       auth.logout();
+      //     },
+      //     child: const Text(
+      //       'Log out'
+      //     ),
+      //   )
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Text(
+                  "Hii!",
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                Text(
+                  guestName,
+                  style: const TextStyle(
+                    fontSize: 30,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: ((context) {
+                        return Container(
+                          height: 100,
+                        );
+                      }),
+                    );
+                  },
+                  icon: const Icon(Icons.edit_square),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

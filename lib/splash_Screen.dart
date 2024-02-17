@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller1.dart';
 import 'package:horizon_vendor/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(Duration(seconds: 3),()=>authController.checkLoginStatus(firebaseAuth.currentUser==null?null:firebaseAuth.currentUser));
+    Timer(const Duration(seconds: 3),()=>authController.checkLoginStatus(firebaseAuth.currentUser));
   }
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
 backgroundColor: Colors.white,
         body: Center(
           child: Container(
-            child: Image(
+            child: const Image(
               image: AssetImage(
                 'assets/images/beach.jpg'
               ),

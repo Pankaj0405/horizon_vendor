@@ -1,17 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:horizon_vendor/Widgets/cards.dart';
 import 'package:horizon_vendor/camera_screen3.dart';
 import 'package:image_picker/image_picker.dart';
 import './Widgets/text_fields.dart';
 import './Controllers/auth_controller.dart';
-import './main.dart';
 import './Widgets/search_bar.dart';
 
 class AddNewEvent extends StatefulWidget {
@@ -49,14 +46,14 @@ class _AddNewEventState extends State<AddNewEvent> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.only(top: 8),
+                margin: const EdgeInsets.only(top: 8),
                 height: 5,
                 width: 50,
                 decoration: BoxDecoration(
                     color: Colors.grey, borderRadius: BorderRadius.circular(5)),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 60),
+                margin: const EdgeInsets.only(bottom: 60),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -68,16 +65,17 @@ class _AddNewEventState extends State<AddNewEvent> {
                       child: Column(
                         children: [
                           Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: Icon(Icons.camera_alt)),
-                          SizedBox(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey.shade100),
+                            child: const Icon(Icons.camera_alt),
+                          ),
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Camera")
+                          const Text("Camera")
                         ],
                       ),
                     ),
@@ -89,16 +87,17 @@ class _AddNewEventState extends State<AddNewEvent> {
                       child: Column(
                         children: [
                           Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: Icon(Icons.browse_gallery_outlined)),
-                          SizedBox(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.grey.shade100),
+                            child: const Icon(Icons.browse_gallery_outlined),
+                          ),
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Gallery")
+                          const Text("Gallery")
                         ],
                       ),
                     )
@@ -109,14 +108,16 @@ class _AddNewEventState extends State<AddNewEvent> {
           );
         });
   }
+
   File? image;
   Future _getImageFromGallery() async {
     Get.back();
     try {
-      final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
       if (image == null) return;
       final imageTemp = File(image.path);
-      link = await upload(imageTemp!);
+      link = await upload(imageTemp);
       setState(() {
         this.image = imageTemp;
         // _infoController.uploadToStorage(this.image!);
@@ -125,11 +126,13 @@ class _AddNewEventState extends State<AddNewEvent> {
       print('Failed to pick image: $e');
     }
   }
+
   List<CameraDescription> cameras = [];
 
   Future<void> _initializeCamera() async {
     cameras = await availableCameras();
   }
+
   Future<void> _getImageFromCamera() async {
     Get.back();
 
@@ -144,7 +147,7 @@ class _AddNewEventState extends State<AddNewEvent> {
     // );
     //
     // await controller.initialize();
-    final result = await Get.to(()=>CameraScreen3(camera: cameras[0]));
+    final result = await Get.to(() => CameraScreen3(camera: cameras[0]));
 
     try {
       if (result != null) {
@@ -152,7 +155,7 @@ class _AddNewEventState extends State<AddNewEvent> {
         link = await upload(imageTemp);
 
         setState(() {
-          this.image = imageTemp;
+          image = imageTemp;
         });
       }
       // final XFile image = await controller.takePicture();
@@ -170,18 +173,21 @@ class _AddNewEventState extends State<AddNewEvent> {
     //   await controller.dispose();
     // }
   }
+
   @override
   void initState() {
     super.initState();
-    _imagePicker = new ImagePicker();
+    _imagePicker = ImagePicker();
   }
+
   Future<String> upload(File imageFile) async {
     try {
       // Create a unique filename for the uploaded image
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
 
       // Reference to the Firebase Storage bucket
-      Reference storageReference = FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('images/$fileName.jpg');
 
       // Upload the image to Firebase Storage
       UploadTask uploadTask = storageReference.putFile(imageFile);
@@ -197,6 +203,7 @@ class _AddNewEventState extends State<AddNewEvent> {
       return '';
     }
   }
+
   pickImage() async {
     try {
       setState(() {
@@ -247,12 +254,14 @@ class _AddNewEventState extends State<AddNewEvent> {
                         _showBottomSheet();
                       },
                       child: (image != null)
-                          ?   CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 60,
-                          backgroundImage:FileImage(image!)
-                      )
-                          :Icon(Icons.person,size: 60,),
+                          ? CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 60,
+                              backgroundImage: FileImage(image!))
+                          : const Icon(
+                              Icons.person,
+                              size: 60,
+                            ),
                     ),
                     textField('Event or Tour Name', _eventNameController,
                         TextInputType.text),
@@ -264,12 +273,12 @@ class _AddNewEventState extends State<AddNewEvent> {
                         'Max slots', _slotsController, TextInputType.number),
                     textField('Booking Price', _priceController,
                         TextInputType.number),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Align(
+                    const Align(
                       alignment: Alignment.topLeft,
-                      child: const Text(
+                      child: Text(
                         'Event Description',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
@@ -349,11 +358,11 @@ class _AddNewEventState extends State<AddNewEvent> {
                           Get.back();
                           emptyFields();
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 40,
                           ),
-                          child: const Text(
+                          child: Text(
                             'ADD',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w600),
@@ -378,7 +387,7 @@ class _AddNewEventState extends State<AddNewEvent> {
           toolbarHeight: 120,
           flexibleSpace: const Column(
             children: [
-              const Text(
+              Text(
                 "Tours and Events",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -386,93 +395,116 @@ class _AddNewEventState extends State<AddNewEvent> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: EventSearchBar(),
               ),
             ],
           ),
           // centerTitle: true,
         ),
-        body: Obx(() => ListView.builder(
-            shrinkWrap: true,
-            itemCount: _authController.eventData.length,
-            itemBuilder: (BuildContext context, int index) {
-              final events = _authController.eventData[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Image.network(
-                          events.imagePath, // Replace 'image.png' with your image asset path
-                          width: 150,
-                          height: 150,
-                          fit: BoxFit.fill,
+        body: Obx(
+          () => ListView.builder(
+              shrinkWrap: true,
+              itemCount: _authController.eventData.length,
+              itemBuilder: (BuildContext context, int index) {
+                final events = _authController.eventData[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: const Color.fromARGB(255, 7, 159, 159),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 30,
+                            right: 8,
+                            left: 08,
+                          ),
+                          child: Image.network(
+                            events
+                                .imagePath, // Replace 'image.png' with your image asset path
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fill,
+                          ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 8,),
-                          Container(
-                            width: 150,
-                            child: Text(
-                              events.eventName,
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          SizedBox(height: 8.0),
-                          Container(
-                            width: 150,
-                            child: Text(
-                              'Organized By: \n${events.organizationName}',
-                              maxLines: 2,
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, overflow: TextOverflow.ellipsis),
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                events.eventName,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 8.0),
-                          // cardListTile('', events.description),
-                          Container(
-                            height: 80,
-                            width: 150,
-                            child: Text(
-                              events.description,
-                              maxLines: 2,
-                              style: TextStyle(fontSize: 18, overflow: TextOverflow.ellipsis, fontWeight: FontWeight.w300),
+                            const SizedBox(height: 8.0),
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                'Organized By: \n${events.organizationName}',
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     Container(
-                    //       height: 400,
-                    //       width: 200,
-                    //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                    //     ),
-                    //     Column(
-                    //       // crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: [
-                    //         cardListTile('Event: ', events.eventName),
-                    //         cardListTile('Organized By: ', events.organizationName),
-                    //         cardListTile('Description: ', events.description),
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
+                            const SizedBox(height: 8.0),
+                            // cardListTile('', events.description),
+                            SizedBox(
+                              height: 80,
+                              width: 150,
+                              child: Text(
+                                events.description,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      // child: Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Container(
+                      //       height: 400,
+                      //       width: 200,
+                      //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                      //     ),
+                      //     Column(
+                      //       // crossAxisAlignment: CrossAxisAlignment.center,
+                      //       children: [
+                      //         cardListTile('Event: ', events.eventName),
+                      //         cardListTile('Organized By: ', events.organizationName),
+                      //         cardListTile('Description: ', events.description),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                    ),
                   ),
-                ),
-              );
-            }),),
-
+                );
+              }),
+        ),
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,

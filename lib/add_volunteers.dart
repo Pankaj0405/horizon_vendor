@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Widgets/text_fields.dart';
 import 'package:horizon_vendor/models/add_events.dart';
-import './main.dart';
 
 class AddVolunteer extends StatefulWidget {
   const AddVolunteer({super.key});
@@ -20,8 +19,7 @@ class _AddVolunteerState extends State<AddVolunteer> {
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
 
-
-  var textStyle = TextStyle(
+  var textStyle = const TextStyle(
     overflow: TextOverflow.fade,
     color: Colors.black,
     fontSize: 15,
@@ -77,9 +75,9 @@ class _AddVolunteerState extends State<AddVolunteer> {
                   //     ),
                   //   ),
                   // ),
-                  Text(
+                  const Text(
                     'Events and Tours',
-                    style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Center(
                     child: Container(
@@ -90,7 +88,7 @@ class _AddVolunteerState extends State<AddVolunteer> {
                           border: Border.all(width: 1)),
                       child: DropdownButton(
                         dropdownColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                         ),
                         borderRadius: BorderRadius.circular(20),
@@ -114,7 +112,10 @@ class _AddVolunteerState extends State<AddVolunteer> {
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 20,
                               ),
-                              child: Text(items, maxLines: 2,),
+                              child: Text(
+                                items,
+                                maxLines: 2,
+                              ),
                             ),
                           );
                         }).toList(),
@@ -124,7 +125,8 @@ class _AddVolunteerState extends State<AddVolunteer> {
                           setModalState(() {
                             eventDropDown = newValue!;
                             selectedEventId = _authController.eventData
-                                .firstWhere((event) => event.eventName == newValue)
+                                .firstWhere(
+                                    (event) => event.eventName == newValue)
                                 .id;
                             print(selectedEventId);
                           });
@@ -134,11 +136,12 @@ class _AddVolunteerState extends State<AddVolunteer> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  textField('No. of Volunteers required: ', _volunteerController, TextInputType.number),
+                  textField('No. of Volunteers required: ',
+                      _volunteerController, TextInputType.number),
                   const SizedBox(height: 20),
-                  Text(
+                  const Text(
                     'Role Description',
-                    style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextField(
                     controller: _roleController,
@@ -196,18 +199,21 @@ class _AddVolunteerState extends State<AddVolunteer> {
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          _authController.addVolunteers(eventDropDown, _volunteerController.text, _roleController.text);
+                          _authController.addVolunteers(eventDropDown,
+                              _volunteerController.text, _roleController.text);
                           emptyFields();
                           Get.back();
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 40,
                           ),
-                          child: const Text(
+                          child: Text(
                             'ADD',
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600,),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
@@ -247,77 +253,94 @@ class _AddVolunteerState extends State<AddVolunteer> {
           ),
           centerTitle: true,
         ),
-        body: Obx(() => ListView.builder(
-            itemCount: _authController.volunteerData.length,
-            itemBuilder: (BuildContext context, int index){
-              final volunteers = _authController.volunteerData[index];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Image.asset(
-                          "", // Replace 'image.png' with your image asset path
-                          width: 100,
-                          height: 200,
-                          fit: BoxFit.fill,
+        body: Obx(
+          () => ListView.builder(
+              itemCount: _authController.volunteerData.length,
+              itemBuilder: (BuildContext context, int index) {
+                final volunteers = _authController.volunteerData[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: const Color.fromARGB(255, 7, 159, 159),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 10),
+                          child: Image.asset(
+                            "", // Replace 'image.png' with your image asset path
+                            width: 100,
+                            height: 200,
+                            fit: BoxFit.fill,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 20.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 8,),
-                          Text(
-                            volunteers.eventName,
-                            style: TextStyle(
-                                fontSize: 28, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            'Volunteers: ${volunteers.volNumber}',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 8.0),
-                          // cardListTile('', events.description),
-                          Container(
-                            height: 80,
-                            width: 150,
-                            child: Text(
-                              volunteers.role,
-                              maxLines: 2,
-                              style: TextStyle(fontSize: 18, overflow: TextOverflow.ellipsis, fontWeight: FontWeight.w300),
+                        const SizedBox(width: 20.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 8,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                    // child: Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     Container(
-                    //       height: 400,
-                    //       width: 200,
-                    //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                    //     ),
-                    //     Column(
-                    //       // crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: [
-                    //         cardListTile('Event: ', events.eventName),
-                    //         cardListTile('Organized By: ', events.organizationName),
-                    //         cardListTile('Description: ', events.description),
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
+                            Text(
+                              volunteers.eventName,
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              'Volunteers: ${volunteers.volNumber}',
+                              style: const TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            // cardListTile('', events.description),
+                            SizedBox(
+                              height: 80,
+                              width: 150,
+                              child: Text(
+                                volunteers.role,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      // child: Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Container(
+                      //       height: 400,
+                      //       width: 200,
+                      //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                      //     ),
+                      //     Column(
+                      //       // crossAxisAlignment: CrossAxisAlignment.center,
+                      //       children: [
+                      //         cardListTile('Event: ', events.eventName),
+                      //         cardListTile('Organized By: ', events.organizationName),
+                      //         cardListTile('Description: ', events.description),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                    ),
                   ),
-                ),
-              );
-            }),),
+                );
+              }),
+        ),
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,

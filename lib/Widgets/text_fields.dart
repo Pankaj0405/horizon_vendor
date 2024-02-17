@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget textField(String label, TextEditingController controller, TextInputType keyboardType) {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: 8.0),
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

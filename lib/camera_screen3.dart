@@ -1,4 +1,6 @@
 // camera_screen.dart
+// ignore_for_file: avoid_print
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -9,6 +11,7 @@ class CameraScreen3 extends StatefulWidget {
   const CameraScreen3({Key? key, required this.camera}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CameraScreen3State createState() => _CameraScreen3State();
 }
 
@@ -57,7 +60,7 @@ class _CameraScreen3State extends State<CameraScreen3> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Camera Screen'),
+        title: const Text('Camera Screen'),
       ),
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -91,16 +94,17 @@ class _CameraScreen3State extends State<CameraScreen3> {
               try {
                 final XFile image = await _controller.takePicture();
           
+                // ignore: use_build_context_synchronously
                 Navigator.pop(context, image.path);
               } catch (e) {
                 print('Failed to take picture: $e');
               }
             },
-            child: Icon(Icons.camera),
+            child: const Icon(Icons.camera),
           ),
         ),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 105,
         child: AnimatedBottomNavigationBar.builder(
           itemCount: iconList.length,
@@ -149,7 +153,7 @@ class _CameraScreen3State extends State<CameraScreen3> {
               print(_bottomNavIndex);
             });
           },
-          backgroundColor: Color(0xFF728adf),
+          backgroundColor: const Color(0xFF728adf),
         ),
       ),
       resizeToAvoidBottomInset: false,
@@ -162,6 +166,7 @@ class _CameraScreen3State extends State<CameraScreen3> {
     List<CameraDescription> cameras = await availableCameras();
 
     // Find the index of the front-facing camera
+    // ignore: unused_local_variable
     int frontCameraIndex = cameras.indexWhere(
           (camera) => camera.lensDirection == CameraLensDirection.front,
     );

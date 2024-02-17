@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 
 
@@ -26,15 +28,19 @@ class AuthController1 extends GetxController
   var firebaseVerificationId = "";
   var statusMessage = "".obs;
   var statusMessageColor = Colors.black.obs;
+  // ignore: prefer_typing_uninitialized_variables
   var timer;
   SharedPreferences? prefs;
   // String uniqueId = "";
   DateTime latesteveningattendancedate = DateTime(1900);
   DateTime latestmorningattendancedate = DateTime(1900);
   DateTime latestdailyupdatedate = DateTime(1900);
-  bool _h = false;
-  bool _a = false;
-  bool _d = false;
+  // ignore: unused_field
+  final bool _h = false;
+  // ignore: unused_field
+  final bool _a = false;
+  // ignore: unused_field
+  final bool _d = false;
   String countKey = 'count';
 
   AuthController() {}
@@ -55,6 +61,7 @@ class AuthController1 extends GetxController
     // checkLoginStatus(_user.value);
   }
 
+  @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
@@ -81,6 +88,7 @@ class AuthController1 extends GetxController
   //
   //   return id;
   // }
+  // ignore: unused_field
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   checkLoginStatus(User? user) async {
     // Your logic to check if the user is logged in
@@ -89,12 +97,12 @@ class AuthController1 extends GetxController
     bool firstTimeLogin = prefs.getBool('first_time_login') ?? true;
     if (firstTimeLogin) {
       prefs.setBool('first_time_login', false);
-      Get.to(() => LoginPage()); // Navigate to intro screen on first time login
+      Get.to(() => const LoginPage()); // Navigate to intro screen on first time login
     } else {
       if (user == null) {
-        Get.to(() => LoginPage());
+        Get.to(() => const LoginPage());
       } else {
-Get.offAll(()=>Home1());
+Get.offAll(()=>const Home1());
       }
     }
   }
@@ -105,12 +113,12 @@ Get.offAll(()=>Home1());
 
 
   void login() {
-    Get.offAll(HomePage());
+    Get.offAll(const HomePage());
   }
 
   Future<void> logout() async {
     isOtpSent.value = false;
-    Get.offAll(LoginPage());
+    Get.offAll(const LoginPage());
 
     await firebaseAuth.signOut();
 
@@ -120,14 +128,14 @@ Get.offAll(()=>Home1());
   getOtp() async {
     try {
       firebaseAuth.verifyPhoneNumber(
-        phoneNumber: '+91' + phoneNo.value,
+        phoneNumber: '+91${phoneNo.value}',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           // Handle verification failure, e.g., show an error message
           print("Verification failed: ${e.message}");
-          Get.snackbar("Attention","$e",titleText: Text("Attention",style: TextStyle(
+          Get.snackbar("Attention","$e",titleText: const Text("Attention",style: TextStyle(
               color: Colors.black
-          ),), messageText: Text("$e",style: TextStyle(
+          ),), messageText: Text("$e",style: const TextStyle(
               color: Colors.red
           ),),backgroundColor: Colors.white);
           authController.isLoading.value = false;
@@ -135,7 +143,7 @@ Get.offAll(()=>Home1());
         codeSent: (String verificationId, int? resendToken) {
           firebaseVerificationId = verificationId;
           isOtpSent.value = true;
-          statusMessage.value = "OTP sent to +91" + phoneNo.value;
+          statusMessage.value = "OTP sent to +91${phoneNo.value}";
           startResendOtpTimer();
 
           authController.isLoading.value = false;
@@ -145,9 +153,9 @@ Get.offAll(()=>Home1());
     } catch (e) {
       // Handle any other exceptions that might occur during the process
       print("Error: $e");
-      Get.snackbar("Attention","$e",titleText: Text("Attention",style: TextStyle(
+      Get.snackbar("Attention","$e",titleText: const Text("Attention",style: TextStyle(
           color: Colors.black
-      ),), messageText: Text("$e",style: TextStyle(
+      ),), messageText: Text("$e",style: const TextStyle(
           color: Colors.red
       ),),backgroundColor: Colors.white);
       authController.isLoading.value = false;
@@ -158,16 +166,16 @@ Get.offAll(()=>Home1());
   resendOtp() async {
     resendOTP.value = false;
     firebaseAuth.verifyPhoneNumber(
-      phoneNumber: '+91' + phoneNo.value,
+      phoneNumber: '+91${phoneNo.value}',
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {},
       codeSent: (String verificationId, int? resendToken) {
         firebaseVerificationId = verificationId;
         isOtpSent.value = true;
-        statusMessage.value = "OTP re-sent to +91" + phoneNo.value;
-        Get.snackbar("Attention","OTP re-sent to +91 ${phoneNo.value}",titleText: Text("Attention",style: TextStyle(
+        statusMessage.value = "OTP re-sent to +91${phoneNo.value}";
+        Get.snackbar("Attention","OTP re-sent to +91 ${phoneNo.value}",titleText: const Text("Attention",style: TextStyle(
             color: Colors.black
-        ),), messageText: Text("OTP re-sent to +91 ${phoneNo.value}",style: TextStyle(
+        ),), messageText: Text("OTP re-sent to +91 ${phoneNo.value}",style: const TextStyle(
             color: Colors.green
         ),),backgroundColor: Colors.white);
         startResendOtpTimer();
@@ -179,7 +187,7 @@ Get.offAll(()=>Home1());
   verifyOTP() async {
     try {
       authController.isLoading.value=true;
-      statusMessage.value = "Verifying... " + otp.value;
+      statusMessage.value = "Verifying... ${otp.value}";
       // Create a PhoneAuthCredential with the code
       print(firebaseVerificationId);
       print(otp.value);
@@ -195,20 +203,20 @@ Get.offAll(()=>Home1());
       // QuerySnapshot doc1 = await _firestore.collection('rider').where('mobile',isEqualTo: int.parse(firebaseAuth.currentUser!.phoneNumber.toString().substring(3))).get();
       print('user credential ${userCredential.user!.uid}');
       // await fetchProfileData();
-      Get.offAll(()=>Home1());
-      Get.snackbar("Success","Login Successfully",titleText: Text("Success",style: TextStyle(
+      Get.offAll(()=>const Home1());
+      Get.snackbar("Success","Login Successfully",titleText: const Text("Success",style: TextStyle(
           color: Colors.black
-      ),), messageText: Text("Login Successfully",style: TextStyle(
+      ),), messageText: const Text("Login Successfully",style: TextStyle(
           color: Colors.green
       ),),backgroundColor: Colors.white);
       authController.isLoading.value=false;
     } catch (e) {
       statusMessage.value = "Invalid or Incorrect OTP.Please retry!";
       statusMessageColor = Colors.red.obs;
-      print("reason ${e}");
-      Get.snackbar("Attention","Invalid or Incorrect OTP.Please retry!",titleText: Text("Attention",style: TextStyle(
+      print("reason $e");
+      Get.snackbar("Attention","Invalid or Incorrect OTP.Please retry!",titleText: const Text("Attention",style: TextStyle(
           color: Colors.black
-      ),), messageText: Text("Invalid or Incorrect OTP.Please retry!",style: TextStyle(
+      ),), messageText: const Text("Invalid or Incorrect OTP.Please retry!",style: TextStyle(
           color: Colors.red
       ),),backgroundColor: Colors.white);
       authController.isLoading.value=false;
@@ -216,7 +224,7 @@ Get.offAll(()=>Home1());
   }
 
   startResendOtpTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (resendAfter.value != 0) {
         resendAfter.value--;
       } else {
@@ -228,8 +236,4 @@ Get.offAll(()=>Home1());
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
