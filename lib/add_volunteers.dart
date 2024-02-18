@@ -261,7 +261,7 @@ class _AddVolunteerState extends State<AddVolunteer> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
-                    color: const Color.fromARGB(255, 7, 159, 159),
+                    color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
