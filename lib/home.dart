@@ -130,13 +130,13 @@ class _TopPartState extends State<TopPart> {
                         (BuildContext context, SearchController controller) {
                       return List<ListTile>.generate(
                         5,
-                            (int index) {
+                        (int index) {
                           final String item = 'item $index';
                           return ListTile(
                             title: Text(item),
                             onTap: () {
                               setState(
-                                    () {
+                                () {
                                   controller.closeView(item);
                                 },
                               );
@@ -213,15 +213,14 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0),
             child: Row(
-              children: List.generate(
-                _authController.eventData.length,
-                    (index) {
-                  final events = _authController.eventData[index];
-                  return EventCard(
+              children:
+                  List.generate(_authController.eventData.length, (index) {
+                final events = _authController.eventData[index];
+                return EventCard(
                   inputText1: events.eventName,
                   inputText2: events.address,
-                );}
-              ),
+                );
+              }),
             ),
           ),
         ),
@@ -251,7 +250,6 @@ class _EventCardState extends State<EventCard> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
-        height: 190,
         width: 220,
         decoration: BoxDecoration(
             color: Colors.grey.shade300,
@@ -294,7 +292,8 @@ class _EventCardState extends State<EventCard> {
                 child: Text(
                   widget.inputText1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Align(
@@ -302,7 +301,8 @@ class _EventCardState extends State<EventCard> {
                 child: Text(
                   widget.inputText2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
             ],
