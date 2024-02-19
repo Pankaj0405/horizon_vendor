@@ -26,10 +26,10 @@ class _AddVolunteerState extends State<AddVolunteer>
   final _roleController = TextEditingController();
   late final TabController _tabController;
 
-  var textStyle = const TextStyle(
+  var textStyle = TextStyle(
     overflow: TextOverflow.fade,
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 15.sp,
   );
 
   emptyFields() {
@@ -106,24 +106,24 @@ class _AddVolunteerState extends State<AddVolunteer>
                       icon: Icon(Icons.arrow_back)),
                   Container(
                     width: double.maxFinite,
-                    height: 50,
+                    height: 50.h,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300], border: Border.all(width: 1)),
+                        color: Colors.grey[300], border: Border.all(width: 1.w)),
                     child: DropdownButton(
                       dropdownColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.r),
                       isExpanded: true,
                       // Initial Value
                       value: typeDropDown,
                       style: textStyle,
                       // Down Arrow Icon
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      hint: const Padding(
+                      hint: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 20,
+                          horizontal: 20.w,
                         ),
                         child: Text('Events and tours'),
                       ),
@@ -132,8 +132,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                         return DropdownMenuItem(
                           value: items,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 20,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 20.w,
                             ),
                             child: Text(
                               items,
@@ -157,8 +157,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                     ),
                     // const EventDropdown(), // event dropdown
                   ),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: 10.h,
                   ),
                   Text(
                     'Events and Tours',
@@ -168,25 +168,25 @@ class _AddVolunteerState extends State<AddVolunteer>
                   typeDropDown == "Event"
                       ? Container(
                           width: double.maxFinite,
-                          height: 50,
+                          height: 50.h,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
-                              border: Border.all(width: 1)),
+                              border: Border.all(width: 1.w)),
                           child: DropdownButton(
                             dropdownColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
                             ),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                             isExpanded: true,
                             // Initial Value
                             value: eventDropDown,
                             style: textStyle,
                             // Down Arrow Icon
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            hint: const Padding(
+                            hint: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 20,
+                                horizontal: 20.w,
                               ),
                               child: Text('Events and tours'),
                             ),
@@ -194,8 +194,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                               return DropdownMenuItem(
                                 value: items,
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 20.w,
                                   ),
                                   child: Text(
                                     items,
@@ -220,25 +220,25 @@ class _AddVolunteerState extends State<AddVolunteer>
                         )
                       : Container(
                           width: double.maxFinite,
-                          height: 50,
+                          height: 50.h,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
-                              border: Border.all(width: 1)),
+                              border: Border.all(width: 1.w)),
                           child: DropdownButton(
                             dropdownColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
                             ),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                             isExpanded: true,
                             // Initial Value
                             value: tourDropDown,
                             style: textStyle,
                             // Down Arrow Icon
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            hint: const Padding(
+                            hint: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 20,
+                                horizontal: 20.w,
                               ),
                               child: Text('Tours'),
                             ),
@@ -247,8 +247,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                               return DropdownMenuItem(
                                 value: items,
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 20.h,
                                   ),
                                   child: Text(
                                     items,
@@ -385,10 +385,10 @@ class _AddVolunteerState extends State<AddVolunteer>
           //     // Get.back();
           //   },
           // ),
-          title: const Text(
+          title: Text(
             "Volunteers",
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 25.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -417,7 +417,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Tour"
                         ? Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.r),
                             child: Card(
                               color: const Color.fromARGB(255, 7, 159, 159)
                                   .withOpacity(0.6),
@@ -425,51 +425,51 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, left: 10),
+                                    padding: EdgeInsets.only(
+                                        top: 20.h, left: 10.w),
                                     child: Image.asset(
                                       "", // Replace 'image.png' with your image asset path
-                                      width: 100,
-                                      height: 200,
+                                      width: 100.w,
+                                      height: 200.h,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
-                                  const SizedBox(width: 20.0),
+                                  SizedBox(width: 20.w),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SizedBox(
-                                        height: 8,
+                                      SizedBox(
+                                        height: 8.h,
                                       ),
                                       Text(
                                         volunteers.eventName,
-                                        style: const TextStyle(
-                                          fontSize: 26,
+                                        style: TextStyle(
+                                          fontSize: 26.sp,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 8.0),
+                                      SizedBox(height: 8.h),
                                       Text(
                                         'Volunteers: ${volunteers.volNumber}',
-                                        style: const TextStyle(
-                                          fontSize: 19,
+                                        style: TextStyle(
+                                          fontSize: 19.sp,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 8.0),
+                                      SizedBox(height: 8.h),
                                       // cardListTile('', events.description),
                                       SizedBox(
-                                        height: 80,
-                                        width: 150,
+                                        height: 80.h,
+                                        width: 150.w,
                                         child: Text(
                                           volunteers.role,
                                           maxLines: 2,
-                                          style: const TextStyle(
-                                            fontSize: 17,
+                                          style: TextStyle(
+                                            fontSize: 17.sp,
                                             overflow: TextOverflow.ellipsis,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.white,
@@ -492,7 +492,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Event"
                         ? Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.r),
                             child: Card(
                               color: const Color.fromARGB(255, 7, 159, 159)
                                   .withOpacity(0.6),
@@ -500,51 +500,51 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, left: 10),
+                                    padding: EdgeInsets.only(
+                                        top: 20.h, left: 10.w),
                                     child: Image.asset(
                                       "", // Replace 'image.png' with your image asset path
-                                      width: 100,
-                                      height: 200,
+                                      width: 100.w,
+                                      height: 200.h,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
-                                  const SizedBox(width: 20.0),
+                                  SizedBox(width: 20.w),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SizedBox(
-                                        height: 8,
+                                      SizedBox(
+                                        height: 8.h,
                                       ),
                                       Text(
                                         volunteers.eventName,
-                                        style: const TextStyle(
-                                          fontSize: 26,
+                                        style: TextStyle(
+                                          fontSize: 26.sp,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 8.0),
+                                      SizedBox(height: 8.h),
                                       Text(
                                         'Volunteers: ${volunteers.volNumber}',
-                                        style: const TextStyle(
-                                          fontSize: 19,
+                                        style: TextStyle(
+                                          fontSize: 19.sp,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      const SizedBox(height: 8.0),
+                                      SizedBox(height: 8.h),
                                       // cardListTile('', events.description),
                                       SizedBox(
-                                        height: 80,
-                                        width: 150,
+                                        height: 80.h,
+                                        width: 150.w,
                                         child: Text(
                                           volunteers.role,
                                           maxLines: 2,
-                                          style: const TextStyle(
-                                            fontSize: 17,
+                                          style: TextStyle(
+                                            fontSize: 17.sp,
                                             overflow: TextOverflow.ellipsis,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.white,

@@ -22,82 +22,84 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 30.0, left: 30, right: 30),
-          child: Column(
-            children: [
-              SearchAnchor(
-                builder: (BuildContext context, SearchController controller) {
-                  return SearchBar(
-                    controller: controller,
-                    padding: const MaterialStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 16.0)),
-                    onTap: () {
-                      controller.openView();
-                    },
-                    onChanged: (_) {
-                      controller.openView();
-                    },
-                    leading: const Icon(Icons.search),
-                    hintText: "Search for event",
-                    shape: const MaterialStatePropertyAll(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          side: BorderSide(width: 1)),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30.0, left: 30, right: 30),
+            child: Column(
+              children: [
+                SearchAnchor(
+                  builder: (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                          EdgeInsets.symmetric(horizontal: 16.0)),
+                      onTap: () {
+                        controller.openView();
+                      },
+                      onChanged: (_) {
+                        controller.openView();
+                      },
+                      leading: const Icon(Icons.search),
+                      hintText: "Search for event",
+                      shape: const MaterialStatePropertyAll(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            side: BorderSide(width: 1)),
+                      ),
+                      elevation: const MaterialStatePropertyAll(0),
+                    );
+                  },
+                  suggestionsBuilder:
+                      (BuildContext context, SearchController controller) {
+                    return List<ListTile>.generate(
+                      5,
+                          (int index) {
+                        final String item = 'item $index';
+                        return ListTile(
+                          title: Text(item),
+                          onTap: () {
+                            setState(
+                                  () {
+                                controller.closeView(item);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                  viewElevation: 0,
+                ),
+                const SizedBox(height: 25),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Categories",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
-                    elevation: const MaterialStatePropertyAll(0),
-                  );
-                },
-                suggestionsBuilder:
-                    (BuildContext context, SearchController controller) {
-                  return List<ListTile>.generate(
-                    5,
-                        (int index) {
-                      final String item = 'item $index';
-                      return ListTile(
-                        title: Text(item),
-                        onTap: () {
-                          setState(
-                                () {
-                              controller.closeView(item);
-                            },
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-                viewElevation: 0,
-              ),
-              const SizedBox(height: 25),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Categories",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 650,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: List.generate(categoryList.length, (index) {
-                      return CategoryCard(
-                        categoryIcon: categoryList[index][1],
-                        categoryName: categoryList[index][0],
-                      );
-                    }),
+                SizedBox(
+                  height: 650,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: List.generate(categoryList.length, (index) {
+                        return CategoryCard(
+                          categoryIcon: categoryList[index][1],
+                          categoryName: categoryList[index][0],
+                        );
+                      }),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
