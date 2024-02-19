@@ -24,7 +24,7 @@ class _AddVolunteerState extends State<AddVolunteer>
   String selectedEventId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
-  late final TabController _tabController;
+  TabController? _tabController;
 
   var textStyle = TextStyle(
     overflow: TextOverflow.fade,
@@ -48,7 +48,7 @@ class _AddVolunteerState extends State<AddVolunteer>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
