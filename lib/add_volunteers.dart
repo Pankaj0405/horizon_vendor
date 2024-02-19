@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Widgets/text_fields.dart';
 import 'package:horizon_vendor/models/add_events.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddVolunteer extends StatefulWidget {
   const AddVolunteer({super.key});
@@ -11,17 +12,15 @@ class AddVolunteer extends StatefulWidget {
   State<AddVolunteer> createState() => _AddVolunteerState();
 }
 
-class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMixin{
+class _AddVolunteerState extends State<AddVolunteer>
+    with TickerProviderStateMixin {
   final _authController = Get.put(AuthController());
   List<String> items = [];
   List<String> items2 = [];
   String eventDropDown = 'Events';
   String tourDropDown = 'Tours';
   String typeDropDown = 'Event';
-  List<String> items1 = [
-    'Event',
-    'Tour'
-  ];
+  List<String> items1 = ['Event', 'Tour'];
   String selectedEventId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
@@ -80,9 +79,9 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: 20,
+              padding: EdgeInsets.symmetric(
+                vertical: 30.h,
+                horizontal: 20.w,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,13 +99,16 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
                   //     ),
                   //   ),
                   // ),
-                  IconButton(onPressed: () {Get.back();}, icon: Icon(Icons.arrow_back)),
+                  IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: Icon(Icons.arrow_back)),
                   Container(
                     width: double.maxFinite,
                     height: 50,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(width: 1)),
+                        color: Colors.grey[300], border: Border.all(width: 1)),
                     child: DropdownButton(
                       dropdownColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
@@ -158,125 +160,126 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
+                  Text(
                     'Events and Tours',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
-                  typeDropDown == "Event"?
-                  Container(
-                    width: double.maxFinite,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(width: 1)),
-                    child: DropdownButton(
-                      dropdownColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      isExpanded: true,
-                      // Initial Value
-                      value: eventDropDown,
-                      style: textStyle,
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      hint: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: Text('Events and tours'),
-                      ),
-                      // Array list of items
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
+                  typeDropDown == "Event"
+                      ? Container(
+                          width: double.maxFinite,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              border: Border.all(width: 1)),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                             ),
-                            child: Text(
-                              items,
-                              maxLines: 2,
+                            borderRadius: BorderRadius.circular(20),
+                            isExpanded: true,
+                            // Initial Value
+                            value: eventDropDown,
+                            style: textStyle,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            hint: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Text('Events and tours'),
                             ),
+                            items: items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Text(
+                                    items,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setModalState(() {
+                                eventDropDown = newValue!;
+                                selectedEventId = _authController.eventData
+                                    .firstWhere(
+                                        (event) => event.eventName == newValue)
+                                    .id;
+                                // print(selectedEventId);
+                              });
+                            },
                           ),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setModalState(() {
-                          eventDropDown = newValue!;
-                          selectedEventId = _authController.eventData
-                              .firstWhere(
-                                  (event) => event.eventName == newValue)
-                              .id;
-                          print(selectedEventId);
-                        });
-                      },
-                    ),
-                    // const EventDropdown(), // event dropdown
-                  ) : Container(
-                    width: double.maxFinite,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border: Border.all(width: 1)),
-                    child: DropdownButton(
-                      dropdownColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      isExpanded: true,
-                      // Initial Value
-                      value: tourDropDown,
-                      style: textStyle,
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      hint: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: Text('Tours'),
-                      ),
-                      // Array list of items
-                      items: items2.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
+                        )
+                      : Container(
+                          width: double.maxFinite,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              border: Border.all(width: 1)),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                             ),
-                            child: Text(
-                              items,
-                              maxLines: 2,
+                            borderRadius: BorderRadius.circular(20),
+                            isExpanded: true,
+                            // Initial Value
+                            value: tourDropDown,
+                            style: textStyle,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            hint: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Text('Tours'),
                             ),
+                            // Array list of items
+                            items: items2.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Text(
+                                    items,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setModalState(() {
+                                tourDropDown = newValue!;
+                                selectedEventId = _authController.tourData
+                                    .firstWhere(
+                                        (tour) => tour.eventName == newValue)
+                                    .id;
+                                print(selectedEventId);
+                              });
+                            },
                           ),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setModalState(() {
-                          tourDropDown = newValue!;
-                          selectedEventId = _authController.tourData
-                              .firstWhere(
-                                  (tour) => tour.eventName == newValue)
-                              .id;
-                          print(selectedEventId);
-                        });
-                      },
-                    ),
-                    // const EventDropdown(), // event dropdown
-                  ),
-                  const SizedBox(height: 20),
+                          // const EventDropdown(), // event dropdown
+                        ),
+                  SizedBox(height: 20.h),
                   textField('No. of Volunteers required: ',
                       _volunteerController, TextInputType.number),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20.h),
+                  Text(
                     'Role Description',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
                   TextField(
                     controller: _roleController,
@@ -312,7 +315,7 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
                   //     ),
                   //   ),
                   // ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   // const Align(
                   //     alignment: Alignment.centerLeft,
                   //     child: Padding(
@@ -329,24 +332,27 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
                   // SizedBox(height: 20),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20.h,
                       ),
                       child: ElevatedButton(
                         onPressed: () {
-                          _authController.addVolunteers(eventDropDown,
-                              _volunteerController.text, _roleController.text, typeDropDown);
+                          _authController.addVolunteers(
+                              eventDropDown,
+                              _volunteerController.text,
+                              _roleController.text,
+                              typeDropDown);
                           emptyFields();
                           Get.back();
                         },
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 40,
+                            horizontal: 40.w,
                           ),
                           child: Text(
                             'ADD',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -405,179 +411,171 @@ class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMix
           controller: _tabController,
           children: [
             Obx(
-                  () => ListView.builder(
+              () => ListView.builder(
                   itemCount: _authController.volunteerData.length,
                   itemBuilder: (BuildContext context, int index) {
                     final volunteers = _authController.volunteerData[index];
-                    return volunteers.type == "Tour"? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20, left: 10),
-                              child: Image.asset(
-                                "", // Replace 'image.png' with your image asset path
-                                width: 100,
-                                height: 200,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  volunteers.eventName,
-                                  style: const TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Volunteers: ${volunteers.volNumber}',
-                                  style: const TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                // cardListTile('', events.description),
-                                SizedBox(
-                                  height: 80,
-                                  width: 150,
-                                  child: Text(
-                                    volunteers.role,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 17,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
+                    return volunteers.type == "Tour"
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              color: const Color.fromARGB(255, 7, 159, 159)
+                                  .withOpacity(0.6),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 20, left: 10),
+                                    child: Image.asset(
+                                      "", // Replace 'image.png' with your image asset path
+                                      width: 100,
+                                      height: 200,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 20.0),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        volunteers.eventName,
+                                        style: const TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Volunteers: ${volunteers.volNumber}',
+                                        style: const TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      // cardListTile('', events.description),
+                                      SizedBox(
+                                        height: 80,
+                                        width: 150,
+                                        child: Text(
+                                          volunteers.role,
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                          // child: Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          //   children: [
-                          //     Container(
-                          //       height: 400,
-                          //       width: 200,
-                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                          //     ),
-                          //     Column(
-                          //       // crossAxisAlignment: CrossAxisAlignment.center,
-                          //       children: [
-                          //         cardListTile('Event: ', events.eventName),
-                          //         cardListTile('Organized By: ', events.organizationName),
-                          //         cardListTile('Description: ', events.description),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-                        ),
-                      ),
-                    ): null;
+                          )
+                        : null;
                   }),
             ),
             Obx(
-                  () => ListView.builder(
+              () => ListView.builder(
                   itemCount: _authController.volunteerData.length,
                   itemBuilder: (BuildContext context, int index) {
                     final volunteers = _authController.volunteerData[index];
-                    return volunteers.type == "Event"? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20, left: 10),
-                              child: Image.asset(
-                                "", // Replace 'image.png' with your image asset path
-                                width: 100,
-                                height: 200,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  volunteers.eventName,
-                                  style: const TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Volunteers: ${volunteers.volNumber}',
-                                  style: const TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-                                // cardListTile('', events.description),
-                                SizedBox(
-                                  height: 80,
-                                  width: 150,
-                                  child: Text(
-                                    volunteers.role,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 17,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
+                    return volunteers.type == "Event"
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              color: const Color.fromARGB(255, 7, 159, 159)
+                                  .withOpacity(0.6),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 20, left: 10),
+                                    child: Image.asset(
+                                      "", // Replace 'image.png' with your image asset path
+                                      width: 100,
+                                      height: 200,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 20.0),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        volunteers.eventName,
+                                        style: const TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Volunteers: ${volunteers.volNumber}',
+                                        style: const TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      // cardListTile('', events.description),
+                                      SizedBox(
+                                        height: 80,
+                                        width: 150,
+                                        child: Text(
+                                          volunteers.role,
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 17,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                // child: Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                //   children: [
+                                //     Container(
+                                //       height: 400,
+                                //       width: 200,
+                                //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                                //     ),
+                                //     Column(
+                                //       // crossAxisAlignment: CrossAxisAlignment.center,
+                                //       children: [
+                                //         cardListTile('Event: ', events.eventName),
+                                //         cardListTile('Organized By: ', events.organizationName),
+                                //         cardListTile('Description: ', events.description),
+                                //       ],
+                                //     ),
+                                //   ],
+                                // ),
+                              ),
                             ),
-                          ],
-                          // child: Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          //   children: [
-                          //     Container(
-                          //       height: 400,
-                          //       width: 200,
-                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                          //     ),
-                          //     Column(
-                          //       // crossAxisAlignment: CrossAxisAlignment.center,
-                          //       children: [
-                          //         cardListTile('Event: ', events.eventName),
-                          //         cardListTile('Organized By: ', events.organizationName),
-                          //         cardListTile('Description: ', events.description),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-                        ),
-                      ),
-                    ): null;
+                          )
+                        : null;
                   }),
             ),
           ],

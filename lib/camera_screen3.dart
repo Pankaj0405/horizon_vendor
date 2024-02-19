@@ -8,7 +8,7 @@ import 'package:camera/camera.dart';
 class CameraScreen3 extends StatefulWidget {
   final CameraDescription camera;
 
-  const CameraScreen3({Key? key, required this.camera}) : super(key: key);
+  const CameraScreen3({super.key, required this.camera});
 
   @override
   // ignore: library_private_types_in_public_api

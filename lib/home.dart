@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import './Category/category.dart';
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  const Scaffold(
       // ignore: unnecessary_const
       body: SingleChildScrollView(
         child: Column(
