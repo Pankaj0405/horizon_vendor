@@ -26,10 +26,10 @@ class _AddVolunteerState extends State<AddVolunteer>
   final _roleController = TextEditingController();
   late final TabController _tabController;
 
-  var textStyle = const TextStyle(
+  var textStyle = TextStyle(
     overflow: TextOverflow.fade,
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 15.sp,
   );
 
   emptyFields() {
