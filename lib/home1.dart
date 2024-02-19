@@ -3,6 +3,8 @@ import 'package:horizon_vendor/add_volunteers.dart';
 import 'package:horizon_vendor/home.dart';
 import 'package:horizon_vendor/new_event.dart';
 import 'package:horizon_vendor/profile.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class Home1 extends StatefulWidget {
   const Home1({Key? key}) : super(key: key);
@@ -10,6 +12,8 @@ class Home1 extends StatefulWidget {
   @override
   State<Home1> createState() => _Home1State();
 }
+
+
 
 class _Home1State extends State<Home1> {
   int _selectedIndex = 0;
@@ -26,6 +30,8 @@ class _Home1State extends State<Home1> {
     const AddVolunteer(),
     const ProfilePage(),
   ];
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Widgets/text_fields.dart';
 import 'package:horizon_vendor/models/add_events.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddVolunteer extends StatefulWidget {
   const AddVolunteer({super.key});
@@ -55,9 +56,9 @@ class _AddVolunteerState extends State<AddVolunteer> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: 20,
+              padding: EdgeInsets.symmetric(
+                vertical: 30.h,
+                horizontal: 20.w,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,21 +76,22 @@ class _AddVolunteerState extends State<AddVolunteer> {
                   //     ),
                   //   ),
                   // ),
-                  const Text(
+                  Text(
                     'Events and Tours',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
                   Center(
                     child: Container(
                       width: double.maxFinite,
-                      height: 50,
+                      height: 50.h,
                       decoration: BoxDecoration(
                           color: Colors.grey[300],
-                          border: Border.all(width: 1)),
+                          border: Border.all(width: 1.w)),
                       child: DropdownButton(
                         dropdownColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
                         ),
                         borderRadius: BorderRadius.circular(20),
                         isExpanded: true,
@@ -98,9 +100,9 @@ class _AddVolunteerState extends State<AddVolunteer> {
                         style: textStyle,
                         // Down Arrow Icon
                         icon: const Icon(Icons.keyboard_arrow_down),
-                        hint: const Padding(
+                        hint: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 20,
+                            horizontal: 20.w,
                           ),
                           child: Text('Events and tours'),
                         ),
@@ -109,8 +111,8 @@ class _AddVolunteerState extends State<AddVolunteer> {
                           return DropdownMenuItem(
                             value: items,
                             child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 20,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 20.w,
                               ),
                               child: Text(
                                 items,
@@ -135,13 +137,14 @@ class _AddVolunteerState extends State<AddVolunteer> {
                       // const EventDropdown(), // event dropdown
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   textField('No. of Volunteers required: ',
                       _volunteerController, TextInputType.number),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20.h),
+                  Text(
                     'Role Description',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
                   TextField(
                     controller: _roleController,
@@ -177,7 +180,7 @@ class _AddVolunteerState extends State<AddVolunteer> {
                   //     ),
                   //   ),
                   // ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   // const Align(
                   //     alignment: Alignment.centerLeft,
                   //     child: Padding(
@@ -194,8 +197,8 @@ class _AddVolunteerState extends State<AddVolunteer> {
                   // SizedBox(height: 20),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20.h,
                       ),
                       child: ElevatedButton(
                         onPressed: () {
@@ -204,14 +207,14 @@ class _AddVolunteerState extends State<AddVolunteer> {
                           emptyFields();
                           Get.back();
                         },
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 40,
+                            horizontal: 40.w,
                           ),
                           child: Text(
                             'ADD',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -227,6 +230,8 @@ class _AddVolunteerState extends State<AddVolunteer> {
       }),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +266,8 @@ class _AddVolunteerState extends State<AddVolunteer> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
-                    color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
+                    color:
+                        const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
