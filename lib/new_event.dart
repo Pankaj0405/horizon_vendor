@@ -18,7 +18,7 @@ class AddNewEvent extends StatefulWidget {
   State<AddNewEvent> createState() => _AddNewEventState();
 }
 
-class _AddNewEventState extends State<AddNewEvent> {
+class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin{
   ImagePicker _imagePicker = ImagePicker();
   bool isLoading = false;
   XFile? imagePath;
@@ -30,6 +30,21 @@ class _AddNewEventState extends State<AddNewEvent> {
   final _descController = TextEditingController();
   final _slotsController = TextEditingController();
   final _priceController = TextEditingController();
+  late final TabController _tabController;
+
+  String dropDownValue = "Select";
+  List<String> items = [
+    "Select",
+    "Event",
+    "Tour"
+  ];
+
+  var textStyle = const TextStyle(
+    overflow: TextOverflow.fade,
+    color: Colors.black,
+    fontSize: 15,
+  );
+
   void _showBottomSheet() {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -41,70 +56,79 @@ class _AddNewEventState extends State<AddNewEvent> {
         ),
         context: context,
         builder: (context) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 8),
-                height: 5,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: Colors.grey, borderRadius: BorderRadius.circular(5)),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 60),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _getImageFromCamera();
-                        print("a");
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.grey.shade100),
-                            child: const Icon(Icons.camera_alt),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text("Camera")
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _getImageFromGallery();
-                        print("b");
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.grey.shade100),
-                            child: const Icon(Icons.browse_gallery_outlined),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text("Gallery")
-                        ],
-                      ),
-                    )
-                  ],
+          return StatefulBuilder(
+            builder: (context, setModalState)
+            {return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  height: 5,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      color: Colors.grey, borderRadius: BorderRadius.circular(5)),
                 ),
-              )
-            ],
+                Container(
+                  margin: const EdgeInsets.only(bottom: 60),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setModalState(() {
+                            _getImageFromCamera();
+                          });
+
+                          print("a");
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: const Icon(Icons.camera_alt),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("Camera")
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setModalState(() {
+                            _getImageFromGallery();
+                          });
+
+                          print("b");
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: const Icon(Icons.browse_gallery_outlined),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("Gallery")
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );},
           );
         });
   }
@@ -178,6 +202,13 @@ class _AddNewEventState extends State<AddNewEvent> {
   void initState() {
     super.initState();
     _imagePicker = ImagePicker();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<String> upload(File imageFile) async {
@@ -204,22 +235,22 @@ class _AddNewEventState extends State<AddNewEvent> {
     }
   }
 
-  pickImage() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        imagePath = XFile(image.path, name: image.name);
-      }
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  // pickImage() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+  //     if (image != null) {
+  //       imagePath = XFile(image.path, name: image.name);
+  //     }
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   void emptyFields() {
     _addressController.text = "";
@@ -229,6 +260,7 @@ class _AddNewEventState extends State<AddNewEvent> {
     _slotsController.text = "";
     _priceController.text = "";
     imagePath = null;
+    image = null;
   }
 
   openBottomSheet() {
@@ -240,137 +272,207 @@ class _AddNewEventState extends State<AddNewEvent> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
-                        _showBottomSheet();
-                      },
-                      child: (image != null)
-                          ? CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 60,
-                              backgroundImage: FileImage(image!))
-                          : const Icon(
-                              Icons.person,
-                              size: 60,
-                            ),
-                    ),
-                    textField('Event or Tour Name', _eventNameController,
-                        TextInputType.text),
-                    textField('Organization Name', _organizationController,
-                        TextInputType.text),
-                    textField(
-                        'Address', _addressController, TextInputType.text),
-                    textField(
-                        'Max slots', _slotsController, TextInputType.number),
-                    textField('Booking Price', _priceController,
-                        TextInputType.number),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Event Description',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(onPressed: () {Get.back();}, icon: Icon(Icons.arrow_back_rounded)),
+                        ],
                       ),
-                    ),
-                    TextField(
-                      maxLines: 1,
-                      // expands: true,
-                      controller: _descController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                      ),
-                    ),
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Expanded(
-                    //   flex: 0,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //     children: [
-                    //       Text(
-                    //         'Image: ',
-                    //         style: TextStyle(
-                    //           fontSize: 20,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //       isLoading
-                    //           ? CircularProgressIndicator(
-                    //               color: Colors.blue,
-                    //             )
-                    //           : GestureDetector(
-                    //               onTap: () {
-                    //                 setModalState(() {
-                    //                   pickImage();
-                    //                   print(imagePath!.name);
-                    //                 });
-                    //               },
-                    //               child: Container(
-                    //                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    //                 decoration: BoxDecoration(
-                    //                   border: Border.all(),
-                    //                   borderRadius: BorderRadius.circular(10),
-                    //                 ),
-                    //                 child: const Text('Select'),
-                    //               ),
-                    //             ),
-                    //       if (imagePath != null)
-                    //         SizedBox(
-                    //           width: 70,
-                    //           child: Text(
-                    //             imagePath!.name,
-                    //             style: TextStyle(
-                    //                 fontSize: 16, color: Colors.black),
-                    //             overflow: TextOverflow.ellipsis,
-                    //           ),
-                    //         ),
-                    //     ],
-                    //   ),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _authController.addEvent(
-                              _eventNameController.text,
-                              _organizationController.text,
-                              _addressController.text,
-                              _descController.text,
-                              _slotsController.text,
-                              _priceController.text,
-                              link!);
-                          Get.back();
-                          emptyFields();
+                      GestureDetector(
+                        onTap: () {
+                          // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
+
+                          setModalState(() {
+                            _showBottomSheet();
+                          });
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40,
+                        child: (image != null)
+                            ? CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 60,
+                                backgroundImage: FileImage(image!))
+                            : const Icon(
+                                Icons.image_rounded,
+                                size: 60,
+                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 20,
+                        ),
+                        child: Container(
+                          width: double.maxFinite,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              border: Border.all(width: 1)),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            isExpanded: true,
+                            // Initial Value
+                            value: dropDownValue,
+                            style: textStyle,
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            hint: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Text('Events and tours'),
+                            ),
+                            // Array list of items
+                            items: items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Text(
+                                    items,
+                                    // maxLines: 2,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setModalState(() {
+                                dropDownValue = newValue!;
+                                // selectedEventId = _authController.eventData
+                                //     .firstWhere(
+                                //         (event) => event.eventName == newValue)
+                                //     .id;
+                                // print(selectedEventId);
+                              });
+                            },
                           ),
-                          child: Text(
-                            'ADD',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600),
+                          // const EventDropdown(), // event dropdown
+                        ),
+                      ),
+                      textField('Event or Tour Name', _eventNameController,
+                          TextInputType.text),
+                      textField('Organization Name', _organizationController,
+                          TextInputType.text),
+                      textField(
+                          'Address', _addressController, TextInputType.text),
+                      textField(
+                          'Max slots', _slotsController, TextInputType.number),
+                      textField('Booking Price', _priceController,
+                          TextInputType.number),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Event Description',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      TextField(
+                        maxLines: 1,
+                        // expands: true,
+                        controller: _descController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                        ),
+                      ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // Expanded(
+                      //   flex: 0,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //     children: [
+                      //       Text(
+                      //         'Image: ',
+                      //         style: TextStyle(
+                      //           fontSize: 20,
+                      //           fontWeight: FontWeight.bold,
+                      //         ),
+                      //       ),
+                      //       isLoading
+                      //           ? CircularProgressIndicator(
+                      //               color: Colors.blue,
+                      //             )
+                      //           : GestureDetector(
+                      //               onTap: () {
+                      //                 setModalState(() {
+                      //                   pickImage();
+                      //                   print(imagePath!.name);
+                      //                 });
+                      //               },
+                      //               child: Container(
+                      //                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                      //                 decoration: BoxDecoration(
+                      //                   border: Border.all(),
+                      //                   borderRadius: BorderRadius.circular(10),
+                      //                 ),
+                      //                 child: const Text('Select'),
+                      //               ),
+                      //             ),
+                      //       if (imagePath != null)
+                      //         SizedBox(
+                      //           width: 70,
+                      //           child: Text(
+                      //             imagePath!.name,
+                      //             style: TextStyle(
+                      //                 fontSize: 16, color: Colors.black),
+                      //             overflow: TextOverflow.ellipsis,
+                      //           ),
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _authController.addEvent(
+                                _eventNameController.text,
+                                _organizationController.text,
+                                _addressController.text,
+                                _descController.text,
+                                _slotsController.text,
+                                _priceController.text,
+                                link!,
+                            dropDownValue);
+                            Get.back();
+                            emptyFields();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40,
+                            ),
+                            child: Text(
+                              'ADD',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -381,130 +483,257 @@ class _AddNewEventState extends State<AddNewEvent> {
   @override
   Widget build(BuildContext context) {
     _authController.getEvent();
+    _authController.getTour();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 120,
-          flexibleSpace: const Column(
-            children: [
-              Text(
-                "Tours and Events",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          // toolbarHeight: 120,
+          title: Text(
+            "Tours and Events",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          // flexibleSpace: const Column(
+          //   children: [
+          //     Text(
+          //       "Tours and Events",
+          //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          //     ),
+          //     SizedBox(
+          //       height: 20,
+          //     ),
+          //     Padding(
+          //       padding: EdgeInsets.symmetric(horizontal: 20),
+          //       child: EventSearchBar(),
+          //     ),
+          //   ],
+          // ),
+          // centerTitle: true,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const <Widget>[
+              Tab(
+                icon: Icon(Icons.tour),
+                text: "Tours",
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: EventSearchBar(),
+              Tab(
+                icon: Icon(Icons.event),
+                text: "Events",
               ),
             ],
           ),
-          // centerTitle: true,
         ),
-        body: Obx(
-          () => ListView.builder(
-              shrinkWrap: true,
-              itemCount: _authController.eventData.length,
-              itemBuilder: (BuildContext context, int index) {
-                final events = _authController.eventData[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 30,
-                            right: 8,
-                            left: 08,
-                          ),
-                          child: Image.network(
-                            events
-                                .imagePath, // Replace 'image.png' with your image asset path
-                            width: 150,
-                            height: 150,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Column(
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            Obx(
+                  () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _authController.tourData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final tours = _authController.tourData[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.8),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: 150,
-                              child: Text(
-                                events.eventName,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: Colors.white,
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 30,
+                                right: 8,
+                                left: 08,
+                              ),
+                              child: Image.network(
+                                tours
+                                    .imagePath, // Replace 'image.png' with your image asset path
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.fill,
                               ),
                             ),
-                            const SizedBox(height: 8.0),
-                            SizedBox(
-                              width: 150,
-                              child: Text(
-                                'Organized By: \n${events.organizationName}',
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: Colors.white,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 8.0),
-                            // cardListTile('', events.description),
-                            SizedBox(
-                              height: 80,
-                              width: 150,
-                              child: Text(
-                                events.description,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.white,
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    tours.eventName,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 8.0),
+                                // SizedBox(
+                                //   width: 150,
+                                //   child: Text(
+                                //     'Type: ${tours.type}',
+                                //     maxLines: 2,
+                                //     style: const TextStyle(
+                                //       fontSize: 20,
+                                //       fontWeight: FontWeight.w500,
+                                //       overflow: TextOverflow.ellipsis,
+                                //       color: Colors.white,
+                                //     ),
+                                //   ),
+                                // ),
+                                // const SizedBox(height: 8.0),
+                                // cardListTile('', events.description),
+                                SizedBox(
+                                  height: 80,
+                                  width: 150,
+                                  child: Text(
+                                    tours.description,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
+                          // child: Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //   children: [
+                          //     Container(
+                          //       height: 400,
+                          //       width: 200,
+                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                          //     ),
+                          //     Column(
+                          //       // crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         cardListTile('Event: ', events.eventName),
+                          //         cardListTile('Organized By: ', events.organizationName),
+                          //         cardListTile('Description: ', events.description),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
                         ),
-                      ],
-                      // child: Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     Container(
-                      //       height: 400,
-                      //       width: 200,
-                      //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                      //     ),
-                      //     Column(
-                      //       // crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         cardListTile('Event: ', events.eventName),
-                      //         cardListTile('Organized By: ', events.organizationName),
-                      //         cardListTile('Description: ', events.description),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
-                    ),
-                  ),
-                );
-              }),
+                      ),
+                    );
+                  }),
+            ),
+            Obx(
+                  () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _authController.eventData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final events = _authController.eventData[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 30,
+                                right: 8,
+                                left: 08,
+                              ),
+                              child: Image.network(
+                                events
+                                    .imagePath, // Replace 'image.png' with your image asset path
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    events.eventName,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    'Type: ${events.type}',
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                // cardListTile('', events.description),
+                                SizedBox(
+                                  height: 80,
+                                  width: 150,
+                                  child: Text(
+                                    events.description,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          // child: Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //   children: [
+                          //     Container(
+                          //       height: 400,
+                          //       width: 200,
+                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                          //     ),
+                          //     Column(
+                          //       // crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         cardListTile('Event: ', events.eventName),
+                          //         cardListTile('Organized By: ', events.organizationName),
+                          //         cardListTile('Description: ', events.description),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
         ),
+
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,

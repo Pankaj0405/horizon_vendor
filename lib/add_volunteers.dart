@@ -11,13 +11,21 @@ class AddVolunteer extends StatefulWidget {
   State<AddVolunteer> createState() => _AddVolunteerState();
 }
 
-class _AddVolunteerState extends State<AddVolunteer> {
+class _AddVolunteerState extends State<AddVolunteer> with TickerProviderStateMixin{
   final _authController = Get.put(AuthController());
   List<String> items = [];
-  String eventDropDown = 'Events and Tours';
+  List<String> items2 = [];
+  String eventDropDown = 'Events';
+  String tourDropDown = 'Tours';
+  String typeDropDown = 'Event';
+  List<String> items1 = [
+    'Event',
+    'Tour'
+  ];
   String selectedEventId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
+  late final TabController _tabController;
 
   var textStyle = const TextStyle(
     overflow: TextOverflow.fade,
@@ -35,6 +43,14 @@ class _AddVolunteerState extends State<AddVolunteer> {
     // TODO: implement initState
     super.initState();
     populateEventsDropdown();
+    populateToursDropdown();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void populateEventsDropdown() async {
@@ -43,6 +59,15 @@ class _AddVolunteerState extends State<AddVolunteer> {
       items = events.map((event) => event.eventName).toList();
       print(items);
       eventDropDown = items[0]; // Set the default value
+    });
+  }
+
+  void populateToursDropdown() async {
+    List<AddEvent> tours = await _authController.getAllTours();
+    setState(() {
+      items2 = tours.map((tour) => tour.eventName).toList();
+      print(items2);
+      tourDropDown = items2[0]; // Set the default value
     });
   }
 
@@ -75,65 +100,175 @@ class _AddVolunteerState extends State<AddVolunteer> {
                   //     ),
                   //   ),
                   // ),
+                  IconButton(onPressed: () {Get.back();}, icon: Icon(Icons.arrow_back)),
+                  Container(
+                    width: double.maxFinite,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        border: Border.all(width: 1)),
+                    child: DropdownButton(
+                      dropdownColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      isExpanded: true,
+                      // Initial Value
+                      value: typeDropDown,
+                      style: textStyle,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      hint: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Text('Events and tours'),
+                      ),
+                      // Array list of items
+                      items: items1.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Text(
+                              items,
+                              maxLines: 2,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setModalState(() {
+                          typeDropDown = newValue!;
+                          // selectedEventId = _authController.eventData
+                          //     .firstWhere(
+                          //         (event) => event.eventName == newValue)
+                          //     .id;
+                          print(typeDropDown);
+                        });
+                      },
+                    ),
+                    // const EventDropdown(), // event dropdown
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   const Text(
                     'Events and Tours',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Center(
-                    child: Container(
-                      width: double.maxFinite,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(width: 1)),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
+                  typeDropDown == "Event"?
+                  Container(
+                    width: double.maxFinite,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        border: Border.all(width: 1)),
+                    child: DropdownButton(
+                      dropdownColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      isExpanded: true,
+                      // Initial Value
+                      value: eventDropDown,
+                      style: textStyle,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      hint: const Padding(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 20,
                         ),
-                        borderRadius: BorderRadius.circular(20),
-                        isExpanded: true,
-                        // Initial Value
-                        value: eventDropDown,
-                        style: textStyle,
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        hint: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20,
-                          ),
-                          child: Text('Events and tours'),
-                        ),
-                        // Array list of items
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Text(
-                                items,
-                                maxLines: 2,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setModalState(() {
-                            eventDropDown = newValue!;
-                            selectedEventId = _authController.eventData
-                                .firstWhere(
-                                    (event) => event.eventName == newValue)
-                                .id;
-                            print(selectedEventId);
-                          });
-                        },
+                        child: Text('Events and tours'),
                       ),
-                      // const EventDropdown(), // event dropdown
+                      // Array list of items
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Text(
+                              items,
+                              maxLines: 2,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setModalState(() {
+                          eventDropDown = newValue!;
+                          selectedEventId = _authController.eventData
+                              .firstWhere(
+                                  (event) => event.eventName == newValue)
+                              .id;
+                          print(selectedEventId);
+                        });
+                      },
                     ),
+                    // const EventDropdown(), // event dropdown
+                  ) : Container(
+                    width: double.maxFinite,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        border: Border.all(width: 1)),
+                    child: DropdownButton(
+                      dropdownColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      isExpanded: true,
+                      // Initial Value
+                      value: tourDropDown,
+                      style: textStyle,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      hint: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Text('Tours'),
+                      ),
+                      // Array list of items
+                      items: items2.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Text(
+                              items,
+                              maxLines: 2,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setModalState(() {
+                          tourDropDown = newValue!;
+                          selectedEventId = _authController.tourData
+                              .firstWhere(
+                                  (tour) => tour.eventName == newValue)
+                              .id;
+                          print(selectedEventId);
+                        });
+                      },
+                    ),
+                    // const EventDropdown(), // event dropdown
                   ),
                   const SizedBox(height: 20),
                   textField('No. of Volunteers required: ',
@@ -200,7 +335,7 @@ class _AddVolunteerState extends State<AddVolunteer> {
                       child: ElevatedButton(
                         onPressed: () {
                           _authController.addVolunteers(eventDropDown,
-                              _volunteerController.text, _roleController.text);
+                              _volunteerController.text, _roleController.text, typeDropDown);
                           emptyFields();
                           Get.back();
                         },
@@ -236,14 +371,14 @@ class _AddVolunteerState extends State<AddVolunteer> {
       child: Scaffold(
         // backgroundColor: Colors.deepPurple,
         appBar: AppBar(
-          leading: BackButton(
-            style: const ButtonStyle(
-              iconSize: MaterialStatePropertyAll(30),
-            ),
-            onPressed: () {
-              // Get.back();
-            },
-          ),
+          // leading: BackButton(
+          //   style: const ButtonStyle(
+          //     iconSize: MaterialStatePropertyAll(30),
+          //   ),
+          //   onPressed: () {
+          //     // Get.back();
+          //   },
+          // ),
           title: const Text(
             "Volunteers",
             style: TextStyle(
@@ -252,94 +387,200 @@ class _AddVolunteerState extends State<AddVolunteer> {
             ),
           ),
           centerTitle: true,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const <Widget>[
+              Tab(
+                icon: Icon(Icons.tour),
+                text: "Tours",
+              ),
+              Tab(
+                icon: Icon(Icons.event),
+                text: "Events",
+              ),
+            ],
+          ),
         ),
-        body: Obx(
-          () => ListView.builder(
-              itemCount: _authController.volunteerData.length,
-              itemBuilder: (BuildContext context, int index) {
-                final volunteers = _authController.volunteerData[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 10),
-                          child: Image.asset(
-                            "", // Replace 'image.png' with your image asset path
-                            width: 100,
-                            height: 200,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        const SizedBox(width: 20.0),
-                        Column(
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            Obx(
+                  () => ListView.builder(
+                  itemCount: _authController.volunteerData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final volunteers = _authController.volunteerData[index];
+                    return volunteers.type == "Tour"? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              volunteers.eventName,
-                              style: const TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20, left: 10),
+                              child: Image.asset(
+                                "", // Replace 'image.png' with your image asset path
+                                width: 100,
+                                height: 200,
+                                fit: BoxFit.fill,
                               ),
                             ),
-                            const SizedBox(height: 8.0),
-                            Text(
-                              'Volunteers: ${volunteers.volNumber}',
-                              style: const TextStyle(
-                                fontSize: 19,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 8.0),
-                            // cardListTile('', events.description),
-                            SizedBox(
-                              height: 80,
-                              width: 150,
-                              child: Text(
-                                volunteers.role,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.white,
+                            const SizedBox(width: 20.0),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 8,
                                 ),
-                              ),
+                                Text(
+                                  volunteers.eventName,
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  'Volunteers: ${volunteers.volNumber}',
+                                  style: const TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                // cardListTile('', events.description),
+                                SizedBox(
+                                  height: 80,
+                                  width: 150,
+                                  child: Text(
+                                    volunteers.role,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
+                          // child: Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //   children: [
+                          //     Container(
+                          //       height: 400,
+                          //       width: 200,
+                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                          //     ),
+                          //     Column(
+                          //       // crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         cardListTile('Event: ', events.eventName),
+                          //         cardListTile('Organized By: ', events.organizationName),
+                          //         cardListTile('Description: ', events.description),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
                         ),
-                      ],
-                      // child: Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     Container(
-                      //       height: 400,
-                      //       width: 200,
-                      //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                      //     ),
-                      //     Column(
-                      //       // crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         cardListTile('Event: ', events.eventName),
-                      //         cardListTile('Organized By: ', events.organizationName),
-                      //         cardListTile('Description: ', events.description),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
-                    ),
-                  ),
-                );
-              }),
+                      ),
+                    ): null;
+                  }),
+            ),
+            Obx(
+                  () => ListView.builder(
+                  itemCount: _authController.volunteerData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final volunteers = _authController.volunteerData[index];
+                    return volunteers.type == "Event"? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.6),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20, left: 10),
+                              child: Image.asset(
+                                "", // Replace 'image.png' with your image asset path
+                                width: 100,
+                                height: 200,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            const SizedBox(width: 20.0),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  volunteers.eventName,
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  'Volunteers: ${volunteers.volNumber}',
+                                  style: const TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                                // cardListTile('', events.description),
+                                SizedBox(
+                                  height: 80,
+                                  width: 150,
+                                  child: Text(
+                                    volunteers.role,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                          // child: Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //   children: [
+                          //     Container(
+                          //       height: 400,
+                          //       width: 200,
+                          //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                          //     ),
+                          //     Column(
+                          //       // crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         cardListTile('Event: ', events.eventName),
+                          //         cardListTile('Organized By: ', events.organizationName),
+                          //         cardListTile('Description: ', events.description),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
+                        ),
+                      ),
+                    ): null;
+                  }),
+            ),
+          ],
         ),
 
         floatingActionButton: FloatingActionButton(

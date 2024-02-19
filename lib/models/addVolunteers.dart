@@ -5,18 +5,21 @@ class AddVolunteers {
   String eventName;
   String volNumber;
   String role;
+  String type;
 
   AddVolunteers(
       {required this.id,
       required this.role,
       required this.eventName,
-      required this.volNumber});
+      required this.volNumber,
+      required this.type});
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "role": role,
         "Event Name": eventName,
-        "No of Volunteers": volNumber
+        "No of Volunteers": volNumber,
+        "type": type
       };
 
   static AddVolunteers fromSnap(DocumentSnapshot snap) {
@@ -25,6 +28,7 @@ class AddVolunteers {
         id: snapshot["id"],
         role: snapshot["role"],
         eventName: snapshot["Event Name"],
-        volNumber: snapshot["No of Volunteers"]);
+        volNumber: snapshot["No of Volunteers"],
+        type: snapshot['type']);
   }
 }
