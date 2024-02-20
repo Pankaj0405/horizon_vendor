@@ -33,7 +33,7 @@ backgroundColor: Colors.white,
           child: Container(
             child: const Image(
               image: AssetImage(
-                'assets/images/logo.jpg'
+                'assets/images/logo.png'
               ),
             ),
           ),
