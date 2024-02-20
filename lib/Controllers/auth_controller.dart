@@ -19,7 +19,7 @@ class AuthController extends GetxController {
   List<add_volunteers.AddVolunteers> get volunteerData => _volunteerData.value;
 
   void addEvent(String eventName, String orgName, String address, String desc,
-      String maxSlots, String price, String imagePath, String type) async {
+      String maxSlots, String price, String imagePath, String type, String fromDate, String toDate) async {
     try {
       // String id = const Uuid().v1();
       String eventId = const Uuid().v1();
@@ -30,7 +30,7 @@ class AuthController extends GetxController {
           maxSlots.isNotEmpty &&
           price.isNotEmpty &&
           imagePath.isNotEmpty &&
-          type != 'Select') {
+          type != 'Select' && fromDate.isNotEmpty && toDate.isNotEmpty) {
         add_event_model.AddEvent newEvent = add_event_model.AddEvent(
             address: address,
             description: desc,
@@ -40,7 +40,9 @@ class AuthController extends GetxController {
             maxSlots: maxSlots,
             price: price,
             imagePath: imagePath,
-            type: type);
+            type: type,
+            fromDate: fromDate,
+            toDate: toDate);
         if(type == "Event") {
           await firestore
               .collection('events')
@@ -110,16 +112,18 @@ class AuthController extends GetxController {
         }));
   }
 
-  void addVolunteers(String eventName, String number, String role, String type) async {
+  void addVolunteers(String eventName, String number, String role, String type, String eventId, String imagePath) async {
     try {
       String volunteerId = const Uuid().v1();
-      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty) {
+      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty && imagePath.isNotEmpty) {
         add_volunteers.AddVolunteers volunteers = add_volunteers.AddVolunteers(
             id: volunteerId,
             role: role,
             eventName: eventName,
             volNumber: number,
-            type: type);
+            type: type,
+            eventId: eventId,
+            imagePath: imagePath);
         await firestore
             .collection('volunteers')
             .doc(volunteerId)

@@ -1,9 +1,16 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Widgets/text_fields.dart';
 import 'package:horizon_vendor/models/add_events.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'camera_screen3.dart';
 
 class AddVolunteer extends StatefulWidget {
   const AddVolunteer({super.key});
@@ -17,24 +24,32 @@ class _AddVolunteerState extends State<AddVolunteer>
   final _authController = Get.put(AuthController());
   List<String> items = [];
   List<String> items2 = [];
-  String eventDropDown = 'Events';
-  String tourDropDown = 'Tours';
+  String eventDropDown = 'Event';
+  String tourDropDown = 'Tour';
   String typeDropDown = 'Event';
   List<String> items1 = ['Event', 'Tour'];
   String selectedEventId = '';
+  String selectedTourId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
   TabController? _tabController;
+  ImagePicker _imagePicker = ImagePicker();
+  // bool isLoading = false;
+  XFile? imagePath;
+  String? link;
 
   var textStyle = TextStyle(
     overflow: TextOverflow.fade,
     color: Colors.black,
-    fontSize: 15.sp,
+    fontSize: 15,
   );
 
   emptyFields() {
     _roleController.text = "";
     _volunteerController.text = "";
+    image = null;
+    // eventDropDown = 'Event';
+
   }
 
   @override
@@ -50,6 +65,183 @@ class _AddVolunteerState extends State<AddVolunteer>
   void dispose() {
     _tabController!.dispose();
     super.dispose();
+  }
+
+  File? image;
+  Future _getImageFromGallery() async {
+    Get.back();
+    try {
+      final XFile? image =
+      await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      link = await upload(imageTemp);
+      setState(() {
+        this.image = imageTemp;
+        // _infoController.uploadToStorage(this.image!);
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  List<CameraDescription> cameras = [];
+
+  Future<void> _initializeCamera() async {
+    cameras = await availableCameras();
+  }
+
+  Future<void> _getImageFromCamera() async {
+    Get.back();
+
+    if (cameras.isEmpty) {
+      // Initialize cameras if not already done
+      await _initializeCamera();
+    }
+
+    // final CameraController controller = CameraController(
+    //   cameras[0], // Use the first camera
+    //   ResolutionPreset.medium,
+    // );
+    //
+    // await controller.initialize();
+    final result = await Get.to(() => CameraScreen3(camera: cameras[0]));
+
+    try {
+      if (result != null) {
+        final imageTemp = File(result);
+        link = await upload(imageTemp);
+
+        setState(() {
+          image = imageTemp;
+        });
+      }
+      // final XFile image = await controller.takePicture();
+      //
+      // final imageTemp = File(image.path);
+      // link = await upload(imageTemp);
+      //
+      // setState(() {
+      //   this.image = imageTemp;
+      // });
+    } catch (e) {
+      print('Failed to take picture: $e');
+    }
+    // finally {
+    //   await controller.dispose();
+    // }
+  }
+
+  Future<String> upload(File imageFile) async {
+    try {
+      // Create a unique filename for the uploaded image
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Reference to the Firebase Storage bucket
+      Reference storageReference =
+      FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+
+      // Upload the image to Firebase Storage
+      UploadTask uploadTask = storageReference.putFile(imageFile);
+
+      // Get the download URL once the image is uploaded
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+      // Return the download URL
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return '';
+    }
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.21,
+          maxWidth: double.infinity,
+        ),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setModalState)
+            {return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  height: 5,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 60),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setModalState(() {
+                            _getImageFromCamera();
+                          });
+
+                          print("a");
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: const Icon(Icons.camera_alt),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("Camera")
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setModalState(() {
+                            _getImageFromGallery();
+                          });
+
+                          print("b");
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey.shade100),
+                              child: const Icon(Icons.browse_gallery_outlined),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text("Gallery")
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );},
+          );
+        });
   }
 
   void populateEventsDropdown() async {
@@ -80,11 +272,11 @@ class _AddVolunteerState extends State<AddVolunteer>
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: EdgeInsets.symmetric(
-                vertical: 30.h,
-                horizontal: 20.w,
+                vertical: 30,
+                horizontal: 20,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Align(
                   //   alignment: Alignment.centerLeft,
@@ -99,22 +291,45 @@ class _AddVolunteerState extends State<AddVolunteer>
                   //     ),
                   //   ),
                   // ),
-                  IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: const Icon(Icons.arrow_back)),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: const Icon(Icons.arrow_back)),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
+
+                      setModalState(() {
+                        _showBottomSheet();
+                      });
+                    },
+                    child: (image != null)
+                        ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 60,
+                        backgroundImage: FileImage(image!))
+                        : const Icon(
+                      Icons.image_rounded,
+                      size: 60,
+                    ),
+                  ),
+                  SizedBox(height: 20,),
                   Container(
                     width: double.maxFinite,
-                    height: 50.h,
+                    height: 50,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300], border: Border.all(width: 1.w)),
+                        color: Colors.grey[300], border: Border.all(width: 1)),
                     child: DropdownButton(
                       dropdownColor: Colors.white,
                       padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
+                        horizontal: 20,
                       ),
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(20),
                       isExpanded: true,
                       // Initial Value
                       value: typeDropDown,
@@ -123,7 +338,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                       icon: const Icon(Icons.keyboard_arrow_down),
                       hint: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
+                          horizontal: 20,
                         ),
                         child: const Text('Events and tours'),
                       ),
@@ -133,7 +348,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                           value: items,
                           child: Container(
                             margin: EdgeInsets.symmetric(
-                              horizontal: 20.w,
+                              horizontal: 20,
                             ),
                             child: Text(
                               items,
@@ -158,26 +373,29 @@ class _AddVolunteerState extends State<AddVolunteer>
                     // const EventDropdown(), // event dropdown
                   ),
                   SizedBox(
-                    height: 10.h,
+                    height: 10,
                   ),
-                  Text(
-                    'Events and Tours',
-                    style:
-                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Events and Tours',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   typeDropDown == "Event"
                       ? Container(
                           width: double.maxFinite,
-                          height: 50.h,
+                          height: 50,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
-                              border: Border.all(width: 1.w)),
+                              border: Border.all(width: 1)),
                           child: DropdownButton(
                             dropdownColor: Colors.white,
                             padding: EdgeInsets.symmetric(
-                              horizontal: 20.w,
+                              horizontal: 20,
                             ),
-                            borderRadius: BorderRadius.circular(20.r),
+                            borderRadius: BorderRadius.circular(20),
                             isExpanded: true,
                             // Initial Value
                             value: eventDropDown,
@@ -186,7 +404,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                             icon: const Icon(Icons.keyboard_arrow_down),
                             hint: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
+                                horizontal: 20,
                               ),
                               child: const Text('Events and tours'),
                             ),
@@ -195,7 +413,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 value: items,
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
-                                    horizontal: 20.w,
+                                    horizontal: 20,
                                   ),
                                   child: Text(
                                     items,
@@ -220,16 +438,16 @@ class _AddVolunteerState extends State<AddVolunteer>
                         )
                       : Container(
                           width: double.maxFinite,
-                          height: 50.h,
+                          height: 50,
                           decoration: BoxDecoration(
                               color: Colors.grey[300],
-                              border: Border.all(width: 1.w)),
+                              border: Border.all(width: 1)),
                           child: DropdownButton(
                             dropdownColor: Colors.white,
                             padding: EdgeInsets.symmetric(
-                              horizontal: 20.w,
+                              horizontal: 20,
                             ),
-                            borderRadius: BorderRadius.circular(20.r),
+                            borderRadius: BorderRadius.circular(20),
                             isExpanded: true,
                             // Initial Value
                             value: tourDropDown,
@@ -238,7 +456,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                             icon: const Icon(Icons.keyboard_arrow_down),
                             hint: Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
+                                horizontal: 20,
                               ),
                               child: const Text('Tours'),
                             ),
@@ -248,7 +466,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 value: items,
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
-                                    horizontal: 20.h,
+                                    horizontal: 20,
                                   ),
                                   child: Text(
                                     items,
@@ -262,24 +480,27 @@ class _AddVolunteerState extends State<AddVolunteer>
                             onChanged: (String? newValue) {
                               setModalState(() {
                                 tourDropDown = newValue!;
-                                selectedEventId = _authController.tourData
+                                selectedTourId = _authController.tourData
                                     .firstWhere(
                                         (tour) => tour.eventName == newValue)
                                     .id;
-                                print(selectedEventId);
+                                print(selectedTourId);
                               });
                             },
                           ),
                           // const EventDropdown(), // event dropdown
                         ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 20),
                   textField('No. of Volunteers required: ',
                       _volunteerController, TextInputType.number),
-                  SizedBox(height: 20.h),
-                  Text(
-                    'Role Description',
-                    style:
-                        TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Role Description',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   TextField(
                     controller: _roleController,
@@ -315,7 +536,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                   //     ),
                   //   ),
                   // ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 10),
                   // const Align(
                   //     alignment: Alignment.centerLeft,
                   //     child: Padding(
@@ -333,7 +554,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                   Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        vertical: 20.h,
+                        vertical: 20,
                       ),
                       child: ElevatedButton(
                         onPressed: () {
@@ -341,18 +562,19 @@ class _AddVolunteerState extends State<AddVolunteer>
                               eventDropDown,
                               _volunteerController.text,
                               _roleController.text,
-                              typeDropDown);
+                              typeDropDown,selectedEventId,
+                              link!);
                           emptyFields();
                           Get.back();
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 40.w,
+                            horizontal: 40,
                           ),
                           child: Text(
                             'ADD',
                             style: TextStyle(
-                              fontSize: 20.sp,
+                              fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -388,7 +610,7 @@ class _AddVolunteerState extends State<AddVolunteer>
           title: Text(
             "Volunteers",
             style: TextStyle(
-              fontSize: 25.sp,
+              fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -417,7 +639,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Tour"
                         ? Padding(
-                            padding: EdgeInsets.all(8.r),
+                            padding: EdgeInsets.all(8),
                             child: Card(
                               color: const Color.fromARGB(255, 7, 159, 159)
                                   .withOpacity(0.6),
@@ -426,50 +648,50 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        top: 20.h, left: 10.w),
-                                    child: Image.asset(
-                                      "", // Replace 'image.png' with your image asset path
-                                      width: 100.w,
-                                      height: 200.h,
+                                        top: 20, left: 10),
+                                    child: Image.network(
+                                      volunteers.imagePath, // Replace 'image.png' with your image asset path
+                                      width: 150,
+                                      height: 150,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
-                                  SizedBox(width: 20.w),
+                                  SizedBox(width: 20),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        height: 8.h,
+                                        height: 8,
                                       ),
                                       Text(
                                         volunteers.eventName,
                                         style: TextStyle(
-                                          fontSize: 26.sp,
+                                          fontSize: 26,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      SizedBox(height: 8.h),
+                                      SizedBox(height: 8),
                                       Text(
                                         'Volunteers: ${volunteers.volNumber}',
                                         style: TextStyle(
-                                          fontSize: 19.sp,
+                                          fontSize: 19,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      SizedBox(height: 8.h),
+                                      SizedBox(height: 8),
                                       // cardListTile('', events.description),
                                       SizedBox(
-                                        height: 80.h,
-                                        width: 150.w,
+                                        height: 80,
+                                        width: 150,
                                         child: Text(
                                           volunteers.role,
                                           maxLines: 2,
                                           style: TextStyle(
-                                            fontSize: 17.sp,
+                                            fontSize: 17,
                                             overflow: TextOverflow.ellipsis,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.white,
@@ -492,7 +714,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Event"
                         ? Padding(
-                            padding: EdgeInsets.all(8.r),
+                            padding: EdgeInsets.all(8),
                             child: Card(
                               color: const Color.fromARGB(255, 7, 159, 159)
                                   .withOpacity(0.6),
@@ -501,50 +723,50 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        top: 20.h, left: 10.w),
-                                    child: Image.asset(
-                                      "", // Replace 'image.png' with your image asset path
-                                      width: 100.w,
-                                      height: 200.h,
+                                        top: 20, left: 10),
+                                    child: Image.network(
+                                      volunteers.imagePath, // Replace 'image.png' with your image asset path
+                                      width: 150,
+                                      height: 150,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
-                                  SizedBox(width: 20.w),
+                                  SizedBox(width: 20),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        height: 8.h,
+                                        height: 8,
                                       ),
                                       Text(
                                         volunteers.eventName,
                                         style: TextStyle(
-                                          fontSize: 26.sp,
+                                          fontSize: 26,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      SizedBox(height: 8.h),
+                                      SizedBox(height: 8),
                                       Text(
                                         'Volunteers: ${volunteers.volNumber}',
                                         style: TextStyle(
-                                          fontSize: 19.sp,
+                                          fontSize: 19,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      SizedBox(height: 8.h),
+                                      SizedBox(height: 8),
                                       // cardListTile('', events.description),
                                       SizedBox(
-                                        height: 80.h,
-                                        width: 150.w,
+                                        height: 80,
+                                        width: 150,
                                         child: Text(
                                           volunteers.role,
                                           maxLines: 2,
                                           style: TextStyle(
-                                            fontSize: 17.sp,
+                                            fontSize: 17,
                                             overflow: TextOverflow.ellipsis,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.white,

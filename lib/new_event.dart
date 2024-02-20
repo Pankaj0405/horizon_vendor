@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:horizon_vendor/camera_screen3.dart';
 import 'package:image_picker/image_picker.dart';
 import './Widgets/text_fields.dart';
@@ -28,6 +29,8 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
   final _descController = TextEditingController();
   final _slotsController = TextEditingController();
   final _priceController = TextEditingController();
+  final fromDateController = TextEditingController();
+  final toDateController = TextEditingController();
   late final TabController _tabController;
 
   String dropDownValue = "Select";
@@ -259,6 +262,8 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
     _priceController.text = "";
     imagePath = null;
     image = null;
+    fromDateController.text = '';
+    toDateController.text = '';
   }
 
   openBottomSheet() {
@@ -363,7 +368,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                       ),
                       textField('Event or Tour Name', _eventNameController,
                           TextInputType.text),
-                      textField('Organization Name', _organizationController,
+                      textField('Organized By', _organizationController,
                           TextInputType.text),
                       textField(
                           'Address', _addressController, TextInputType.text),
@@ -383,12 +388,112 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                         ),
                       ),
                       TextField(
-                        maxLines: 1,
+                        maxLines: 2,
                         // expands: true,
                         controller: _descController,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.grey[300],
+                        ),
+                      ),
+                      ListTile(
+                        leading: Text('From: ', style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        trailing: SizedBox(
+                          height: 30,
+                          width: 120,
+                          child: TextField(
+                            controller:
+                            fromDateController,
+                            style: const TextStyle(color: Colors.black),
+                            cursorColor: Colors.blue,//editing controller of this TextField
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                contentPadding: EdgeInsets.only(
+                                  left: 5,
+                                  right: 5,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                            readOnly:
+                            true, //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                  lastDate: DateTime(2101));
+
+                              if (pickedDate != null) {
+                                print(
+                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                print(
+                                    formattedDate); //formatted date output using intl package =>  2021-03-16
+                                //you can implement different kind of Date Format here according to your requirement
+
+                                setState(() {
+                                  fromDateController.text =
+                                      formattedDate; //set output date to TextField value.
+                                });
+                              } else {
+                                print("Date is not selected");
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: Text('To: ', style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        trailing: SizedBox(
+                          height: 30,
+                          width: 120,
+                          child: TextField(
+                            controller:
+                            toDateController,
+                            style: const TextStyle(color: Colors.black),
+                            cursorColor: Colors.blue,//editing controller of this TextField
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                contentPadding: EdgeInsets.only(
+                                  left: 5,
+                                  right: 5,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                            readOnly:
+                            true, //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                  lastDate: DateTime(2101));
+
+                              if (pickedDate != null) {
+                                print(
+                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                print(
+                                    formattedDate); //formatted date output using intl package =>  2021-03-16
+                                //you can implement different kind of Date Format here according to your requirement
+
+                                setState(() {
+                                  toDateController.text =
+                                      formattedDate; //set output date to TextField value.
+                                });
+                              } else {
+                                print("Date is not selected");
+                              }
+                            },
+                          ),
                         ),
                       ),
                       // SizedBox(
@@ -453,7 +558,9 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                 _slotsController.text,
                                 _priceController.text,
                                 link!,
-                            dropDownValue);
+                            dropDownValue,
+                            fromDateController.text,
+                            toDateController.text);
                             Get.back();
                             emptyFields();
                           },
@@ -674,20 +781,20 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                   ),
                                 ),
                                 const SizedBox(height: 8.0),
-                                SizedBox(
-                                  width: 150,
-                                  child: Text(
-                                    'Type: ${events.type}',
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.ellipsis,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
+                                // SizedBox(
+                                //   width: 150,
+                                //   child: Text(
+                                //     events.description,
+                                //     maxLines: 2,
+                                //     style: const TextStyle(
+                                //       fontSize: 20,
+                                //       fontWeight: FontWeight.w500,
+                                //       overflow: TextOverflow.ellipsis,
+                                //       color: Colors.white,
+                                //     ),
+                                //   ),
+                                // ),
+                                // const SizedBox(height: 8.0),
                                 // cardListTile('', events.description),
                                 SizedBox(
                                   height: 80,

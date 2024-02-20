@@ -10,6 +10,8 @@ class AddEvent {
   String price;
   String imagePath;
   String type;
+  String fromDate;
+  String toDate;
 
   AddEvent(
       {required this.address,
@@ -20,7 +22,9 @@ class AddEvent {
       required this.price,
       required this.maxSlots,
       required this.imagePath,
-      required this.type});
+      required this.type,
+      required this.fromDate,
+      required this.toDate});
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -31,7 +35,9 @@ class AddEvent {
         "Max Slots": maxSlots,
         "Booking price": price,
         "Image Path": imagePath,
-        "Type": type
+        "Type": type,
+        "From": fromDate,
+        "To": toDate
       };
 
   static AddEvent fromSnap(DocumentSnapshot snap) {
@@ -45,7 +51,9 @@ class AddEvent {
       maxSlots: snapshot["Max Slots"],
       price: snapshot["Booking price"],
       imagePath: snapshot["Image Path"],
-      type: snapshot["Type"]
+      type: snapshot["Type"],
+      fromDate: snapshot['From'],
+      toDate: snapshot['To']
     );
   }
 }
