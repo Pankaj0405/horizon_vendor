@@ -26,15 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "",
-          style: TextStyle(
-            fontSize: 30,
-            color: Colors.black,
-          ),
-        ),
-      ),
       // body: Center(
       //   child: ElevatedButton(
       //     onPressed: (){
@@ -46,9 +37,20 @@ class _ProfilePageState extends State<ProfilePage> {
       //   )
       // ),
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.only(top: 50.0, left: 15, right: 15),
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset("assets/images/logo.jpg"),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

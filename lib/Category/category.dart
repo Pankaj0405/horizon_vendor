@@ -109,10 +109,10 @@ class _CategoryPageState extends State<CategoryPage> {
 
 class CategoryCard extends StatefulWidget {
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.categoryIcon,
     required this.categoryName,
-  }) : super(key: key);
+  });
 
   final Icon categoryIcon;
   final String categoryName;

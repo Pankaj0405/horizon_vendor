@@ -3,11 +3,10 @@ import 'package:horizon_vendor/add_volunteers.dart';
 import 'package:horizon_vendor/home.dart';
 import 'package:horizon_vendor/new_event.dart';
 import 'package:horizon_vendor/profile.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class Home1 extends StatefulWidget {
-  const Home1({Key? key}) : super(key: key);
+  const Home1({super.key});
 
   @override
   State<Home1> createState() => _Home1State();

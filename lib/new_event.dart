@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +8,6 @@ import 'package:horizon_vendor/camera_screen3.dart';
 import 'package:image_picker/image_picker.dart';
 import './Widgets/text_fields.dart';
 import './Controllers/auth_controller.dart';
-import './Widgets/search_bar.dart';
 
 class AddNewEvent extends StatefulWidget {
   const AddNewEvent({super.key});
@@ -283,7 +281,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                     children: [
                       Row(
                         children: [
-                          IconButton(onPressed: () {Get.back();}, icon: Icon(Icons.arrow_back_rounded)),
+                          IconButton(onPressed: () {Get.back();}, icon: const Icon(Icons.arrow_back_rounded)),
                         ],
                       ),
                       GestureDetector(
@@ -488,7 +486,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
       child: Scaffold(
         appBar: AppBar(
           // toolbarHeight: 120,
-          title: Text(
+          title: const Text(
             "Tours and Events",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),

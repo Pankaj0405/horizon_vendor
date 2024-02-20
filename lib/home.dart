@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import './Category/category.dart';
@@ -233,10 +232,10 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
 // ignore: must_be_immutable
 class EventCard extends StatefulWidget {
   EventCard({
-    Key? key,
+    super.key,
     required this.inputText1,
     required this.inputText2,
-  }) : super(key: key);
+  });
 
   String inputText1;
   String inputText2;
@@ -383,10 +382,10 @@ class _CategoriesState extends State<Categories> {
 
 class CategoryTile extends StatefulWidget {
   const CategoryTile({
-    Key? key,
+    super.key,
     required this.categoryTitle,
     required this.categoryIcon,
-  }) : super(key: key);
+  });
 
   final String categoryTitle;
   final Icon categoryIcon;

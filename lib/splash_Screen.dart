@@ -7,7 +7,7 @@ import 'package:horizon_vendor/constants.dart';
 
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(const Duration(seconds: 3),()=>authController.checkLoginStatus(firebaseAuth.currentUser));
+    Timer(const Duration(seconds: 2),()=>authController.checkLoginStatus(firebaseAuth.currentUser));
   }
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ backgroundColor: Colors.white,
           child: Container(
             child: const Image(
               image: AssetImage(
-                'assets/images/beach.jpg'
+                'assets/images/logo.jpg'
               ),
             ),
           ),

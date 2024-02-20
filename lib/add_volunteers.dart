@@ -103,7 +103,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                       onPressed: () {
                         Get.back();
                       },
-                      icon: Icon(Icons.arrow_back)),
+                      icon: const Icon(Icons.arrow_back)),
                   Container(
                     width: double.maxFinite,
                     height: 50.h,
@@ -125,7 +125,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                         ),
-                        child: Text('Events and tours'),
+                        child: const Text('Events and tours'),
                       ),
                       // Array list of items
                       items: items1.map((String items) {
@@ -188,7 +188,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                               padding: EdgeInsets.symmetric(
                                 horizontal: 20.w,
                               ),
-                              child: Text('Events and tours'),
+                              child: const Text('Events and tours'),
                             ),
                             items: items.map((String items) {
                               return DropdownMenuItem(
@@ -240,7 +240,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                               padding: EdgeInsets.symmetric(
                                 horizontal: 20.w,
                               ),
-                              child: Text('Tours'),
+                              child: const Text('Tours'),
                             ),
                             // Array list of items
                             items: items2.map((String items) {
