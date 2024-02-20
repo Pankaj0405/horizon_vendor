@@ -12,11 +12,23 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final auth = Get.put(AuthController1());
-  final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _nameEditingController = TextEditingController();
+  final TextEditingController _addressEditingController =
+      TextEditingController();
+  TextEditingController _phoneEditingController = TextEditingController();
+  final TextEditingController _emailEditingConroller = TextEditingController();
   String guestName = "Guest";
+  String address = "Address";
+  String phoneNumber = "XXXXXXXXXX";
+  String email = "Email";
   void changeName() {
     setState(() {
-      guestName = _textEditingController.text;
+      guestName = _nameEditingController.text;
+      phoneNumber = _phoneEditingController.text;
+      email = _emailEditingConroller.text;
+    });
+    setState(() {
+      address = _addressEditingController.text;
     });
     setState(() {
       navigator?.pop(context);
@@ -36,106 +48,275 @@ class _ProfilePageState extends State<ProfilePage> {
       //     ),
       //   )
       // ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 50.0, left: 15, right: 15),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset("assets/images/logo.jpg"),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: [
+          SizedBox(
+            height: 400,
+            child: Stack(
               children: [
-                Row(
-                  children: [
-                    const Text(
-                      "Hii!",
-                      style: TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    SizedBox(
-                      width: 200,
-                      child: Text(
-                        guestName,
-                        style: const TextStyle(
-                          fontSize: 30,
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 160,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Material(
+                      shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      elevation: 10,
+                      child: Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 7, 159, 159),
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        overflow: TextOverflow.fade,
-                        maxLines: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: ((context) {
-                        return Container(
-                          height: 600,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 7, 159, 159)
-                                .withOpacity(0.5),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(25),
-                              topRight: Radius.circular(25),
-                            ),
-                          ),
+                        child: Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                margin: const EdgeInsets.all(10),
-                                padding: const EdgeInsets.only(top: 20),
-                                child: textField(
-                                  "Enter your name",
-                                  _textEditingController,
-                                  TextInputType.text,
-                                ),
-                              ),
-                              const SizedBox(height: 30),
-                              TextButton(
-                                onPressed: changeName,
-                                style: const ButtonStyle(
-                                  elevation: MaterialStatePropertyAll(10),
-                                  backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 7, 159, 159),
+                              Stack(
+                                children: [
+                                  SizedBox(
+                                    width: double.maxFinite,
+                                    child: Center(
+                                      child: Text(
+                                        guestName,
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  padding: MaterialStatePropertyAll(
-                                    EdgeInsets.only(left: 20, right: 20),
+                                  Positioned.directional(
+                                    textDirection: TextDirection.ltr,
+                                    end: 0,
+                                    child: IconButton(
+                                      style: const ButtonStyle(
+                                        iconColor: MaterialStatePropertyAll(
+                                            Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: ((context) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                        255, 7, 159, 159)
+                                                    .withOpacity(0.5),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topLeft: Radius.circular(25),
+                                                  topRight: Radius.circular(25),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: textField(
+                                                      "Enter your name",
+                                                      _nameEditingController,
+                                                      TextInputType.text,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: textField(
+                                                      "Enter your Address",
+                                                      _addressEditingController,
+                                                      TextInputType.text,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: textField(
+                                                      "Enter your Number",
+                                                      _phoneEditingController,
+                                                      TextInputType.phone,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: textField(
+                                                      "Enter your Email",
+                                                      _emailEditingConroller,
+                                                      TextInputType
+                                                          .emailAddress,
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: changeName,
+                                                    style: const ButtonStyle(
+                                                      elevation:
+                                                          MaterialStatePropertyAll(
+                                                              10),
+                                                      backgroundColor:
+                                                          MaterialStatePropertyAll(
+                                                        Color.fromARGB(
+                                                            255, 7, 159, 159),
+                                                      ),
+                                                      padding:
+                                                          MaterialStatePropertyAll(
+                                                        EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 20),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      "Save",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 22,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.edit_square),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  "Save",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        );
-                      }),
-                    );
-                  },
-                  icon: const Icon(Icons.edit_square),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 130,
+                  child: Material(
+                    shape: CircleBorder(
+                      side: BorderSide(
+                        width: 0,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    elevation: 5,
+                    child: CircleAvatar(
+                      radius: 50,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          //-------------------------------Address------------------------------
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Material(
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromARGB(255, 7, 159, 159),
+                ),
+                child: Center(
+                  child: Text(
+                    address,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+//--------------number---------------
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Material(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromARGB(255, 7, 159, 159),
+                ),
+                child: Center(
+                  child: Text(
+                    phoneNumber,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+//------------email------------------
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Material(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromARGB(255, 7, 159, 159),
+                ),
+                child: Center(
+                  child: Text(
+                    email,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
