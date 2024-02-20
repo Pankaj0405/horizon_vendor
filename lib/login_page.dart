@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
               const Center(
                 child: Image(
                     height: 150,
-                    image: AssetImage('assets/images/beach.jpg')),
+                    image: AssetImage('assets/images/logo.jpg')),
               ),
               const SizedBox(
                 height: 50,
