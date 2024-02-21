@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
-import 'package:horizon_vendor/card_discriptions/card_description.dart';
+import 'package:horizon_vendor/card_discriptions/event_description.dart';
+import 'package:horizon_vendor/card_discriptions/tour_card_description.dart';
+import 'package:horizon_vendor/card_discriptions/volunteer_description.dart';
 import './Category/category.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -222,7 +224,7 @@ class _TodaysVolunteerState extends State<TodaysVolunteer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CardDescription(),
+                        builder: (context) => const VolunteerCardDescription(),
                       ),
                     );
                   },
@@ -335,7 +337,7 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CardDescription(),
+                        builder: (context) => const EventCardDescription(),
                       ),
                     );
                   },
@@ -486,7 +488,7 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
 
 //-------------------Categories------------------
 
-//----------- upcoming events------------------------
+//----------- upcoming tours------------------------
 
 class UpcomingTours extends StatefulWidget {
   const UpcomingTours({super.key});
@@ -534,7 +536,7 @@ class _UpcomingToursState extends State<UpcomingTours> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CardDescription(),
+                        builder: (context) => const TourCardDescription(),
                       ),
                     );
                   },

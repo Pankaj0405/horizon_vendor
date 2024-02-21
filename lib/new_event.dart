@@ -17,7 +17,8 @@ class AddNewEvent extends StatefulWidget {
   State<AddNewEvent> createState() => _AddNewEventState();
 }
 
-class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin{
+class _AddNewEventState extends State<AddNewEvent>
+    with TickerProviderStateMixin {
   ImagePicker _imagePicker = ImagePicker();
   bool isLoading = false;
   XFile? imagePath;
@@ -34,11 +35,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
   late final TabController _tabController;
 
   String dropDownValue = "Select";
-  List<String> items = [
-    "Select",
-    "Event",
-    "Tour"
-  ];
+  List<String> items = ["Select", "Event", "Tour"];
 
   var textStyle = const TextStyle(
     overflow: TextOverflow.fade,
@@ -58,78 +55,81 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
         context: context,
         builder: (context) {
           return StatefulBuilder(
-            builder: (context, setModalState)
-            {return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  height: 5,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(5)),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 60),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setModalState(() {
-                            _getImageFromCamera();
-                          });
-
-                          print("a");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: const Icon(Icons.camera_alt),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text("Camera")
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setModalState(() {
-                            _getImageFromGallery();
-                          });
-
-                          print("b");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: const Icon(Icons.browse_gallery_outlined),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text("Gallery")
-                          ],
-                        ),
-                      )
-                    ],
+            builder: (context, setModalState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    height: 5,
+                    width: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(5)),
                   ),
-                )
-              ],
-            );},
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 60),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setModalState(() {
+                              _getImageFromCamera();
+                            });
+
+                            print("a");
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.grey.shade100),
+                                child: const Icon(Icons.camera_alt),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("Camera")
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setModalState(() {
+                              _getImageFromGallery();
+                            });
+
+                            print("b");
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.grey.shade100),
+                                child:
+                                    const Icon(Icons.browse_gallery_outlined),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("Gallery")
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
           );
         });
   }
@@ -286,7 +286,11 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                     children: [
                       Row(
                         children: [
-                          IconButton(onPressed: () {Get.back();}, icon: const Icon(Icons.arrow_back_rounded)),
+                          IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: const Icon(Icons.arrow_back_rounded)),
                         ],
                       ),
                       GestureDetector(
@@ -397,15 +401,21 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                         ),
                       ),
                       ListTile(
-                        leading: const Text('From: ', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        leading: const Text(
+                          'From: ',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
                         trailing: SizedBox(
                           height: 30,
                           width: 120,
                           child: TextField(
-                            controller:
-                            fromDateController,
+                            controller: fromDateController,
                             style: const TextStyle(color: Colors.black),
-                            cursorColor: Colors.blue,//editing controller of this TextField
+                            cursorColor: Colors
+                                .blue, //editing controller of this TextField
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[300],
@@ -417,7 +427,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                             readOnly:
-                            true, //set it true, so that user will not able to edit text
+                                true, //set it true, so that user will not able to edit text
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                   context: context,
@@ -430,7 +440,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                 print(
                                     pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                                 String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
                                 print(
                                     formattedDate); //formatted date output using intl package =>  2021-03-16
                                 //you can implement different kind of Date Format here according to your requirement
@@ -447,15 +457,21 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                         ),
                       ),
                       ListTile(
-                        leading: const Text('To: ', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        leading: const Text(
+                          'To: ',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
                         trailing: SizedBox(
                           height: 30,
                           width: 120,
                           child: TextField(
-                            controller:
-                            toDateController,
+                            controller: toDateController,
                             style: const TextStyle(color: Colors.black),
-                            cursorColor: Colors.blue,//editing controller of this TextField
+                            cursorColor: Colors
+                                .blue, //editing controller of this TextField
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[300],
@@ -467,7 +483,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                             readOnly:
-                            true, //set it true, so that user will not able to edit text
+                                true, //set it true, so that user will not able to edit text
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                   context: context,
@@ -480,7 +496,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                 print(
                                     pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                                 String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
                                 print(
                                     formattedDate); //formatted date output using intl package =>  2021-03-16
                                 //you can implement different kind of Date Format here according to your requirement
@@ -558,9 +574,9 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                                 _slotsController.text,
                                 _priceController.text,
                                 link!,
-                            dropDownValue,
-                            fromDateController.text,
-                            toDateController.text);
+                                dropDownValue,
+                                fromDateController.text,
+                                toDateController.text);
                             Get.back();
                             emptyFields();
                           },
@@ -591,6 +607,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
     _authController.getTour();
     return SafeArea(
       child: Scaffold(
+        
         appBar: AppBar(
           // toolbarHeight: 120,
           title: const Text(
@@ -631,7 +648,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
           controller: _tabController,
           children: [
             Obx(
-                  () => ListView.builder(
+              () => ListView.builder(
                   shrinkWrap: true,
                   itemCount: _authController.tourData.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -639,22 +656,23 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
-                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.8),
+                        color: const Color.fromARGB(255, 7, 159, 159)
+                            .withOpacity(0.8),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                top: 30,
-                                right: 8,
-                                left: 08,
-                              ),
-                              child: Image.network(
-                                tours
-                                    .imagePath, // Replace 'image.png' with your image asset path
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.fill,
+                              padding: const EdgeInsets.only(top:15, bottom: 15, left: 15, right: 5),
+                              child: Material(
+                                elevation: 15,
+                                child: Image.network(
+                                  tours
+                                      .imagePath, // Replace 'image.png' with your image asset path
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                             Column(
@@ -662,7 +680,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                               // mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 SizedBox(
                                   width: 150,
@@ -734,7 +752,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                   }),
             ),
             Obx(
-                  () => ListView.builder(
+              () => ListView.builder(
                   shrinkWrap: true,
                   itemCount: _authController.eventData.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -742,22 +760,27 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
-                        color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.8),
+                        color: const Color.fromARGB(255, 7, 159, 159)
+                            .withOpacity(0.8),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                top: 30,
-                                right: 8,
-                                left: 08,
+                                top: 15,
+                                right: 5,
+                                bottom: 15,
+                                left: 15,
                               ),
-                              child: Image.network(
-                                events
-                                    .imagePath, // Replace 'image.png' with your image asset path
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.fill,
+                              child: Material(
+                                elevation: 10,
+                                child: Image.network(
+                                  events
+                                      .imagePath, // Replace 'image.png' with your image asset path
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                             Column(
@@ -765,7 +788,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                               // mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 SizedBox(
                                   width: 150,
@@ -838,7 +861,6 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
             ),
           ],
         ),
-
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.green,

@@ -1,322 +1,343 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:horizon_vendor/Controllers/auth_controller1.dart';
-import 'package:horizon_vendor/Widgets/text_fields.dart';
+import './edit_profile.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  final auth = Get.put(AuthController1());
-  final TextEditingController _nameEditingController = TextEditingController();
-  final TextEditingController _addressEditingController =
-      TextEditingController();
-  final TextEditingController _phoneEditingController = TextEditingController();
-  final TextEditingController _emailEditingConroller = TextEditingController();
-  String guestName = "Guest";
-  String address = "Address";
-  String phoneNumber = "XXXXXXXXXX";
-  String email = "Email";
-  void changeName() {
-    setState(() {
-      guestName = _nameEditingController.text;
-      phoneNumber = _phoneEditingController.text;
-      email = _emailEditingConroller.text;
-    });
-    setState(() {
-      address = _addressEditingController.text;
-    });
-    setState(() {
-      navigator?.pop(context);
-    });
+class _ProfileState extends State<Profile> {
+  @override
+  Widget build(BuildContext context) {
+    return const SafeArea(
+      child: Scaffold(
+        body: StackExample(),
+      ),
+    );
   }
+}
+
+class StackExample extends StatelessWidget {
+  const StackExample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // body: Center(
-      //   child: ElevatedButton(
-      //     onPressed: (){
-      //       auth.logout();
-      //     },
-      //     child: const Text(
-      //       'Log out'
-      //     ),
-      //   )
-      // ),
-      body: Column(
+    return SingleChildScrollView(
+      child: Column(
         children: [
-          SizedBox(
-            height: 400,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 160,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Material(
-                      shape: BeveledRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      elevation: 10,
-                      child: Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 7, 159, 159),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Stack(
-                                children: [
-                                  SizedBox(
-                                    width: double.maxFinite,
-                                    child: Center(
-                                      child: Text(
-                                        guestName,
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned.directional(
-                                    textDirection: TextDirection.ltr,
-                                    end: 0,
-                                    child: IconButton(
-                                      style: const ButtonStyle(
-                                        iconColor: MaterialStatePropertyAll(
-                                            Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          context: context,
-                                          builder: ((context) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                        255, 7, 159, 159)
-                                                    .withOpacity(0.5),
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topLeft: Radius.circular(25),
-                                                  topRight: Radius.circular(25),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 20),
-                                                    child: textField(
-                                                      "Enter your name",
-                                                      _nameEditingController,
-                                                      TextInputType.text,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 20),
-                                                    child: textField(
-                                                      "Enter your Address",
-                                                      _addressEditingController,
-                                                      TextInputType.text,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 20),
-                                                    child: textField(
-                                                      "Enter your Number",
-                                                      _phoneEditingController,
-                                                      TextInputType.phone,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 20),
-                                                    child: textField(
-                                                      "Enter your Email",
-                                                      _emailEditingConroller,
-                                                      TextInputType
-                                                          .emailAddress,
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: changeName,
-                                                    style: const ButtonStyle(
-                                                      elevation:
-                                                          MaterialStatePropertyAll(
-                                                              10),
-                                                      backgroundColor:
-                                                          MaterialStatePropertyAll(
-                                                        Color.fromARGB(
-                                                            255, 7, 159, 159),
-                                                      ),
-                                                      padding:
-                                                          MaterialStatePropertyAll(
-                                                        EdgeInsets.only(
-                                                            left: 20,
-                                                            right: 20),
-                                                      ),
-                                                    ),
-                                                    child: const Text(
-                                                      "Save",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 22,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }),
-                                        );
-                                      },
-                                      icon: const Icon(Icons.edit_square),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+          Stack(
+            children: [
+              // Bottom container
+              const SizedBox(
+                width: double.maxFinite,
+                height: 200,
+              ),
+              //image holder
+              Container(
+                height: 150,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                ),
+              ),
+              // Circular widget in the middle
+              const Positioned(
+                bottom: 0,
+                right: 0,
+                left: 0,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage("assets/images/profile.jpeg"),
+                ),
+                // Container(
+                //   width: 100,
+                //   height: 100,
+                //   alignment: Alignment.bottomCenter,
+                //   decoration: const BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     color: Colors.red,
+                //   ),
+                // ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Text(
+            "Profile name",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Text("@nickname"),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              hobbyCard(),
+              const SizedBox(
+                width: 10,
+              ),
+              hobbyCard(),
+              const SizedBox(
+                width: 10,
+              ),
+              hobbyCard(),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              const SizedBox(
+                width: 20,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    ),
+                  );
+                },
+                borderRadius: BorderRadius.circular(10),
+                highlightColor: Colors.blue.shade300,
+                splashFactory: InkSplash.splashFactory,
+                child: Container(
+                  height: 40,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey.shade200,
+                  ),
+                  child: const Center(
+                    child: Text("Edit Profile"),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.settings,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "0",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text("Tours")
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "0",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text("Followers")
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      "0",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text("Following")
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 13,
+                  top: 13,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "Tours",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.keyboard_arrow_right,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                const Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 130,
-                  child: Material(
-                    shape: CircleBorder(
-                      side: BorderSide(
-                        width: 0,
-                        color: Colors.blue,
-                      ),
+                    const SizedBox(
+                      height: 8,
                     ),
-                    elevation: 5,
-                    child: CircleAvatar(
-                      radius: 50,
+                    Row(
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        const Text(
+                          "nickname",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          //-------------------------------Address------------------------------
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Material(
-              shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromARGB(255, 7, 159, 159),
-                ),
-                child: Center(
-                  child: Text(
-                    address,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
+                    const SizedBox(
+                      height: 6,
                     ),
-                  ),
+                    const Text(
+                      "Welcome to Seaventure! Discover amazing sea-related tours events, and volunteering opportunities.",
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-//--------------number---------------
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Material(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromARGB(255, 7, 159, 159),
-                ),
-                child: Center(
-                  child: Text(
-                    phoneNumber,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-//------------email------------------
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Material(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromARGB(255, 7, 159, 159),
-                ),
-                child: Center(
-                  child: Text(
-                    email,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          Rating(),
         ],
+      ),
+    );
+  }
+}
+
+Widget hobbyCard() {
+  return Container(
+    height: 25,
+    decoration: BoxDecoration(
+      color: Colors.grey.shade200,
+      borderRadius: BorderRadius.circular(25),
+    ),
+    child: const Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Text(
+        "hobby",
+        style: TextStyle(fontSize: 16),
+      ),
+    ),
+  );
+}
+
+//------------------rating----------
+
+class Rating extends StatelessWidget {
+  const Rating({super.key});
+  final double cutomRating = 2.7;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Container(
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.grey.shade200,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: Text(
+                  "Contribution",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              SizedBox(height: 5),
+              RatingBar.builder(
+                initialRating: cutomRating,
+                minRating: 0,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                maxRating: 5,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                ignoreGestures: true,
+                itemSize: 20,
+                onRatingUpdate: (value) {},
+              ),
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: Text(
+                  "discription......\ndiscription......\ndiscription......\ndiscription......",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

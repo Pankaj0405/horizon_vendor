@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 
-class CardDescription extends StatefulWidget {
-  const CardDescription({super.key});
+class VolunteerCardDescription extends StatefulWidget {
+  const VolunteerCardDescription({super.key});
 
   @override
-  State<CardDescription> createState() => _CardDescriptionState();
+  State<VolunteerCardDescription> createState() => _VolunteerCardDescriptionState();
 }
 
-class _CardDescriptionState extends State<CardDescription> {
+class _VolunteerCardDescriptionState extends State<VolunteerCardDescription> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +36,7 @@ class _CardDescriptionState extends State<CardDescription> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 15.0, left: 15),
+                        padding: const EdgeInsets.only(top: 25.0, left: 15),
                         child: IconButton(
                           style: const ButtonStyle(
                             backgroundColor:
@@ -62,7 +62,7 @@ class _CardDescriptionState extends State<CardDescription> {
                     child: const Padding(
                       padding: EdgeInsets.all(25),
                       child: Text(
-                        "Tour Name",
+                        "Volunteer Name",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -110,19 +110,6 @@ class _CardDescriptionState extends State<CardDescription> {
             const SizedBox(height: 25),
             const Details(),
             const SizedBox(height: 25),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: Text(
-                  "Location",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-            LocationDetails(),
           ],
         ),
       ),
@@ -278,25 +265,7 @@ class Details extends StatelessWidget {
                   ),
                 ],
               ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Price",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 5.0),
-                    child: Text(
-                      "\$  00",
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                ],
-              ),
+              
             ],
           ),
         ),

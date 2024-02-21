@@ -647,12 +647,15 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 20, left: 10),
-                                    child: Image.network(
-                                      volunteers.imagePath, // Replace 'image.png' with your image asset path
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.fill,
+                                        top: 15, left: 10, bottom: 15),
+                                    child: Material(
+                                      elevation: 10,
+                                      child: Image.network(
+                                        volunteers.imagePath, // Replace 'image.png' with your image asset path
+                                        width: 150,
+                                        height: 150,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 20),
@@ -722,12 +725,15 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 20, left: 10),
-                                    child: Image.network(
-                                      volunteers.imagePath, // Replace 'image.png' with your image asset path
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.fill,
+                                        top: 15, left: 10, bottom: 15),
+                                    child: Material(
+                                      elevation: 10,
+                                      child: Image.network(
+                                        volunteers.imagePath, // Replace 'image.png' with your image asset path
+                                        width: 150,
+                                        height: 150,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 20),
