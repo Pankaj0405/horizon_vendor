@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 
 class CardDescription extends StatefulWidget {
   const CardDescription({super.key});
@@ -108,6 +109,20 @@ class _CardDescriptionState extends State<CardDescription> {
             PlacePictures(),
             const SizedBox(height: 25),
             const Details(),
+            const SizedBox(height: 25),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0),
+                child: Text(
+                  "Location",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            LocationDetails(),
           ],
         ),
       ),
@@ -176,11 +191,14 @@ class PlacePictures extends StatelessWidget {
       child: CarouselSlider(
         items: pictures
             .map(
-              (item) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      item,
+              (item) => InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        item,
+                      ),
                     ),
                   ),
                 ),
@@ -212,25 +230,104 @@ class Details extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.2),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(5.0),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Description",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Maximum Users",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Text(
+                      "no.of users",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 5),
-              Text(
-                "data..........\ndata..........\ndata..........\ndata..........",
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Last Date",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Text(
+                      DateFormat('yyyy-MM-dd')
+                          .format(
+                            DateTime.now(),
+                          )
+                          .toString(),
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                  ),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Price",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 5.0),
+                    child: Text(
+                      "\$  00",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                ],
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//-----------------location----------------------
+
+class LocationDetails extends StatefulWidget {
+  const LocationDetails({super.key});
+
+  @override
+  State<LocationDetails> createState() => _LocationDetailsState();
+}
+
+class _LocationDetailsState extends State<LocationDetails> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: InkWell(
+        onTap: () {},
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Image(
+            image: AssetImage("assets/images/location.jpg"),
+            fit: BoxFit.fill,
           ),
         ),
       ),
