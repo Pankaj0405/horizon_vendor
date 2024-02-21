@@ -104,10 +104,10 @@ class _CardDescriptionState extends State<CardDescription> {
             ),
             const SizedBox(height: 15),
             const Description(),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             PlacePictures(),
-            SizedBox(height: 25),
-            Details(),
+            const SizedBox(height: 25),
+            const Details(),
           ],
         ),
       ),
@@ -172,7 +172,7 @@ class PlacePictures extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: CarouselSlider(
         items: pictures
             .map(
