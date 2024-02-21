@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
-import 'package:horizon_vendor/card_description.dart';
+import 'package:horizon_vendor/card_discriptions/card_description.dart';
 import './Category/category.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 

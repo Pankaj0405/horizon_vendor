@@ -15,7 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _nameEditingController = TextEditingController();
   final TextEditingController _addressEditingController =
       TextEditingController();
-  TextEditingController _phoneEditingController = TextEditingController();
+  final TextEditingController _phoneEditingController = TextEditingController();
   final TextEditingController _emailEditingConroller = TextEditingController();
   String guestName = "Guest";
   String address = "Address";
@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Text(
                     address,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
@@ -258,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
 //--------------number---------------
@@ -278,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Text(
                     phoneNumber,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
@@ -287,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
 //------------email------------------
@@ -307,7 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Text(
                     email,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),

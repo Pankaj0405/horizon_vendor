@@ -397,7 +397,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                         ),
                       ),
                       ListTile(
-                        leading: Text('From: ', style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        leading: const Text('From: ', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
                         trailing: SizedBox(
                           height: 30,
                           width: 120,
@@ -409,7 +409,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[300],
-                                contentPadding: EdgeInsets.only(
+                                contentPadding: const EdgeInsets.only(
                                   left: 5,
                                   right: 5,
                                 ),
@@ -447,7 +447,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                         ),
                       ),
                       ListTile(
-                        leading: Text('To: ', style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
+                        leading: const Text('To: ', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.black),),
                         trailing: SizedBox(
                           height: 30,
                           width: 120,
@@ -459,7 +459,7 @@ class _AddNewEventState extends State<AddNewEvent> with TickerProviderStateMixin
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.grey[300],
-                                contentPadding: EdgeInsets.only(
+                                contentPadding: const EdgeInsets.only(
                                   left: 5,
                                   right: 5,
                                 ),
