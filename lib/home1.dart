@@ -27,7 +27,7 @@ class _Home1State extends State<Home1> {
     const HomePage(),
     const AddNewEvent(),
     const AddVolunteer(),
-    const ProfilePage(),
+    const Profile(),
   ];
 
   
