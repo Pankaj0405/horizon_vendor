@@ -49,6 +49,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   web: ^0.3.0
   test_api: ^0.6.1
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

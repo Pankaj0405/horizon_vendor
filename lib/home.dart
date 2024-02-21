@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
+import 'package:horizon_vendor/card_description.dart';
 import './Category/category.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,16 +15,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return  const Scaffold(
+    return const Scaffold(
       // ignore: unnecessary_const
       body: SingleChildScrollView(
         child: Column(
           children: [
             TopPart(),
             SizedBox(height: 35),
+            TodaysVolunteer(),
+            SizedBox(height: 35),
             UpcomingEvents(),
             SizedBox(height: 35),
-            Categories(),
+            UpcomingTours(),
+            SizedBox(height: 20),
+            // Categories(),
           ],
         ),
       ),
@@ -168,6 +174,119 @@ class _TopPartState extends State<TopPart> {
   }
 }
 
+//----------- today's volunteer------------------------
+
+class TodaysVolunteer extends StatefulWidget {
+  const TodaysVolunteer({super.key});
+
+  @override
+  State<TodaysVolunteer> createState() => _TodaysVolunteerState();
+}
+
+class _TodaysVolunteerState extends State<TodaysVolunteer> {
+  final _authController = Get.put(AuthController());
+  List upcomingEventsCards = [
+    // color will be replaced by images
+    ["Title", "description", true, Colors.red.shade300],
+    ["inputText1", "inputText2", false, Colors.red.shade300],
+    ["inputText2", "inputText2", true, Colors.red.shade300],
+    ["inputText3", "inputText2", false, Colors.red.shade300],
+    ["inputText4", "inputText2", true, Colors.red.shade300],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    _authController.getEvent();
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 22.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Today's Volunteers",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        CarouselSlider(
+          items: upcomingEventsCards
+              .map(
+                (item) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CardDescription(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 400,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                        image: AssetImage("assets/images/beach.jpg"),
+                        fit: BoxFit.fill,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[0],
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[1],
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          options: CarouselOptions(
+              enlargeCenterPage: true,
+              aspectRatio: 2.0,
+              autoPlay: true,
+              enableInfiniteScroll: true,
+              viewportFraction: 0.8,
+              animateToClosest: true,
+              height: 170),
+        ),
+      ],
+    );
+  }
+}
+
 //----------- upcoming events------------------------
 
 class UpcomingEvents extends StatefulWidget {
@@ -183,9 +302,9 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
     // color will be replaced by images
     ["Title", "description", true, Colors.red.shade300],
     ["inputText1", "inputText2", false, Colors.red.shade300],
-    ["inputText1", "inputText2", true, Colors.red.shade300],
-    ["inputText1", "inputText2", false, Colors.red.shade300],
-    ["inputText1", "inputText2", true, Colors.red.shade300],
+    ["inputText2", "inputText2", true, Colors.red.shade300],
+    ["inputText3", "inputText2", false, Colors.red.shade300],
+    ["inputText4", "inputText2", true, Colors.red.shade300],
   ];
 
   @override
@@ -208,21 +327,73 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
           ),
         ),
         const SizedBox(height: 5),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12.0),
-            child: Row(
-              children:
-                  List.generate(_authController.eventData.length, (index) {
-                final events = _authController.eventData[index];
-                return EventCard(
-                  inputText1: events.eventName,
-                  inputText2: events.address,
-                );
-              }),
-            ),
-          ),
+        CarouselSlider(
+          items: upcomingEventsCards
+              .map(
+                (item) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CardDescription(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 400,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                        image: AssetImage("assets/images/beach.jpg"),
+                        fit: BoxFit.fill,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[0],
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[1],
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          options: CarouselOptions(
+              enlargeCenterPage: true,
+              aspectRatio: 2.0,
+              autoPlay: false,
+              enableInfiniteScroll: true,
+              viewportFraction: 0.8,
+              animateToClosest: true,
+              height: 170),
         ),
       ],
     );
@@ -230,90 +401,203 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
 }
 
 // ignore: must_be_immutable
-class EventCard extends StatefulWidget {
-  EventCard({
-    super.key,
-    required this.inputText1,
-    required this.inputText2,
-  });
+// class EventCard extends StatefulWidget {
+//   EventCard({
+//     super.key,
+//     required this.inputText1,
+//     required this.inputText2,
+//   });
 
-  String inputText1;
-  String inputText2;
+//   String inputText1;
+//   String inputText2;
+
+//   @override
+//   State<EventCard> createState() => _EventCardState();
+// }
+
+// class _EventCardState extends State<EventCard> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(10.0),
+//       child: Container(
+//         width: 220,
+//         decoration: BoxDecoration(
+//             color: Colors.grey.shade300,
+//             borderRadius: BorderRadius.circular(6)),
+//         child: Padding(
+//           padding: const EdgeInsets.all(8),
+//           child: Column(
+//             children: [
+//               Container(
+//                 height: 120,
+//                 width: double.maxFinite,
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(6),
+//                   color: Colors.green,
+//                 ),
+//                 // child: Align(
+//                 //   alignment: Alignment.topRight,
+//                 //   child: Padding(
+//                 //     padding: const EdgeInsets.all(8.0),
+//                 //     child: Container(
+//                 //       decoration: BoxDecoration(
+//                 //         color: Colors.white.withOpacity(0.8),
+//                 //         borderRadius: BorderRadius.circular(6),
+//                 //       ),
+//                 //       child: Padding(
+//                 //         padding: const EdgeInsets.all(5),
+//                 //         child: Icon(Icons.favorite,
+//                 //             color:
+//                 //             widget.like ? Colors.red : Colors.black),
+//                 //       ),
+//                 //     ),
+//                 //   ),
+//                 // ),
+//               ),
+//               const SizedBox(
+//                 height: 7,
+//               ),
+//               Align(
+//                 alignment: Alignment.centerLeft,
+//                 child: Text(
+//                   widget.inputText1,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: const TextStyle(
+//                       fontSize: 20, fontWeight: FontWeight.bold),
+//                 ),
+//               ),
+//               Align(
+//                 alignment: Alignment.centerLeft,
+//                 child: Text(
+//                   widget.inputText2,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: const TextStyle(
+//                       fontSize: 18, fontWeight: FontWeight.w500),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+//-------------------Categories------------------
+
+//----------- upcoming events------------------------
+
+class UpcomingTours extends StatefulWidget {
+  const UpcomingTours({super.key});
 
   @override
-  State<EventCard> createState() => _EventCardState();
+  State<UpcomingTours> createState() => _UpcomingToursState();
 }
 
-class _EventCardState extends State<EventCard> {
+class _UpcomingToursState extends State<UpcomingTours> {
+  final _authController = Get.put(AuthController());
+  List upcomingEventsCards = [
+    // color will be replaced by images
+    ["Title", "description", true, Colors.red.shade300],
+    ["inputText1", "inputText2", false, Colors.red.shade300],
+    ["inputText2", "inputText2", true, Colors.red.shade300],
+    ["inputText3", "inputText2", false, Colors.red.shade300],
+    ["inputText4", "inputText2", true, Colors.red.shade300],
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: 220,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade300,
-            borderRadius: BorderRadius.circular(6)),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Container(
-                height: 120,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: Colors.green,
-                ),
-                // child: Align(
-                //   alignment: Alignment.topRight,
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Container(
-                //       decoration: BoxDecoration(
-                //         color: Colors.white.withOpacity(0.8),
-                //         borderRadius: BorderRadius.circular(6),
-                //       ),
-                //       child: Padding(
-                //         padding: const EdgeInsets.all(5),
-                //         child: Icon(Icons.favorite,
-                //             color:
-                //             widget.like ? Colors.red : Colors.black),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+    _authController.getEvent();
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 22.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Upcoming Tours",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(
-                height: 7,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.inputText1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.inputText2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 5),
+        CarouselSlider(
+          items: upcomingEventsCards
+              .map(
+                (item) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CardDescription(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 400,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                        image: AssetImage("assets/images/beach.jpg"),
+                        fit: BoxFit.fill,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[0],
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              item[1],
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          options: CarouselOptions(
+              enlargeCenterPage: true,
+              aspectRatio: 2.0,
+              autoPlay: false,
+              enableInfiniteScroll: true,
+              viewportFraction: 0.8,
+              animateToClosest: true,
+              height: 170),
+        ),
+      ],
     );
   }
 }
-
-//-------------------Categories------------------
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
