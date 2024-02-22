@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
+import 'package:horizon_vendor/card_discriptions/volunteer_details.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:horizon_vendor/Controllers/auth_controller.dart';
 import 'package:horizon_vendor/Widgets/text_fields.dart';
 import 'package:horizon_vendor/models/add_events.dart';
+import 'package:intl/intl.dart';
 
 import 'camera_screen3.dart';
 
@@ -31,6 +33,7 @@ class _AddVolunteerState extends State<AddVolunteer>
   String selectedTourId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
+  final _dateController = TextEditingController();
   TabController? _tabController;
   final ImagePicker _imagePicker = ImagePicker();
   // bool isLoading = false;
@@ -46,9 +49,9 @@ class _AddVolunteerState extends State<AddVolunteer>
   emptyFields() {
     _roleController.text = "";
     _volunteerController.text = "";
+    _dateController.text = "";
     image = null;
     // eventDropDown = 'Event';
-
   }
 
   @override
@@ -71,7 +74,7 @@ class _AddVolunteerState extends State<AddVolunteer>
     Get.back();
     try {
       final XFile? image =
-      await _imagePicker.pickImage(source: ImageSource.gallery);
+          await _imagePicker.pickImage(source: ImageSource.gallery);
       if (image == null) return;
       final imageTemp = File(image.path);
       link = await upload(imageTemp);
@@ -138,7 +141,7 @@ class _AddVolunteerState extends State<AddVolunteer>
 
       // Reference to the Firebase Storage bucket
       Reference storageReference =
-      FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+          FirebaseStorage.instance.ref().child('images/$fileName.jpg');
 
       // Upload the image to Firebase Storage
       UploadTask uploadTask = storageReference.putFile(imageFile);
@@ -167,78 +170,81 @@ class _AddVolunteerState extends State<AddVolunteer>
         context: context,
         builder: (context) {
           return StatefulBuilder(
-            builder: (context, setModalState)
-            {return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  height: 5,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: Colors.grey, borderRadius: BorderRadius.circular(5)),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 60),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setModalState(() {
-                            _getImageFromCamera();
-                          });
-
-                          print("a");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: const Icon(Icons.camera_alt),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text("Camera")
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setModalState(() {
-                            _getImageFromGallery();
-                          });
-
-                          print("b");
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.grey.shade100),
-                              child: const Icon(Icons.browse_gallery_outlined),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text("Gallery")
-                          ],
-                        ),
-                      )
-                    ],
+            builder: (context, setModalState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    height: 5,
+                    width: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(5)),
                   ),
-                )
-              ],
-            );},
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 60),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setModalState(() {
+                              _getImageFromCamera();
+                            });
+
+                            print("a");
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.grey.shade100),
+                                child: const Icon(Icons.camera_alt),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("Camera")
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setModalState(() {
+                              _getImageFromGallery();
+                            });
+
+                            print("b");
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.grey.shade100),
+                                child:
+                                    const Icon(Icons.browse_gallery_outlined),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text("Gallery")
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
           );
         });
   }
@@ -309,15 +315,17 @@ class _AddVolunteerState extends State<AddVolunteer>
                     },
                     child: (image != null)
                         ? CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 60,
-                        backgroundImage: FileImage(image!))
+                            backgroundColor: Colors.white,
+                            radius: 60,
+                            backgroundImage: FileImage(image!))
                         : const Icon(
-                      Icons.image_rounded,
-                      size: 60,
-                    ),
+                            Icons.image_rounded,
+                            size: 60,
+                          ),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     width: double.maxFinite,
                     height: 50,
@@ -550,6 +558,62 @@ class _AddVolunteerState extends State<AddVolunteer>
                   // const SizedBox(height: 20),
                   // const RoleDescription(),
                   // SizedBox(height: 20),
+                  ListTile(
+                    leading: const Text(
+                      'Last Date: ',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    trailing: SizedBox(
+                      height: 30,
+                      width: 120,
+                      child: TextField(
+                        controller: _dateController,
+                        style: const TextStyle(color: Colors.black),
+                        cursorColor:
+                            Colors.blue, //editing controller of this TextField
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            contentPadding: const EdgeInsets.only(
+                              left: 5,
+                              right: 5,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                        readOnly:
+                            true, //set it true, so that user will not able to edit text
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                              lastDate: DateTime(2101));
+
+                          if (pickedDate != null) {
+                            print(
+                                pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            print(
+                                formattedDate); //formatted date output using intl package =>  2021-03-16
+                            //you can implement different kind of Date Format here according to your requirement
+
+                            setState(() {
+                              _dateController.text =
+                                  formattedDate; //set output date to TextField value.
+                            });
+                          } else {
+                            print("Date is not selected");
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -561,8 +625,10 @@ class _AddVolunteerState extends State<AddVolunteer>
                               eventDropDown,
                               _volunteerController.text,
                               _roleController.text,
-                              typeDropDown,selectedEventId,
-                              link!);
+                              typeDropDown,
+                              selectedEventId,
+                              link!,
+                              _dateController.text);
                           emptyFields();
                           Get.back();
                         },
@@ -637,75 +703,166 @@ class _AddVolunteerState extends State<AddVolunteer>
                   itemBuilder: (BuildContext context, int index) {
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Tour"
-                        ? Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Card(
-                              color: const Color.fromARGB(255, 7, 159, 159)
-                                  .withOpacity(0.6),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15, left: 10, bottom: 15),
-                                    child: Material(
-                                      elevation: 10,
-                                      child: Image.network(
-                                        volunteers.imagePath, // Replace 'image.png' with your image asset path
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                        ? InkWell(
+                            onTap: () {
+                              Get.to(() => VolunteerScreen(
+                                  imagePath: volunteers.imagePath,
+                                  eventName: volunteers.eventName,
+                                  role: volunteers.role,
+                                  date: volunteers.lastDate,
+                                  maxSlots: volunteers.volNumber));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(volunteers.imagePath),
+                                    fit: BoxFit.fill,
+                                    opacity: 0.6,
                                   ),
-                                  const SizedBox(width: 20),
-                                  Column(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        volunteers.eventName,
-                                        style: const TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Volunteers: ${volunteers.volNumber}',
-                                        style: const TextStyle(
-                                          fontSize: 19,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      // cardListTile('', events.description),
-                                      SizedBox(
-                                        height: 80,
-                                        width: 150,
                                         child: Text(
-                                          volunteers.role,
-                                          maxLines: 2,
+                                          volunteers.eventName,
                                           style: const TextStyle(
-                                            fontSize: 17,
-                                            overflow: TextOverflow.ellipsis,
-                                            fontWeight: FontWeight.w300,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
                                         ),
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
+                                        ),
+                                        child: Text(
+                                          'Last Date: ${volunteers.lastDate}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
+                                        ),
+                                        child: Text(
+                                          'Max-Slots: ${volunteers.volNumber}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          volunteers.role,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           )
+                        // Padding(
+                        //         padding: const EdgeInsets.all(8),
+                        //         child: Card(
+                        //           color: const Color.fromARGB(255, 7, 159, 159)
+                        //               .withOpacity(0.6),
+                        //           child: Row(
+                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                        //             children: [
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(
+                        //                     top: 15, left: 10, bottom: 15),
+                        //                 child: Material(
+                        //                   elevation: 10,
+                        //                   child: Image.network(
+                        //                     volunteers.imagePath, // Replace 'image.png' with your image asset path
+                        //                     width: 150,
+                        //                     height: 150,
+                        //                     fit: BoxFit.fill,
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //               const SizedBox(width: 20),
+                        //               Column(
+                        //                 crossAxisAlignment:
+                        //                     CrossAxisAlignment.start,
+                        //                 // mainAxisAlignment: MainAxisAlignment.center,
+                        //                 children: [
+                        //                   const SizedBox(
+                        //                     height: 8,
+                        //                   ),
+                        //                   Text(
+                        //                     volunteers.eventName,
+                        //                     style: const TextStyle(
+                        //                       fontSize: 26,
+                        //                       fontWeight: FontWeight.bold,
+                        //                       color: Colors.white,
+                        //                     ),
+                        //                   ),
+                        //                   const SizedBox(height: 8),
+                        //                   Text(
+                        //                     'Volunteers: ${volunteers.volNumber}',
+                        //                     style: const TextStyle(
+                        //                       fontSize: 19,
+                        //                       fontWeight: FontWeight.w500,
+                        //                       color: Colors.white,
+                        //                     ),
+                        //                   ),
+                        //                   const SizedBox(height: 8),
+                        //                   // cardListTile('', events.description),
+                        //                   SizedBox(
+                        //                     height: 80,
+                        //                     width: 150,
+                        //                     child: Text(
+                        //                       volunteers.role,
+                        //                       maxLines: 2,
+                        //                       style: const TextStyle(
+                        //                         fontSize: 17,
+                        //                         overflow: TextOverflow.ellipsis,
+                        //                         fontWeight: FontWeight.w300,
+                        //                         color: Colors.white,
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       )
                         : null;
                   }),
             ),
@@ -715,93 +872,184 @@ class _AddVolunteerState extends State<AddVolunteer>
                   itemBuilder: (BuildContext context, int index) {
                     final volunteers = _authController.volunteerData[index];
                     return volunteers.type == "Event"
-                        ? Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Card(
-                              color: const Color.fromARGB(255, 7, 159, 159)
-                                  .withOpacity(0.6),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15, left: 10, bottom: 15),
-                                    child: Material(
-                                      elevation: 10,
-                                      child: Image.network(
-                                        volunteers.imagePath, // Replace 'image.png' with your image asset path
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                        ? InkWell(
+                            onTap: () {
+                              Get.to(() => VolunteerScreen(
+                                  imagePath: volunteers.imagePath,
+                                  eventName: volunteers.eventName,
+                                  role: volunteers.role,
+                                  date: volunteers.lastDate,
+                                  maxSlots: volunteers.volNumber));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(volunteers.imagePath),
+                                    fit: BoxFit.fill,
+                                    opacity: 0.6,
                                   ),
-                                  const SizedBox(width: 20),
-                                  Column(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        volunteers.eventName,
-                                        style: const TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Volunteers: ${volunteers.volNumber}',
-                                        style: const TextStyle(
-                                          fontSize: 19,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      // cardListTile('', events.description),
-                                      SizedBox(
-                                        height: 80,
-                                        width: 150,
                                         child: Text(
-                                          volunteers.role,
-                                          maxLines: 2,
+                                          volunteers.eventName,
                                           style: const TextStyle(
-                                            fontSize: 17,
-                                            overflow: TextOverflow.ellipsis,
-                                            fontWeight: FontWeight.w300,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
                                         ),
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
+                                        ),
+                                        child: Text(
+                                          'Last Date: ${volunteers.lastDate}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 2,
+                                        ),
+                                        child: Text(
+                                          'Max-Slots: ${volunteers.volNumber}',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          volunteers.role,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ],
-                                // child: Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                //   children: [
-                                //     Container(
-                                //       height: 400,
-                                //       width: 200,
-                                //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                                //     ),
-                                //     Column(
-                                //       // crossAxisAlignment: CrossAxisAlignment.center,
-                                //       children: [
-                                //         cardListTile('Event: ', events.eventName),
-                                //         cardListTile('Organized By: ', events.organizationName),
-                                //         cardListTile('Description: ', events.description),
-                                //       ],
-                                //     ),
-                                //   ],
-                                // ),
+                                ),
                               ),
                             ),
                           )
+                        // Padding(
+                        //         padding: const EdgeInsets.all(8),
+                        //         child: Card(
+                        //           color: const Color.fromARGB(255, 7, 159, 159)
+                        //               .withOpacity(0.6),
+                        //           child: Row(
+                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                        //             children: [
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(
+                        //                     top: 15, left: 10, bottom: 15),
+                        //                 child: Material(
+                        //                   elevation: 10,
+                        //                   child: Image.network(
+                        //                     volunteers.imagePath, // Replace 'image.png' with your image asset path
+                        //                     width: 150,
+                        //                     height: 150,
+                        //                     fit: BoxFit.fill,
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //               const SizedBox(width: 20),
+                        //               Column(
+                        //                 crossAxisAlignment:
+                        //                     CrossAxisAlignment.start,
+                        //                 // mainAxisAlignment: MainAxisAlignment.center,
+                        //                 children: [
+                        //                   const SizedBox(
+                        //                     height: 8,
+                        //                   ),
+                        //                   Text(
+                        //                     volunteers.eventName,
+                        //                     style: const TextStyle(
+                        //                       fontSize: 26,
+                        //                       fontWeight: FontWeight.bold,
+                        //                       color: Colors.white,
+                        //                     ),
+                        //                   ),
+                        //                   const SizedBox(height: 8),
+                        //                   Text(
+                        //                     'Volunteers: ${volunteers.volNumber}',
+                        //                     style: const TextStyle(
+                        //                       fontSize: 19,
+                        //                       fontWeight: FontWeight.w500,
+                        //                       color: Colors.white,
+                        //                     ),
+                        //                   ),
+                        //                   const SizedBox(height: 8),
+                        //                   // cardListTile('', events.description),
+                        //                   SizedBox(
+                        //                     height: 80,
+                        //                     width: 150,
+                        //                     child: Text(
+                        //                       volunteers.role,
+                        //                       maxLines: 2,
+                        //                       style: const TextStyle(
+                        //                         fontSize: 17,
+                        //                         overflow: TextOverflow.ellipsis,
+                        //                         fontWeight: FontWeight.w300,
+                        //                         color: Colors.white,
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //             // child: Row(
+                        //             //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //             //   children: [
+                        //             //     Container(
+                        //             //       height: 400,
+                        //             //       width: 200,
+                        //             //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                        //             //     ),
+                        //             //     Column(
+                        //             //       // crossAxisAlignment: CrossAxisAlignment.center,
+                        //             //       children: [
+                        //             //         cardListTile('Event: ', events.eventName),
+                        //             //         cardListTile('Organized By: ', events.organizationName),
+                        //             //         cardListTile('Description: ', events.description),
+                        //             //       ],
+                        //             //     ),
+                        //             //   ],
+                        //             // ),
+                        //           ),
+                        //         ),
+                        //       )
                         : null;
                   }),
             ),

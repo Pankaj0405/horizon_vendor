@@ -262,7 +262,7 @@ class StackExample extends StatelessWidget {
               ),
             ),
           ),
-          const Rating(),
+          // const Rating(),
         ],
       ),
     );
@@ -288,64 +288,64 @@ Widget hobbyCard(hobyName) {
 
 //------------------rating----------
 
-class Rating extends StatelessWidget {
-  const Rating({super.key});
-  final double cutomRating = 2.7;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Container(
-        width: double.maxFinite,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.grey.shade200,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 5.0),
-                child: Text(
-                  "Contribution",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 5),
-              RatingBar.builder(
-                initialRating: cutomRating,
-                minRating: 0,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                maxRating: 5,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                ignoreGestures: true,
-                itemSize: 20,
-                onRatingUpdate: (value) {},
-              ),
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(left: 5.0),
-                child: Text(
-                  "discription......\ndiscription......\ndiscription......\ndiscription......",
-                  style: TextStyle(
-                    fontSize: 15,
-                  ),
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+// class Rating extends StatelessWidget {
+//   const Rating({super.key});
+//   final double cutomRating = 2.7;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(20),
+//       child: Container(
+//         width: double.maxFinite,
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(15),
+//           color: Colors.grey.shade200,
+//         ),
+//         child: Padding(
+//           padding: const EdgeInsets.all(10),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Padding(
+//                 padding: EdgeInsets.only(left: 5.0),
+//                 child: Text(
+//                   "Contribution",
+//                   style: TextStyle(fontSize: 20),
+//                 ),
+//               ),
+//               const SizedBox(height: 5),
+//               RatingBar.builder(
+//                 initialRating: cutomRating,
+//                 minRating: 0,
+//                 direction: Axis.horizontal,
+//                 allowHalfRating: true,
+//                 maxRating: 5,
+//                 itemCount: 5,
+//                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+//                 itemBuilder: (context, _) => const Icon(
+//                   Icons.star,
+//                   color: Colors.amber,
+//                 ),
+//                 ignoreGestures: true,
+//                 itemSize: 20,
+//                 onRatingUpdate: (value) {},
+//               ),
+//               const SizedBox(height: 10),
+//               const Padding(
+//                 padding: EdgeInsets.only(left: 5.0),
+//                 child: Text(
+//                   "discription......\ndiscription......\ndiscription......\ndiscription......",
+//                   style: TextStyle(
+//                     fontSize: 15,
+//                   ),
+//                   maxLines: 4,
+//                   overflow: TextOverflow.ellipsis,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

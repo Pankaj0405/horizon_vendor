@@ -112,10 +112,10 @@ class AuthController extends GetxController {
         }));
   }
 
-  void addVolunteers(String eventName, String number, String role, String type, String eventId, String imagePath) async {
+  void addVolunteers(String eventName, String number, String role, String type, String eventId, String imagePath, String lastDate) async {
     try {
       String volunteerId = const Uuid().v1();
-      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty && imagePath.isNotEmpty) {
+      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty && imagePath.isNotEmpty && lastDate.isNotEmpty) {
         add_volunteers.AddVolunteers volunteers = add_volunteers.AddVolunteers(
             id: volunteerId,
             role: role,
@@ -123,7 +123,8 @@ class AuthController extends GetxController {
             volNumber: number,
             type: type,
             eventId: eventId,
-            imagePath: imagePath);
+            imagePath: imagePath,
+            lastDate: lastDate);
         await firestore
             .collection('volunteers')
             .doc(volunteerId)
