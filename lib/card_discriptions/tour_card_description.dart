@@ -3,7 +3,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 
 class TourCardDescription extends StatefulWidget {
-  const TourCardDescription({super.key});
+  const TourCardDescription({
+    super.key,
+    required this.tourName,
+    required this.tourDescription,
+  });
+
+  final String tourName;
+  final String tourDescription;
 
   @override
   State<TourCardDescription> createState() => _TourCardDescriptionState();
@@ -59,11 +66,11 @@ class _TourCardDescriptionState extends State<TourCardDescription> {
                         bottomRight: Radius.circular(25),
                       ),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(25),
+                    child: Padding(
+                      padding: const EdgeInsets.all(25),
                       child: Text(
-                        "Tour Name",
-                        style: TextStyle(
+                        widget.tourName,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -104,16 +111,16 @@ class _TourCardDescriptionState extends State<TourCardDescription> {
               ),
             ),
             const SizedBox(height: 15),
-            const Description(),
+            Description(tourDescription: widget.tourDescription),
             const SizedBox(height: 25),
             PlacePictures(),
             const SizedBox(height: 25),
             const Details(),
             const SizedBox(height: 25),
-            Align(
+            const Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: 25.0),
+                padding: EdgeInsets.only(left: 25.0),
                 child: Text(
                   "Location",
                   style: TextStyle(
@@ -122,7 +129,7 @@ class _TourCardDescriptionState extends State<TourCardDescription> {
                 ),
               ),
             ),
-            LocationDetails(),
+            const LocationDetails(),
           ],
         ),
       ),
@@ -133,8 +140,8 @@ class _TourCardDescriptionState extends State<TourCardDescription> {
 //------------------description---------------
 
 class Description extends StatelessWidget {
-  const Description({super.key});
-
+  const Description({super.key, required this.tourDescription});
+  final String tourDescription;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -145,21 +152,21 @@ class Description extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.2),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(5.0),
+        child:  Padding(
+          padding: const EdgeInsets.all(5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Description",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
-                "data..........\ndata..........\ndata..........\ndata..........",
+                tourDescription,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -318,14 +325,14 @@ class _LocationDetailsState extends State<LocationDetails> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: InkWell(
         onTap: () {},
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
           ),
-          child: Image(
+          child: const Image(
             image: AssetImage("assets/images/location.jpg"),
             fit: BoxFit.fill,
           ),

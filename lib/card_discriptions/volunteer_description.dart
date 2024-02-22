@@ -3,10 +3,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 
 class VolunteerCardDescription extends StatefulWidget {
-  const VolunteerCardDescription({super.key});
+  const VolunteerCardDescription({
+    super.key,
+    required this.volunteerName,
+    required this.volunteerDescription,
+  });
+
+  final String volunteerName;
+  final String volunteerDescription;
 
   @override
-  State<VolunteerCardDescription> createState() => _VolunteerCardDescriptionState();
+  State<VolunteerCardDescription> createState() =>
+      _VolunteerCardDescriptionState();
 }
 
 class _VolunteerCardDescriptionState extends State<VolunteerCardDescription> {
@@ -59,11 +67,11 @@ class _VolunteerCardDescriptionState extends State<VolunteerCardDescription> {
                         bottomRight: Radius.circular(25),
                       ),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(25),
+                    child: Padding(
+                      padding: const EdgeInsets.all(25),
                       child: Text(
-                        "Volunteer Name",
-                        style: TextStyle(
+                        widget.volunteerName,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -104,7 +112,7 @@ class _VolunteerCardDescriptionState extends State<VolunteerCardDescription> {
               ),
             ),
             const SizedBox(height: 15),
-            const Description(),
+            Description(volunteerDescription: widget.volunteerDescription),
             const SizedBox(height: 25),
             PlacePictures(),
             const SizedBox(height: 25),
@@ -120,8 +128,8 @@ class _VolunteerCardDescriptionState extends State<VolunteerCardDescription> {
 //------------------description---------------
 
 class Description extends StatelessWidget {
-  const Description({super.key});
-
+  const Description({super.key, required this.volunteerDescription});
+  final String volunteerDescription;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -132,21 +140,21 @@ class Description extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: const Color.fromARGB(255, 7, 159, 159).withOpacity(0.2),
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(5.0),
+        child:  Padding(
+          padding: const EdgeInsets.all(5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Description",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
-                "data..........\ndata..........\ndata..........\ndata..........",
+                volunteerDescription,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -265,7 +273,6 @@ class Details extends StatelessWidget {
                   ),
                 ],
               ),
-              
             ],
           ),
         ),
@@ -287,14 +294,14 @@ class _LocationDetailsState extends State<LocationDetails> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: InkWell(
         onTap: () {},
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
           ),
-          child: Image(
+          child: const Image(
             image: AssetImage("assets/images/location.jpg"),
             fit: BoxFit.fill,
           ),

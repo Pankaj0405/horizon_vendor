@@ -189,11 +189,21 @@ class _TodaysVolunteerState extends State<TodaysVolunteer> {
   final _authController = Get.put(AuthController());
   List upcomingEventsCards = [
     // color will be replaced by images
-    ["Title", "description", true, Colors.red.shade300],
-    ["inputText1", "inputText2", false, Colors.red.shade300],
-    ["inputText2", "inputText2", true, Colors.red.shade300],
-    ["inputText3", "inputText2", false, Colors.red.shade300],
-    ["inputText4", "inputText2", true, Colors.red.shade300],
+    ["Denice", "An enthusiast about octopus", true, "assets/images/tour2.jpg"],
+    [
+      "Alice",
+      "Lives to follow the hatchlings",
+      false,
+      "assets/images/event1.jpg"
+    ],
+    [
+      "Maya",
+      "comes outside to escape the city",
+      true,
+      "assets/images/tour2.jpg"
+    ],
+    ["Jack", "explorer of the corals", false, "assets/images/event2.jpeg"],
+    ["Jimmy", "Loves the beach vibes", true, "assets/images/tour3.jpeg"],
   ];
 
   @override
@@ -224,15 +234,18 @@ class _TodaysVolunteerState extends State<TodaysVolunteer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const VolunteerCardDescription(),
+                        builder: (context) => VolunteerCardDescription(
+                          volunteerName: item[0],
+                          volunteerDescription: item[1],
+                        ),
                       ),
                     );
                   },
                   child: Container(
                     width: 400,
                     decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage("assets/images/beach.jpg"),
+                      image: DecorationImage(
+                        image: AssetImage(item[3]),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(15),
@@ -302,11 +315,36 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
   final _authController = Get.put(AuthController());
   List upcomingEventsCards = [
     // color will be replaced by images
-    ["Title", "description", true, Colors.red.shade300],
-    ["inputText1", "inputText2", false, Colors.red.shade300],
-    ["inputText2", "inputText2", true, Colors.red.shade300],
-    ["inputText3", "inputText2", false, Colors.red.shade300],
-    ["inputText4", "inputText2", true, Colors.red.shade300],
+    [
+      "The Fire Night",
+      "enjoy a night in the city but differently",
+      true,
+      "assets/images/event1.jpg"
+    ],
+    [
+      "Beach wedding",
+      "A wedding wave is going to strike the beach",
+      false,
+      "assets/images/event2.jpeg"
+    ],
+    [
+      "The beach get together",
+      "meet new people and discuss about, well it's up to you",
+      true,
+      "assets/images/event3.jpeg"
+    ],
+    [
+      "Hatchling festival",
+      "see the turtles emerging from the earth",
+      false,
+      "assets/images/event4.jpeg"
+    ],
+    [
+      "Beach sand party",
+      "it's can't be rock because it's a beach with sand",
+      true,
+      "assets/images/event5.jpg"
+    ],
   ];
 
   @override
@@ -337,15 +375,18 @@ class _UpcomingEventsState extends State<UpcomingEvents> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EventCardDescription(),
+                        builder: (context) => EventCardDescription(
+                          eventName: item[0],
+                          eventDescription: item[1],
+                        ),
                       ),
                     );
                   },
                   child: Container(
                     width: 400,
                     decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage("assets/images/beach.jpg"),
+                      image: DecorationImage(
+                        image: AssetImage(item[3]),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(15),
@@ -501,11 +542,36 @@ class _UpcomingToursState extends State<UpcomingTours> {
   final _authController = Get.put(AuthController());
   List upcomingEventsCards = [
     // color will be replaced by images
-    ["Title", "description", true, Colors.red.shade300],
-    ["inputText1", "inputText2", false, Colors.red.shade300],
-    ["inputText2", "inputText2", true, Colors.red.shade300],
-    ["inputText3", "inputText2", false, Colors.red.shade300],
-    ["inputText4", "inputText2", true, Colors.red.shade300],
+    [
+      "The silent sea",
+      "Perfect for embrassing the nature",
+      true,
+      "assets/images/tour1.jpeg"
+    ],
+    [
+      "The swim beach",
+      "If you like swimming in ocean and watch the aquatics, this is the place",
+      false,
+      "assets/images/tour2.jpg"
+    ],
+    [
+      "Galgibaga",
+      "Perfect for watching the new journey of hatchligs",
+      true,
+      "assets/images/tour3.jpeg"
+    ],
+    [
+      "The blue lagoon",
+      "If you want to see the real untouchd beauty of nature",
+      false,
+      "assets/images/tour4.jpg"
+    ],
+    [
+      "Scubasauras",
+      "The jurrasic for scuba divers",
+      true,
+      "assets/images/tour5.jpg"
+    ],
   ];
 
   @override
@@ -536,7 +602,10 @@ class _UpcomingToursState extends State<UpcomingTours> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const TourCardDescription(),
+                        builder: (context) => TourCardDescription(
+                          tourName: item[0],
+                          tourDescription: item[1],
+                        ),
                       ),
                     );
                   },
