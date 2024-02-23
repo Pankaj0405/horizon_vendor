@@ -54,14 +54,32 @@ class _AddVolunteerState extends State<AddVolunteer>
     // eventDropDown = 'Event';
   }
 
+  bool isLoading = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    populateEventsDropdown();
-    populateToursDropdown();
-    _tabController = TabController(length: 2, vsync: this);
+    fetchData();
   }
+
+  Future<String> fetchData() async {
+    setState(() {
+      isLoading =
+      true; // Set isLoading to false to hide the circular progress indicator
+    });
+    _tabController = TabController(length: 2, vsync: this);
+    await _authController.getVolunteers();
+    print(_authController.volunteerData.length);
+    await populateEventsDropdown();
+    await populateToursDropdown();
+    setState(() {
+      isLoading =
+      false; // Set isLoading to false to hide the circular progress indicator
+    });
+    return "Data fetched successfully";
+  }
+
+
 
   @override
   void dispose() {
@@ -249,7 +267,7 @@ class _AddVolunteerState extends State<AddVolunteer>
         });
   }
 
-  void populateEventsDropdown() async {
+  Future<void> populateEventsDropdown() async {
     List<AddEvent> events = await _authController.getAllEvents();
     setState(() {
       items = events.map((event) => event.eventName).toList();
@@ -258,7 +276,7 @@ class _AddVolunteerState extends State<AddVolunteer>
     });
   }
 
-  void populateToursDropdown() async {
+  Future<void> populateToursDropdown() async {
     List<AddEvent> tours = await _authController.getAllTours();
     setState(() {
       items2 = tours.map((tour) => tour.eventName).toList();
@@ -658,7 +676,7 @@ class _AddVolunteerState extends State<AddVolunteer>
 
   @override
   Widget build(BuildContext context) {
-    _authController.getVolunteers();
+
     // _authController.getEvent();
     return SafeArea(
       child: Scaffold(
@@ -694,14 +712,17 @@ class _AddVolunteerState extends State<AddVolunteer>
             ],
           ),
         ),
-        body: TabBarView(
+        body:isLoading
+            ? Center(child: CircularProgressIndicator())
+            :  TabBarView(
           controller: _tabController,
           children: [
             Obx(
               () => ListView.builder(
                   itemCount: _authController.volunteerData.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (context,index) {
                     final volunteers = _authController.volunteerData[index];
+                    print(volunteers.type);
                     return volunteers.type == "Tour"
                         ? InkWell(
                             onTap: () {
@@ -794,83 +815,16 @@ class _AddVolunteerState extends State<AddVolunteer>
                               ),
                             ),
                           )
-                        // Padding(
-                        //         padding: const EdgeInsets.all(8),
-                        //         child: Card(
-                        //           color: const Color.fromARGB(255, 7, 159, 159)
-                        //               .withOpacity(0.6),
-                        //           child: Row(
-                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                        //             children: [
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(
-                        //                     top: 15, left: 10, bottom: 15),
-                        //                 child: Material(
-                        //                   elevation: 10,
-                        //                   child: Image.network(
-                        //                     volunteers.imagePath, // Replace 'image.png' with your image asset path
-                        //                     width: 150,
-                        //                     height: 150,
-                        //                     fit: BoxFit.fill,
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //               const SizedBox(width: 20),
-                        //               Column(
-                        //                 crossAxisAlignment:
-                        //                     CrossAxisAlignment.start,
-                        //                 // mainAxisAlignment: MainAxisAlignment.center,
-                        //                 children: [
-                        //                   const SizedBox(
-                        //                     height: 8,
-                        //                   ),
-                        //                   Text(
-                        //                     volunteers.eventName,
-                        //                     style: const TextStyle(
-                        //                       fontSize: 26,
-                        //                       fontWeight: FontWeight.bold,
-                        //                       color: Colors.white,
-                        //                     ),
-                        //                   ),
-                        //                   const SizedBox(height: 8),
-                        //                   Text(
-                        //                     'Volunteers: ${volunteers.volNumber}',
-                        //                     style: const TextStyle(
-                        //                       fontSize: 19,
-                        //                       fontWeight: FontWeight.w500,
-                        //                       color: Colors.white,
-                        //                     ),
-                        //                   ),
-                        //                   const SizedBox(height: 8),
-                        //                   // cardListTile('', events.description),
-                        //                   SizedBox(
-                        //                     height: 80,
-                        //                     width: 150,
-                        //                     child: Text(
-                        //                       volunteers.role,
-                        //                       maxLines: 2,
-                        //                       style: const TextStyle(
-                        //                         fontSize: 17,
-                        //                         overflow: TextOverflow.ellipsis,
-                        //                         fontWeight: FontWeight.w300,
-                        //                         color: Colors.white,
-                        //                       ),
-                        //                     ),
-                        //                   ),
-                        //                 ],
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       )
-                        : null;
+
+                        : SizedBox();
                   }),
             ),
             Obx(
               () => ListView.builder(
                   itemCount: _authController.volunteerData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final volunteers = _authController.volunteerData[index];
+                  itemBuilder: (BuildContext context, int index1) {
+                    final volunteers = _authController.volunteerData[index1];
+                    print(volunteers.type);
                     return volunteers.type == "Event"
                         ? InkWell(
                             onTap: () {
@@ -963,94 +917,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                               ),
                             ),
                           )
-                        // Padding(
-                        //         padding: const EdgeInsets.all(8),
-                        //         child: Card(
-                        //           color: const Color.fromARGB(255, 7, 159, 159)
-                        //               .withOpacity(0.6),
-                        //           child: Row(
-                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                        //             children: [
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(
-                        //                     top: 15, left: 10, bottom: 15),
-                        //                 child: Material(
-                        //                   elevation: 10,
-                        //                   child: Image.network(
-                        //                     volunteers.imagePath, // Replace 'image.png' with your image asset path
-                        //                     width: 150,
-                        //                     height: 150,
-                        //                     fit: BoxFit.fill,
-                        //                   ),
-                        //                 ),
-                        //               ),
-                        //               const SizedBox(width: 20),
-                        //               Column(
-                        //                 crossAxisAlignment:
-                        //                     CrossAxisAlignment.start,
-                        //                 // mainAxisAlignment: MainAxisAlignment.center,
-                        //                 children: [
-                        //                   const SizedBox(
-                        //                     height: 8,
-                        //                   ),
-                        //                   Text(
-                        //                     volunteers.eventName,
-                        //                     style: const TextStyle(
-                        //                       fontSize: 26,
-                        //                       fontWeight: FontWeight.bold,
-                        //                       color: Colors.white,
-                        //                     ),
-                        //                   ),
-                        //                   const SizedBox(height: 8),
-                        //                   Text(
-                        //                     'Volunteers: ${volunteers.volNumber}',
-                        //                     style: const TextStyle(
-                        //                       fontSize: 19,
-                        //                       fontWeight: FontWeight.w500,
-                        //                       color: Colors.white,
-                        //                     ),
-                        //                   ),
-                        //                   const SizedBox(height: 8),
-                        //                   // cardListTile('', events.description),
-                        //                   SizedBox(
-                        //                     height: 80,
-                        //                     width: 150,
-                        //                     child: Text(
-                        //                       volunteers.role,
-                        //                       maxLines: 2,
-                        //                       style: const TextStyle(
-                        //                         fontSize: 17,
-                        //                         overflow: TextOverflow.ellipsis,
-                        //                         fontWeight: FontWeight.w300,
-                        //                         color: Colors.white,
-                        //                       ),
-                        //                     ),
-                        //                   ),
-                        //                 ],
-                        //               ),
-                        //             ],
-                        //             // child: Row(
-                        //             //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //             //   children: [
-                        //             //     Container(
-                        //             //       height: 400,
-                        //             //       width: 200,
-                        //             //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                        //             //     ),
-                        //             //     Column(
-                        //             //       // crossAxisAlignment: CrossAxisAlignment.center,
-                        //             //       children: [
-                        //             //         cardListTile('Event: ', events.eventName),
-                        //             //         cardListTile('Organized By: ', events.organizationName),
-                        //             //         cardListTile('Description: ', events.description),
-                        //             //       ],
-                        //             //     ),
-                        //             //   ],
-                        //             // ),
-                        //           ),
-                        //         ),
-                        //       )
-                        : null;
+
+                        : SizedBox();
                   }),
             ),
           ],
