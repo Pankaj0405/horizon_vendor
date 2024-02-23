@@ -143,7 +143,7 @@ class AuthController extends GetxController {
     }
   }
 
-  void getVolunteers() async {
+  Future<void> getVolunteers() async {
     _volunteerData.bindStream(firestore
         .collection('volunteers')
         .snapshots()
