@@ -33,6 +33,8 @@ class _AddNewEventState extends State<AddNewEvent>
   final _priceController = TextEditingController();
   final fromDateController = TextEditingController();
   final toDateController = TextEditingController();
+  final startTimeController = TextEditingController();
+  final endTimeController = TextEditingController();
   late final TabController _tabController;
 
   String dropDownValue = "Select";
@@ -265,6 +267,9 @@ class _AddNewEventState extends State<AddNewEvent>
     image = null;
     fromDateController.text = '';
     toDateController.text = '';
+    startTimeController.text = '';
+    endTimeController.text = '';
+    dropDownValue = "Select";
   }
 
   openBottomSheet() {
@@ -513,6 +518,126 @@ class _AddNewEventState extends State<AddNewEvent>
                           ),
                         ),
                       ),
+                      ListTile(
+                        leading: const Text(
+                          'Start Time: ',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                        trailing: SizedBox(
+                          height: 30,
+                          width: 120,
+                          child: TextField(
+                            controller: startTimeController,
+                            style: const TextStyle(color: Colors.black),
+                            cursorColor: Colors
+                                .blue, //editing controller of this TextField
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                contentPadding: const EdgeInsets.only(
+                                  left: 5,
+                                  right: 5,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                            readOnly:
+                            true, //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                              );
+                              // showDatePicker(
+                              //     context: context,
+                              //     initialDate: DateTime.now(),
+                              //     firstDate: DateTime.now(),
+                              //     // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                              //     lastDate: DateTime(2101));
+
+                              if (pickedTime != null) {
+                                print(
+                                    pickedTime); //pickedDate output format => 2021-03-10 00:00:00.000
+                                // String formattedTime =
+                                // DateFormat('hh:mm a').format();
+                                // print(
+                                //     formattedTime); //formatted date output using intl package =>  2021-03-16
+                                //you can implement different kind of Date Format here according to your requirement
+
+                                setState(() {
+                                  startTimeController.text =
+                                      pickedTime.format(context); //set output date to TextField value.
+                                });
+                              } else {
+                                print("Time is not selected");
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Text(
+                          'End Time: ',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                        trailing: SizedBox(
+                          height: 30,
+                          width: 120,
+                          child: TextField(
+                            controller: endTimeController,
+                            style: const TextStyle(color: Colors.black),
+                            cursorColor: Colors
+                                .blue, //editing controller of this TextField
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                contentPadding: const EdgeInsets.only(
+                                  left: 5,
+                                  right: 5,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                            readOnly:
+                            true, //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              TimeOfDay? pickedTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              );
+                              // showDatePicker(
+                              //     context: context,
+                              //     initialDate: DateTime.now(),
+                              //     firstDate: DateTime.now(),
+                              //     // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                              //     lastDate: DateTime(2101));
+
+                              if (pickedTime != null) {
+                                print(
+                                    pickedTime); //pickedDate output format => 2021-03-10 00:00:00.000
+                                // String formattedTime =
+                                // DateFormat('hh:mm a').format();
+                                // print(
+                                //     formattedTime); //formatted date output using intl package =>  2021-03-16
+                                //you can implement different kind of Date Format here according to your requirement
+
+                                setState(() {
+                                  endTimeController.text =
+                                      pickedTime.format(context); //set output date to TextField value.
+                                });
+                              } else {
+                                print("Time is not selected");
+                              }
+                            },
+                          ),
+                        ),
+                      ),
                       // SizedBox(
                       //   height: 20,
                       // ),
@@ -577,7 +702,9 @@ class _AddNewEventState extends State<AddNewEvent>
                                 link!,
                                 dropDownValue,
                                 fromDateController.text,
-                                toDateController.text);
+                                toDateController.text,
+                                startTimeController.text,
+                                endTimeController.text);
                             Get.back();
                             emptyFields();
                           },
@@ -666,7 +793,9 @@ class _AddNewEventState extends State<AddNewEvent>
                               orgName: tours.organizationName,
                               price: tours.price,
                               desc: tours.description,
-                              imagePath: tours.imagePath));
+                              imagePath: tours.imagePath,
+                              startTime: tours.startTime,
+                              endTime: tours.endTime,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -864,7 +993,9 @@ class _AddNewEventState extends State<AddNewEvent>
                               orgName: events.organizationName,
                               price: events.price,
                               desc: events.description,
-                              imagePath: events.imagePath));
+                              imagePath: events.imagePath,
+                              startTime: events.startTime,
+                              endTime: events.endTime,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

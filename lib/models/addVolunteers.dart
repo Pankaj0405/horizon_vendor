@@ -8,7 +8,11 @@ class AddVolunteers {
   String type;
   String eventId;
   String imagePath;
-  String lastDate;
+  String fromDate;
+  String toDate;
+  String startTime;
+  String endTime;
+  String address;
 
   AddVolunteers(
       {required this.id,
@@ -18,7 +22,11 @@ class AddVolunteers {
       required this.type,
       required this.eventId,
       required this.imagePath,
-      required this.lastDate});
+      required this.fromDate,
+        required this.toDate,
+      required this.endTime,
+      required this.startTime,
+      required this.address});
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -28,7 +36,11 @@ class AddVolunteers {
         "type": type,
         "Event Id": eventId,
         "Image Path": imagePath,
-        "Last Date": lastDate
+        "From Date": fromDate,
+        "To Date": toDate,
+        "Start Time": startTime,
+        "End Time": endTime,
+        "Address": address,
       };
 
   static AddVolunteers fromSnap(DocumentSnapshot snap) {
@@ -41,6 +53,10 @@ class AddVolunteers {
         type: snapshot['type'],
         eventId: snapshot['Event Id'],
         imagePath: snapshot["Image Path"],
-        lastDate: snapshot['Last Date']);
+        fromDate: snapshot['From Date'],
+        toDate: snapshot['To Date'],
+        startTime: snapshot['Start Time'],
+        endTime: snapshot['End Time'],
+        address: snapshot['Address']);
   }
 }

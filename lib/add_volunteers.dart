@@ -33,7 +33,12 @@ class _AddVolunteerState extends State<AddVolunteer>
   String selectedTourId = '';
   final _volunteerController = TextEditingController();
   final _roleController = TextEditingController();
-  final _dateController = TextEditingController();
+  final _fromDateController = TextEditingController();
+  final _toDateController = TextEditingController();
+  final _startTimeController = TextEditingController();
+  final _endTimeController = TextEditingController();
+  final _addressController = TextEditingController();
+
   TabController? _tabController;
   final ImagePicker _imagePicker = ImagePicker();
   // bool isLoading = false;
@@ -49,8 +54,12 @@ class _AddVolunteerState extends State<AddVolunteer>
   emptyFields() {
     _roleController.text = "";
     _volunteerController.text = "";
-    _dateController.text = "";
+    _fromDateController.text = "";
+    _toDateController.text = "";
+    _startTimeController.text = "";
+    _endTimeController.text = "";
     image = null;
+    _addressController.text = '';
     // eventDropDown = 'Event';
   }
 
@@ -275,379 +284,563 @@ class _AddVolunteerState extends State<AddVolunteer>
       builder: ((context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Align(
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(left: 8.0),
-                  //     child: BackButton(
-                  //       onPressed: () {
-                  //         Navigator.pop(context);
-                  //       },
-                  //       style: const ButtonStyle(
-                  //           iconSize: MaterialStatePropertyAll(30)),
-                  //     ),
-                  //   ),
-                  // ),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: const Icon(Icons.arrow_back)),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
-
-                      setModalState(() {
-                        _showBottomSheet();
-                      });
-                    },
-                    child: (image != null)
-                        ? CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 60,
-                            backgroundImage: FileImage(image!))
-                        : const Icon(
-                            Icons.image_rounded,
-                            size: 60,
-                          ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300], border: Border.all(width: 1)),
-                    child: DropdownButton(
-                      dropdownColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      isExpanded: true,
-                      // Initial Value
-                      value: typeDropDown,
-                      style: textStyle,
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      hint: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: Text('Events and tours'),
-                      ),
-                      // Array list of items
-                      items: items1.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
-                            child: Text(
-                              items,
-                              maxLines: 2,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 30,
+                  horizontal: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Align(
+                    //   alignment: Alignment.centerLeft,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(left: 8.0),
+                    //     child: BackButton(
+                    //       onPressed: () {
+                    //         Navigator.pop(context);
+                    //       },
+                    //       style: const ButtonStyle(
+                    //           iconSize: MaterialStatePropertyAll(30)),
+                    //     ),
+                    //   ),
+                    // ),
+              
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: const Icon(Icons.arrow_back)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // _infoController.profilePhotoget.value == null?_showBottomSheet():null;
+              
                         setModalState(() {
-                          typeDropDown = newValue!;
-                          // selectedEventId = _authController.eventData
-                          //     .firstWhere(
-                          //         (event) => event.eventName == newValue)
-                          //     .id;
-                          print(typeDropDown);
+                          _showBottomSheet();
                         });
                       },
+                      child: (image != null)
+                          ? CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 60,
+                              backgroundImage: FileImage(image!))
+                          : const Icon(
+                              Icons.image_rounded,
+                              size: 60,
+                            ),
                     ),
-                    // const EventDropdown(), // event dropdown
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Events and Tours',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  typeDropDown == "Event"
-                      ? Container(
-                          width: double.maxFinite,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              border: Border.all(width: 1)),
-                          child: DropdownButton(
-                            dropdownColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            isExpanded: true,
-                            // Initial Value
-                            value: eventDropDown,
-                            style: textStyle,
-                            // Down Arrow Icon
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            hint: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Text('Events and tours'),
-                            ),
-                            items: items.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Text(
-                                    items,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            // After selecting the desired option,it will
-                            // change button value to selected value
-                            onChanged: (String? newValue) {
-                              setModalState(() {
-                                eventDropDown = newValue!;
-                                selectedEventId = _authController.eventData
-                                    .firstWhere(
-                                        (event) => event.eventName == newValue)
-                                    .id;
-                                // print(selectedEventId);
-                              });
-                            },
-                          ),
-                        )
-                      : Container(
-                          width: double.maxFinite,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              border: Border.all(width: 1)),
-                          child: DropdownButton(
-                            dropdownColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            isExpanded: true,
-                            // Initial Value
-                            value: tourDropDown,
-                            style: textStyle,
-                            // Down Arrow Icon
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            hint: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Text('Tours'),
-                            ),
-                            // Array list of items
-                            items: items2.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Text(
-                                    items,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            // After selecting the desired option,it will
-                            // change button value to selected value
-                            onChanged: (String? newValue) {
-                              setModalState(() {
-                                tourDropDown = newValue!;
-                                selectedTourId = _authController.tourData
-                                    .firstWhere(
-                                        (tour) => tour.eventName == newValue)
-                                    .id;
-                                print(selectedTourId);
-                              });
-                            },
-                          ),
-                          // const EventDropdown(), // event dropdown
+                    Container(
+                      width: double.maxFinite,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300], border: Border.all(width: 1)),
+                      child: DropdownButton(
+                        dropdownColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
                         ),
-                  const SizedBox(height: 20),
-                  textField('No. of Volunteers required: ',
-                      _volunteerController, TextInputType.number),
-                  const SizedBox(height: 20),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Role Description',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  TextField(
-                    controller: _roleController,
-                    // expands: true,
-                    maxLines: 3,
-                    // enabled: false,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //       left: 20.0, right: 20.0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       border: Border.all(width: 1),
-                  //     ),
-                  //     child: const Row(
-                  //       mainAxisAlignment:
-                  //       MainAxisAlignment.spaceEvenly,
-                  //       children: [
-                  //         Text(
-                  //           "No. of volunteers required:",
-                  //           style: TextStyle(
-                  //             fontSize: 18,
-                  //           ),
-                  //         ),
-                  //         SizedBox(height: 40),
-                  //         MyDropdown(),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 10),
-                  // const Align(
-                  //     alignment: Alignment.centerLeft,
-                  //     child: Padding(
-                  //       padding: EdgeInsets.only(left: 20.0),
-                  //       child: Text(
-                  //         "Role description",
-                  //         style: TextStyle(
-                  //             fontSize: 20,
-                  //             fontWeight: FontWeight.bold),
-                  //       ),
-                  //     )),
-                  // const SizedBox(height: 20),
-                  // const RoleDescription(),
-                  // SizedBox(height: 20),
-                  ListTile(
-                    leading: const Text(
-                      'Last Date: ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    trailing: SizedBox(
-                      height: 30,
-                      width: 120,
-                      child: TextField(
-                        controller: _dateController,
-                        style: const TextStyle(color: Colors.black),
-                        cursorColor:
-                            Colors.blue, //editing controller of this TextField
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[300],
-                            contentPadding: const EdgeInsets.only(
-                              left: 5,
-                              right: 5,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
-                        readOnly:
-                            true, //set it true, so that user will not able to edit text
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              // DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                              lastDate: DateTime(2101));
-
-                          if (pickedDate != null) {
-                            print(
-                                pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
-                            print(
-                                formattedDate); //formatted date output using intl package =>  2021-03-16
-                            //you can implement different kind of Date Format here according to your requirement
-
-                            setState(() {
-                              _dateController.text =
-                                  formattedDate; //set output date to TextField value.
-                            });
-                          } else {
-                            print("Date is not selected");
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _authController.addVolunteers(
-                              eventDropDown,
-                              _volunteerController.text,
-                              _roleController.text,
-                              typeDropDown,
-                              selectedEventId,
-                              link!,
-                              _dateController.text);
-                          emptyFields();
-                          Get.back();
-                        },
-                        child: const Padding(
+                        borderRadius: BorderRadius.circular(20),
+                        isExpanded: true,
+                        // Initial Value
+                        value: typeDropDown,
+                        style: textStyle,
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        hint: const Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 40,
+                            horizontal: 20,
                           ),
-                          child: Text(
-                            'ADD',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                          child: Text('Events and tours'),
+                        ),
+                        // Array list of items
+                        items: items1.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Text(
+                                items,
+                                maxLines: 2,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setModalState(() {
+                            typeDropDown = newValue!;
+                            // selectedEventId = _authController.eventData
+                            //     .firstWhere(
+                            //         (event) => event.eventName == newValue)
+                            //     .id;
+                            print(typeDropDown);
+                          });
+                        },
+                      ),
+                      // const EventDropdown(), // event dropdown
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Events and Tours',
+                        style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    typeDropDown == "Event"
+                        ? Container(
+                            width: double.maxFinite,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                border: Border.all(width: 1)),
+                            child: DropdownButton(
+                              dropdownColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              isExpanded: true,
+                              // Initial Value
+                              value: eventDropDown,
+                              style: textStyle,
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              hint: const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Text('Events and tours'),
+                              ),
+                              items: items.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Text(
+                                      items,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setModalState(() {
+                                  eventDropDown = newValue!;
+                                  selectedEventId = _authController.eventData
+                                      .firstWhere(
+                                          (event) => event.eventName == newValue)
+                                      .id;
+                                  // print(selectedEventId);
+                                });
+                              },
+                            ),
+                          )
+                        : Container(
+                            width: double.maxFinite,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                border: Border.all(width: 1)),
+                            child: DropdownButton(
+                              dropdownColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              isExpanded: true,
+                              // Initial Value
+                              value: tourDropDown,
+                              style: textStyle,
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              hint: const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Text('Tours'),
+                              ),
+                              // Array list of items
+                              items: items2.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Text(
+                                      items,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setModalState(() {
+                                  tourDropDown = newValue!;
+                                  selectedTourId = _authController.tourData
+                                      .firstWhere(
+                                          (tour) => tour.eventName == newValue)
+                                      .id;
+                                  print(selectedTourId);
+                                });
+                              },
+                            ),
+                            // const EventDropdown(), // event dropdown
+                          ),
+                    const SizedBox(height: 20),
+                    textField('No. of Volunteers required: ',
+                        _volunteerController, TextInputType.number),
+                    textField(
+                        'Address', _addressController, TextInputType.text),
+                    const SizedBox(height: 20),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Role Description',
+                        style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    TextField(
+                      controller: _roleController,
+                      // expands: true,
+                      maxLines: 3,
+                      // enabled: false,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 20.0, right: 20.0),
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       border: Border.all(width: 1),
+                    //     ),
+                    //     child: const Row(
+                    //       mainAxisAlignment:
+                    //       MainAxisAlignment.spaceEvenly,
+                    //       children: [
+                    //         Text(
+                    //           "No. of volunteers required:",
+                    //           style: TextStyle(
+                    //             fontSize: 18,
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 40),
+                    //         MyDropdown(),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 10),
+                    // const Align(
+                    //     alignment: Alignment.centerLeft,
+                    //     child: Padding(
+                    //       padding: EdgeInsets.only(left: 20.0),
+                    //       child: Text(
+                    //         "Role description",
+                    //         style: TextStyle(
+                    //             fontSize: 20,
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //     )),
+                    // const SizedBox(height: 20),
+                    // const RoleDescription(),
+                    // SizedBox(height: 20),
+                    ListTile(
+                      leading: const Text(
+                        'From Date: ',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      trailing: SizedBox(
+                        height: 30,
+                        width: 120,
+                        child: TextField(
+                          controller: _fromDateController,
+                          style: const TextStyle(color: Colors.black),
+                          cursorColor:
+                              Colors.blue, //editing controller of this TextField
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              contentPadding: const EdgeInsets.only(
+                                left: 5,
+                                right: 5,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
+                          readOnly:
+                              true, //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101));
+              
+                            if (pickedDate != null) {
+                              print(
+                                  pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(
+                                  formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+              
+                              setState(() {
+                                _fromDateController.text =
+                                    formattedDate; //set output date to TextField value.
+                              });
+                            } else {
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Text(
+                        'To Date: ',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      trailing: SizedBox(
+                        height: 30,
+                        width: 120,
+                        child: TextField(
+                          controller: _toDateController,
+                          style: const TextStyle(color: Colors.black),
+                          cursorColor:
+                          Colors.blue, //editing controller of this TextField
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              contentPadding: const EdgeInsets.only(
+                                left: 5,
+                                right: 5,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
+                          readOnly:
+                          true, //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101));
+              
+                            if (pickedDate != null) {
+                              print(
+                                  pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(
+                                  formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+              
+                              setState(() {
+                                _toDateController.text =
+                                    formattedDate; //set output date to TextField value.
+                              });
+                            } else {
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Text(
+                        'Start Time: ',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      trailing: SizedBox(
+                        height: 30,
+                        width: 120,
+                        child: TextField(
+                          controller: _startTimeController,
+                          style: const TextStyle(color: Colors.black),
+                          cursorColor: Colors
+                              .blue, //editing controller of this TextField
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              contentPadding: const EdgeInsets.only(
+                                left: 5,
+                                right: 5,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
+                          readOnly:
+                          true, //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            TimeOfDay? pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            // showDatePicker(
+                            //     context: context,
+                            //     initialDate: DateTime.now(),
+                            //     firstDate: DateTime.now(),
+                            //     // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                            //     lastDate: DateTime(2101));
+              
+                            if (pickedTime != null) {
+                              print(
+                                  pickedTime); //pickedDate output format => 2021-03-10 00:00:00.000
+                              // String formattedTime =
+                              // DateFormat('hh:mm a').format();
+                              // print(
+                              //     formattedTime); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+              
+                              setState(() {
+                                _startTimeController.text =
+                                    pickedTime.format(context); //set output date to TextField value.
+                              });
+                            } else {
+                              print("Time is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Text(
+                        'End Time: ',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      trailing: SizedBox(
+                        height: 30,
+                        width: 120,
+                        child: TextField(
+                          controller: _endTimeController,
+                          style: const TextStyle(color: Colors.black),
+                          cursorColor: Colors
+                              .blue, //editing controller of this TextField
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              contentPadding: const EdgeInsets.only(
+                                left: 5,
+                                right: 5,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
+                          readOnly:
+                          true, //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            TimeOfDay? pickedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            // showDatePicker(
+                            //     context: context,
+                            //     initialDate: DateTime.now(),
+                            //     firstDate: DateTime.now(),
+                            //     // DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                            //     lastDate: DateTime(2101));
+              
+                            if (pickedTime != null) {
+                              print(
+                                  pickedTime); //pickedDate output format => 2021-03-10 00:00:00.000
+                              // String formattedTime =
+                              // DateFormat('hh:mm a').format();
+                              // print(
+                              //     formattedTime); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+              
+                              setState(() {
+                                _endTimeController.text =
+                                    pickedTime.format(context); //set output date to TextField value.
+                              });
+                            } else {
+                              print("Time is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _authController.addVolunteers(
+                                eventDropDown,
+                                _volunteerController.text,
+                                _roleController.text,
+                                typeDropDown,
+                                selectedEventId,
+                                link!,
+                                _fromDateController.text,
+                                _toDateController.text,
+                                _startTimeController.text,
+                                _endTimeController.text,
+                                _addressController.text);
+                            emptyFields();
+                            Get.back();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40,
+                            ),
+                            child: Text(
+                              'ADD',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
@@ -709,8 +902,12 @@ class _AddVolunteerState extends State<AddVolunteer>
                                   imagePath: volunteers.imagePath,
                                   eventName: volunteers.eventName,
                                   role: volunteers.role,
-                                  date: volunteers.lastDate,
-                                  maxSlots: volunteers.volNumber));
+                                  fromDate: volunteers.fromDate,
+                                  maxSlots: volunteers.volNumber,
+                                  startTime: volunteers.startTime,
+                                  endTime: volunteers.endTime,
+                                  toDate: volunteers.toDate,
+                                  address: volunteers.address,));
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -755,7 +952,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                                           vertical: 2,
                                         ),
                                         child: Text(
-                                          'Last Date: ${volunteers.lastDate}',
+                                          'Last Date: ${volunteers.fromDate}',
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -878,8 +1075,12 @@ class _AddVolunteerState extends State<AddVolunteer>
                                   imagePath: volunteers.imagePath,
                                   eventName: volunteers.eventName,
                                   role: volunteers.role,
-                                  date: volunteers.lastDate,
-                                  maxSlots: volunteers.volNumber));
+                                  fromDate: volunteers.fromDate,
+                                  maxSlots: volunteers.volNumber,
+                                  toDate: volunteers.toDate,
+                                  endTime: volunteers.endTime,
+                                  startTime: volunteers.startTime,
+                                  address: volunteers.address,));
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -924,7 +1125,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                                           vertical: 2,
                                         ),
                                         child: Text(
-                                          'Last Date: ${volunteers.lastDate}',
+                                          'Last Date: ${volunteers.fromDate}',
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,

@@ -19,7 +19,7 @@ class AuthController extends GetxController {
   List<add_volunteers.AddVolunteers> get volunteerData => _volunteerData.value;
 
   void addEvent(String eventName, String orgName, String address, String desc,
-      String maxSlots, String price, String imagePath, String type, String fromDate, String toDate) async {
+      String maxSlots, String price, String imagePath, String type, String fromDate, String toDate, String startTime, String endTime) async {
     try {
       // String id = const Uuid().v1();
       String eventId = const Uuid().v1();
@@ -30,7 +30,7 @@ class AuthController extends GetxController {
           maxSlots.isNotEmpty &&
           price.isNotEmpty &&
           imagePath.isNotEmpty &&
-          type != 'Select' && fromDate.isNotEmpty && toDate.isNotEmpty) {
+          type != 'Select' && fromDate.isNotEmpty && toDate.isNotEmpty && startTime.isNotEmpty && endTime.isNotEmpty) {
         add_event_model.AddEvent newEvent = add_event_model.AddEvent(
             address: address,
             description: desc,
@@ -42,7 +42,9 @@ class AuthController extends GetxController {
             imagePath: imagePath,
             type: type,
             fromDate: fromDate,
-            toDate: toDate);
+            toDate: toDate,
+            startTime: startTime,
+            endTime: endTime);
         if(type == "Event") {
           await firestore
               .collection('events')
@@ -112,10 +114,10 @@ class AuthController extends GetxController {
         }));
   }
 
-  void addVolunteers(String eventName, String number, String role, String type, String eventId, String imagePath, String lastDate) async {
+  void addVolunteers(String eventName, String number, String role, String type, String eventId, String imagePath, String fromDate, String toDate, String startTime, String endTime, String address) async {
     try {
       String volunteerId = const Uuid().v1();
-      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty && imagePath.isNotEmpty && lastDate.isNotEmpty) {
+      if (eventName.isNotEmpty && number.isNotEmpty && role.isNotEmpty && imagePath.isNotEmpty && fromDate.isNotEmpty && toDate.isNotEmpty && startTime.isNotEmpty && endTime.isNotEmpty && startTime.isNotEmpty) {
         add_volunteers.AddVolunteers volunteers = add_volunteers.AddVolunteers(
             id: volunteerId,
             role: role,
@@ -124,7 +126,11 @@ class AuthController extends GetxController {
             type: type,
             eventId: eventId,
             imagePath: imagePath,
-            lastDate: lastDate);
+            fromDate: fromDate,
+            toDate: toDate,
+            startTime: startTime,
+            endTime: endTime,
+            address: address);
         await firestore
             .collection('volunteers')
             .doc(volunteerId)

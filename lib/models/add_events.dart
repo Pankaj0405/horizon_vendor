@@ -12,6 +12,8 @@ class AddEvent {
   String type;
   String fromDate;
   String toDate;
+  String startTime;
+  String endTime;
 
   AddEvent(
       {required this.address,
@@ -24,7 +26,9 @@ class AddEvent {
       required this.imagePath,
       required this.type,
       required this.fromDate,
-      required this.toDate});
+      required this.toDate,
+      required this.startTime,
+      required this.endTime});
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -37,7 +41,9 @@ class AddEvent {
         "Image Path": imagePath,
         "Type": type,
         "From": fromDate,
-        "To": toDate
+        "To": toDate,
+        "Start Time": startTime,
+        "End Time": endTime
       };
 
   static AddEvent fromSnap(DocumentSnapshot snap) {
@@ -53,7 +59,9 @@ class AddEvent {
       imagePath: snapshot["Image Path"],
       type: snapshot["Type"],
       fromDate: snapshot['From'],
-      toDate: snapshot['To']
+      toDate: snapshot['To'],
+      startTime: snapshot['Start Time'],
+      endTime: snapshot['End Time']
     );
   }
 }
