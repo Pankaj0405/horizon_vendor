@@ -33,12 +33,12 @@ class VolunteerScreen extends StatefulWidget {
 
 class _VolunteerScreenState extends State<VolunteerScreen> {
 
-  var textStyle1= TextStyle(
+  var textStyle1= const TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
   );
 
-  var textStyle2 = TextStyle(
+  var textStyle2 = const TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
   );
@@ -858,7 +858,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.location_on_outlined),
+                leading: const Icon(Icons.location_on_outlined),
                 title: Text(
                   widget.address,
                   style: const TextStyle(
@@ -869,7 +869,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.calendar_month_outlined),
+                leading: const Icon(Icons.calendar_month_outlined),
                 title: Text(
                   '${widget.fromDate} - ${widget.toDate}',
                   style: const TextStyle(
@@ -880,7 +880,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.alarm),
+                leading: const Icon(Icons.alarm),
                 title: Text(
                   '${widget.startTime} - ${widget.endTime}',
                   style: const TextStyle(
@@ -891,7 +891,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.people_alt_outlined),
+                leading: const Icon(Icons.people_alt_outlined),
                 title: Text(
                   widget.maxSlots,
                   style: const TextStyle(
@@ -902,7 +902,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 ),
               ),
               const Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   "Description",
                   style: TextStyle(
@@ -915,7 +915,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   widget.role,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -926,14 +926,14 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
         ),
         bottomNavigationBar: Container(
           // color: Colors.grey[200],
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             border: Border(
                 top: BorderSide(
                     color: Colors.grey, width: 1, style: BorderStyle.solid)),
           ),
           height: 70,
           width: double.maxFinite,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 20,
             right: 20,
           ),
@@ -948,7 +948,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     )),
-                child: Text(
+                child: const Text(
                   'DELETE',
                   style: TextStyle(
                     fontSize: 20,
@@ -967,7 +967,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     )),
-                child: Text(
+                child: const Text(
                   'EDIT',
                   style: TextStyle(
                     fontSize: 20,
