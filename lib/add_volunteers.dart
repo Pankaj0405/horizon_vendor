@@ -928,7 +928,9 @@ class _AddVolunteerState extends State<AddVolunteer>
                                   startTime: volunteers.startTime,
                                   endTime: volunteers.endTime,
                                   toDate: volunteers.toDate,
-                                  address: volunteers.address,));
+                                  address: volunteers.address,
+                                  id: volunteers.id,
+                                  type: volunteers.type));
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -1034,7 +1036,9 @@ class _AddVolunteerState extends State<AddVolunteer>
                                   toDate: volunteers.toDate,
                                   endTime: volunteers.endTime,
                                   startTime: volunteers.startTime,
-                                  address: volunteers.address,));
+                                  address: volunteers.address,
+                                  id: volunteers.id,
+                                  type: volunteers.type));
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -21,7 +21,7 @@ class AddNewEvent extends StatefulWidget {
 class _AddNewEventState extends State<AddNewEvent>
     with TickerProviderStateMixin {
   ImagePicker _imagePicker = ImagePicker();
-  bool isLoading = false;
+  // bool isLoading = false;
   XFile? imagePath;
   String? link;
   final _authController = Get.put(AuthController());
@@ -239,22 +239,6 @@ class _AddNewEventState extends State<AddNewEvent>
     }
   }
 
-  // pickImage() async {
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-  //     XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-  //     if (image != null) {
-  //       imagePath = XFile(image.path, name: image.name);
-  //     }
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
 
   void emptyFields() {
     _addressController.text = "";
@@ -795,7 +779,8 @@ class _AddNewEventState extends State<AddNewEvent>
                               desc: tours.description,
                               imagePath: tours.imagePath,
                               startTime: tours.startTime,
-                              endTime: tours.endTime,));
+                              endTime: tours.endTime,
+                              id: tours.id,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -995,7 +980,8 @@ class _AddNewEventState extends State<AddNewEvent>
                               desc: events.description,
                               imagePath: events.imagePath,
                               startTime: events.startTime,
-                              endTime: events.endTime,));
+                              endTime: events.endTime,
+                              id: events.id,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
