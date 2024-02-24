@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -13,6 +15,7 @@ import '../Widgets/text_fields.dart';
 import '../camera_screen3.dart';
 import '../models/add_events.dart';
 
+// ignore: must_be_immutable
 class VolunteerScreen extends StatefulWidget {
   String imagePath;
   String eventName;

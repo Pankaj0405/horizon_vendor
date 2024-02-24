@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -12,6 +14,7 @@ import '../Controllers/auth_controller.dart';
 import '../Widgets/text_fields.dart';
 import '../camera_screen3.dart';
 
+// ignore: must_be_immutable
 class EventScreen extends StatefulWidget {
   String eventName;
   String orgName;
@@ -50,6 +53,7 @@ class _EventScreenState extends State<EventScreen> {
   // bool isLoading = false;
   XFile? imagePath;
   String? link;
+  // ignore: unused_field
   final _authController = Get.put(AuthController());
   final _eventNameController = TextEditingController();
   final _organizationController = TextEditingController();
