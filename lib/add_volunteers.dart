@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
@@ -906,7 +908,7 @@ class _AddVolunteerState extends State<AddVolunteer>
           ),
         ),
         body:isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             :  TabBarView(
           controller: _tabController,
           children: [
@@ -1015,7 +1017,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                             ),
                           )
 
-                        : SizedBox();
+                        : const SizedBox();
                   }),
             ),
             Obx(
@@ -1123,7 +1125,7 @@ class _AddVolunteerState extends State<AddVolunteer>
                             ),
                           )
 
-                        : SizedBox();
+                        : const SizedBox();
                   }),
             ),
           ],

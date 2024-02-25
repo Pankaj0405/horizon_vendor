@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -12,6 +14,7 @@ import '../Controllers/auth_controller.dart';
 import '../Widgets/text_fields.dart';
 import '../camera_screen3.dart';
 
+// ignore: must_be_immutable
 class EventScreen extends StatefulWidget {
   String eventName;
   String orgName;
@@ -52,6 +55,7 @@ class _EventScreenState extends State<EventScreen> {
   // bool isLoading = false;
   XFile? imagePath;
   String? link;
+  // ignore: unused_field
   final _authController = Get.put(AuthController());
   final _eventNameController = TextEditingController();
   final _organizationController = TextEditingController();
@@ -64,12 +68,12 @@ class _EventScreenState extends State<EventScreen> {
   final startTimeController = TextEditingController();
   final endTimeController = TextEditingController();
 
-  var textStyle1 = TextStyle(
+  var textStyle1 = const TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
   );
 
-  var textStyle2 = TextStyle(
+  var textStyle2 = const TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
   );
@@ -754,7 +758,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.apartment),
+                leading: const Icon(Icons.apartment),
                 title: Text(
                   widget.orgName,
                   style: const TextStyle(
@@ -765,7 +769,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.location_on_outlined),
+                leading: const Icon(Icons.location_on_outlined),
                 title: Text(
                   widget.address,
                   style: const TextStyle(
@@ -776,7 +780,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.monetization_on_outlined),
+                leading: const Icon(Icons.monetization_on_outlined),
                 title: Text(
                   'Rs ${widget.price}',
                   style: const TextStyle(
@@ -787,7 +791,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.calendar_month_outlined),
+                leading: const Icon(Icons.calendar_month_outlined),
                 title: Text(
                   '${widget.fromDate} - ${widget.toDate}',
                   style: const TextStyle(
@@ -798,7 +802,7 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.alarm),
+                leading: const Icon(Icons.alarm),
                 title: Text(
                   '${widget.startTime} - ${widget.endTime}',
                   style: const TextStyle(
@@ -808,8 +812,8 @@ class _EventScreenState extends State<EventScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   "Description",
                   style: TextStyle(
@@ -822,7 +826,7 @@ class _EventScreenState extends State<EventScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   widget.desc,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -961,14 +965,14 @@ class _EventScreenState extends State<EventScreen> {
         // floatingActionButton: ,
         bottomNavigationBar: Container(
           // color: Colors.grey[200],
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             border: Border(
                 top: BorderSide(
                     color: Colors.grey, width: 1, style: BorderStyle.solid)),
           ),
           height: 70,
           width: double.maxFinite,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 20,
             right: 20,
           ),
@@ -995,7 +999,7 @@ class _EventScreenState extends State<EventScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     )),
-                child: Text(
+                child: const Text(
                   'DELETE',
                   style: TextStyle(
                     fontSize: 20,
@@ -1014,7 +1018,7 @@ class _EventScreenState extends State<EventScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     )),
-                child: Text(
+                child: const Text(
                   'EDIT',
                   style: TextStyle(
                     fontSize: 20,

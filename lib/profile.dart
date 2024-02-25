@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './edit_profile.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
