@@ -25,6 +25,7 @@ class EventScreen extends StatefulWidget {
   String startTime;
   String endTime;
   String id;
+  String type;
   EventScreen(
       {required this.maxSlots,
       required this.address,
@@ -38,6 +39,7 @@ class EventScreen extends StatefulWidget {
       required this.endTime,
       required this.startTime,
         required this.id,
+        required this.type,
       super.key});
 
   @override
@@ -85,6 +87,7 @@ class _EventScreenState extends State<EventScreen> {
     toDateController.text = widget.toDate;
     startTimeController.text = widget.startTime;
     endTimeController.text = widget.endTime;
+    link = widget.imagePath;
     super.initState();
   }
 
@@ -640,7 +643,41 @@ class _EventScreenState extends State<EventScreen> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.back();
+                            setModalState(() {
+                              if(widget.type == 'Event') {
+                                _authController.updateEvent(
+                                    widget.id,
+                                    _eventNameController.text,
+                                    _organizationController.text,
+                                    _addressController.text,
+                                    _slotsController.text,
+                                    _priceController.text,
+                                    _descController.text,
+                                    fromDateController.text,
+                                    toDateController.text,
+                                    startTimeController.text,
+                                    endTimeController.text,
+                                    link!);
+                                Get.back();
+                              } else {
+                                _authController.updateTour(
+                                    widget.id,
+                                    _eventNameController.text,
+                                    _organizationController.text,
+                                    _addressController.text,
+                                    _slotsController.text,
+                                    _priceController.text,
+                                    _descController.text,
+                                    fromDateController.text,
+                                    toDateController.text,
+                                    startTimeController.text,
+                                    endTimeController.text,
+                                    link!);
+                                Get.back();
+                              }
+
+                            });
+
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
@@ -939,7 +976,19 @@ class _EventScreenState extends State<EventScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    if(widget.type == 'Event') {
+                      _authController.deleteEvent(widget.id);
+                      Get.back();
+                    } else {
+                      _authController.deleteTour(widget.id);
+                      Get.back();
+                    }
+                  });
+
+
+                },
                 // isExtended: true,
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

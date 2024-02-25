@@ -80,6 +80,7 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
     _startTimeController.text = widget.startTime;
     _endTimeController.text = widget.endTime;
     _addressController.text = widget.address;
+    link = widget.imagePath;
     super.initState();
   }
 
@@ -777,7 +778,11 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.back();
+                            setModalState(() {
+                              _authController.updateVolunteer(widget.id, _addressController.text, _volunteerController.text, _roleController.text, _fromDateController.text, _toDateController.text, _startTimeController.text, _endTimeController.text, link!);
+                              Get.back();
+                            });
+
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
@@ -941,7 +946,10 @@ class _VolunteerScreenState extends State<VolunteerScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _authController.deleteVolunteer(widget.id);
+                  Get.back();
+                },
                 // isExtended: true,
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

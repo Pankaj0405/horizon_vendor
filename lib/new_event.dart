@@ -780,7 +780,8 @@ class _AddNewEventState extends State<AddNewEvent>
                               imagePath: tours.imagePath,
                               startTime: tours.startTime,
                               endTime: tours.endTime,
-                              id: tours.id,));
+                              id: tours.id,
+                              type: tours.type,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -981,7 +982,8 @@ class _AddNewEventState extends State<AddNewEvent>
                               imagePath: events.imagePath,
                               startTime: events.startTime,
                               endTime: events.endTime,
-                              id: events.id,));
+                              id: events.id,
+                              type: events.type,));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
