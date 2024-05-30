@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:horizon_vendor/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:horizon_vendor/camera_screen3.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1176,7 +1177,7 @@ class _AddNewEventState extends State<AddNewEvent>
             color: Colors.white,
           ),
           onPressed: () {
-            openBottomSheet();
+           firebaseAuth.currentUser==null?Get.snackbar("title", "message"):openBottomSheet();
           },
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

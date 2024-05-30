@@ -193,12 +193,7 @@ Get.offAll(()=>const Home1());
           verificationId: firebaseVerificationId, smsCode: otp.value);
       // Sign the user in (or link) with the credential
       UserCredential userCredential= await firebaseAuth.signInWithCredential(credential);
-      // String phoneNumber =
-      // userCredential.user!.phoneNumber.toString().substring(3);
-      //
-      // String additionalChars = "whizz-ev";
-      // uniqueId = generateCharacterUniqueId(phoneNumber, additionalChars);
-      // QuerySnapshot doc1 = await _firestore.collection('rider').where('mobile',isEqualTo: int.parse(firebaseAuth.currentUser!.phoneNumber.toString().substring(3))).get();
+     // collection vendors doc(userCredential.user!.uid) set(phone, userId) setMergeOptions true
       print('user credential ${userCredential.user!.uid}');
       // await fetchProfileData();
       Get.offAll(()=>const Home1());

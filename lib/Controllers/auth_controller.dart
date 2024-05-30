@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../constants.dart';
@@ -259,6 +260,8 @@ class AuthController extends GetxController {
   }
 
   Future<List<add_event_model.AddEvent>> getAllTours() async {
+    // DateTime now = DateTime.now();
+    // String currentDate = DateFormat('yyyy-MM-dd').format(now);
     QuerySnapshot querySnapshot = await firestore.collection('tours').get();
 
     List<add_event_model.AddEvent> tours = querySnapshot.docs
