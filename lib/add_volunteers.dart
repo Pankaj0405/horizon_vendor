@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:horizon_vendor/card_discriptions/volunteer_details.dart';
+import 'package:horizon_vendor/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -829,18 +830,21 @@ class _AddVolunteerState extends State<AddVolunteer>
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            _authController.addVolunteers(
-                                eventDropDown,
-                                _volunteerController.text,
-                                _roleController.text,
-                                typeDropDown,
-                                selectedEventId,
-                                link!,
-                                _fromDateController.text,
-                                _toDateController.text,
-                                _startTimeController.text,
-                                _endTimeController.text,
-                                _addressController.text);
+                            setModalState (() {
+                              _authController.addVolunteers(
+                                  eventDropDown,
+                                  _volunteerController.text,
+                                  _roleController.text,
+                                  typeDropDown,
+                                  typeDropDown == "Event" ? selectedEventId : selectedTourId,
+                                  link!,
+                                  _fromDateController.text,
+                                  _toDateController.text,
+                                  _startTimeController.text,
+                                  _endTimeController.text,
+                                  _addressController.text, firebaseAuth.currentUser!.uid);
+                            });
+
                             emptyFields();
                             Get.back();
                           },
@@ -871,7 +875,8 @@ class _AddVolunteerState extends State<AddVolunteer>
 
   @override
   Widget build(BuildContext context) {
-
+    _authController.getEventVolunteers();
+    _authController.getTourVolunteers();
     // _authController.getEvent();
     return SafeArea(
       child: Scaffold(
@@ -913,13 +918,12 @@ class _AddVolunteerState extends State<AddVolunteer>
           controller: _tabController,
           children: [
             Obx(
-              () => ListView.builder(
-                  itemCount: _authController.volunteerData.length,
+              () => _authController.volunteerTourData.isNotEmpty
+                  ? ListView.builder(
+                  itemCount: _authController.volunteerTourData.length,
                   itemBuilder: (context,index) {
-                    final volunteers = _authController.volunteerData[index];
-                    print(volunteers.type);
-                    return volunteers.type == "Tour"
-                        ? InkWell(
+                    final volunteers = _authController.volunteerTourData[index];
+                    return InkWell(
                             onTap: () {
                               Get.to(() => VolunteerScreen(
                                   imagePath: volunteers.imagePath,
@@ -1015,118 +1019,119 @@ class _AddVolunteerState extends State<AddVolunteer>
                                 ),
                               ),
                             ),
-                          )
-
-                        : const SizedBox();
-                  }),
+                          );
+                  })
+                  : const Center(child: Text('No Volunteers for Tours Added Yet', style:  TextStyle(fontSize: 25),)),
             ),
             Obx(
-              () => ListView.builder(
-                  itemCount: _authController.volunteerData.length,
-                  itemBuilder: (BuildContext context, int index1) {
-                    final volunteers = _authController.volunteerData[index1];
-                    print(volunteers.type);
-                    return volunteers.type == "Event"
-                        ? InkWell(
-                            onTap: () {
-                              Get.to(() => VolunteerScreen(
-                                  imagePath: volunteers.imagePath,
-                                  eventName: volunteers.eventName,
-                                  role: volunteers.role,
-                                  fromDate: volunteers.fromDate,
-                                  maxSlots: volunteers.volNumber,
-                                  toDate: volunteers.toDate,
-                                  endTime: volunteers.endTime,
-                                  startTime: volunteers.startTime,
-                                  address: volunteers.address,
-                                  id: volunteers.id,
-                                  type: volunteers.type));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(volunteers.imagePath),
-                                    fit: BoxFit.fill,
-                                    opacity: 0.6,
+              () {
+                return _authController.volunteerEventData.isNotEmpty
+                  ? ListView.builder(
+                    itemCount: _authController.volunteerEventData.length,
+                    itemBuilder: (BuildContext context, int index1) {
+                      final volunteers = _authController.volunteerEventData[index1];
+                      return InkWell(
+                        onTap: () {
+                          Get.to(() => VolunteerScreen(
+                              imagePath: volunteers.imagePath,
+                              eventName: volunteers.eventName,
+                              role: volunteers.role,
+                              fromDate: volunteers.fromDate,
+                              maxSlots: volunteers.volNumber,
+                              toDate: volunteers.toDate,
+                              endTime: volunteers.endTime,
+                              startTime: volunteers.startTime,
+                              address: volunteers.address,
+                              id: volunteers.id,
+                              type: volunteers.type));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: double.maxFinite,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(volunteers.imagePath),
+                                fit: BoxFit.fill,
+                                opacity: 0.6,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 2,
+                                    ),
+                                    child: Text(
+                                      volunteers.eventName,
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(15),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 2,
+                                    ),
+                                    child: Text(
+                                      'Last Date: ${volunteers.fromDate}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 2,
-                                        ),
-                                        child: Text(
-                                          volunteers.eventName,
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 2,
+                                    ),
+                                    child: Text(
+                                      'Max-Slots: ${volunteers.volNumber}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 2,
-                                        ),
-                                        child: Text(
-                                          'Last Date: ${volunteers.fromDate}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 2,
-                                        ),
-                                        child: Text(
-                                          'Max-Slots: ${volunteers.volNumber}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text(
-                                          volunteers.role,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      volunteers.role,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          )
+                          ),
+                        ),
+                      );
 
-                        : const SizedBox();
-                  }),
+
+                    })
+                    : const Center(child: Text('No Volunteers for Events Added Yet', style:  TextStyle(fontSize: 25),));
+              }
             ),
           ],
         ),

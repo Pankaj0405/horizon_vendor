@@ -194,6 +194,14 @@ Get.offAll(()=>const Home1());
       // Sign the user in (or link) with the credential
       UserCredential userCredential= await firebaseAuth.signInWithCredential(credential);
      // collection vendors doc(userCredential.user!.uid) set(phone, userId) setMergeOptions true
+      final vendorId = firebaseAuth.currentUser!.uid;
+
+      await _firestore.collection('vendors').doc(vendorId).set({
+        'phone': phoneNo.value,
+        'userId': vendorId,
+        'usertype': 'vendor',
+      }, SetOptions(merge: true));
+
       print('user credential ${userCredential.user!.uid}');
       // await fetchProfileData();
       Get.offAll(()=>const Home1());

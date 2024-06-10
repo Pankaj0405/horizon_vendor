@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:horizon_vendor/constants.dart';
+import './Controllers/auth_controller1.dart';
 import './edit_profile.dart';
 
 class Profile extends StatefulWidget {
@@ -9,18 +12,20 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: StackExample(),
+        endDrawer: CustomDrawer(),
+        body: const ProfileScreen(),
       ),
     );
   }
 }
 
-class StackExample extends StatelessWidget {
-  const StackExample({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +34,10 @@ class StackExample extends StatelessWidget {
         children: [
           Stack(
             children: [
-              // Bottom container
               const SizedBox(
                 width: double.maxFinite,
                 height: 200,
               ),
-              //image holder
               Container(
                 height: 150,
                 width: double.maxFinite,
@@ -46,7 +49,6 @@ class StackExample extends StatelessWidget {
                   ),
                 ),
               ),
-              // Circular widget in the middle
               const Positioned(
                 bottom: 0,
                 right: 0,
@@ -55,15 +57,6 @@ class StackExample extends StatelessWidget {
                   radius: 50,
                   backgroundImage: AssetImage("assets/images/profile.jpeg"),
                 ),
-                // Container(
-                //   width: 100,
-                //   height: 100,
-                //   alignment: Alignment.bottomCenter,
-                //   decoration: const BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     color: Colors.red,
-                //   ),
-                // ),
               ),
             ],
           ),
@@ -131,7 +124,9 @@ class StackExample extends StatelessWidget {
                 width: 20,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
                 icon: const Icon(
                   Icons.settings,
                 ),
@@ -261,14 +256,60 @@ class StackExample extends StatelessWidget {
               ),
             ),
           ),
-          // const Rating(),
         ],
       ),
     );
   }
 }
 
-Widget hobbyCard(hobyName) {
+class CustomDrawer extends StatelessWidget {
+  CustomDrawer({super.key});
+
+  final _authController = Get.put(AuthController1());
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: Colors.white.withOpacity(0.7),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notification'),
+              onTap: () {
+                // Handle notification tap
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sign Out'),
+              onTap: () {
+                // Handle sign out tap
+                _authController.logout();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Widget hobbyCard(String hobbyName) {
   return Container(
     height: 25,
     decoration: BoxDecoration(
@@ -278,73 +319,9 @@ Widget hobbyCard(hobyName) {
     child: Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Text(
-        hobyName,
+        hobbyName,
         style: const TextStyle(fontSize: 16),
       ),
     ),
   );
 }
-
-//------------------rating----------
-
-// class Rating extends StatelessWidget {
-//   const Rating({super.key});
-//   final double cutomRating = 2.7;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(20),
-//       child: Container(
-//         width: double.maxFinite,
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(15),
-//           color: Colors.grey.shade200,
-//         ),
-//         child: Padding(
-//           padding: const EdgeInsets.all(10),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Padding(
-//                 padding: EdgeInsets.only(left: 5.0),
-//                 child: Text(
-//                   "Contribution",
-//                   style: TextStyle(fontSize: 20),
-//                 ),
-//               ),
-//               const SizedBox(height: 5),
-//               RatingBar.builder(
-//                 initialRating: cutomRating,
-//                 minRating: 0,
-//                 direction: Axis.horizontal,
-//                 allowHalfRating: true,
-//                 maxRating: 5,
-//                 itemCount: 5,
-//                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-//                 itemBuilder: (context, _) => const Icon(
-//                   Icons.star,
-//                   color: Colors.amber,
-//                 ),
-//                 ignoreGestures: true,
-//                 itemSize: 20,
-//                 onRatingUpdate: (value) {},
-//               ),
-//               const SizedBox(height: 10),
-//               const Padding(
-//                 padding: EdgeInsets.only(left: 5.0),
-//                 child: Text(
-//                   "discription......\ndiscription......\ndiscription......\ndiscription......",
-//                   style: TextStyle(
-//                     fontSize: 15,
-//                   ),
-//                   maxLines: 4,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -13,6 +13,7 @@ class AddVolunteers {
   String startTime;
   String endTime;
   String address;
+  String vendorId;
 
   AddVolunteers(
       {required this.id,
@@ -26,7 +27,8 @@ class AddVolunteers {
         required this.toDate,
       required this.endTime,
       required this.startTime,
-      required this.address});
+      required this.address,
+      required this.vendorId});
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -41,22 +43,24 @@ class AddVolunteers {
         "Start Time": startTime,
         "End Time": endTime,
         "Address": address,
+        "VendorId": vendorId
       };
 
   static AddVolunteers fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return AddVolunteers(
-        id: snapshot["id"],
-        role: snapshot["role"],
-        eventName: snapshot["Event Name"],
-        volNumber: snapshot["No of Volunteers"],
-        type: snapshot['type'],
-        eventId: snapshot['Event Id'],
-        imagePath: snapshot["Image Path"],
-        fromDate: snapshot['From Date'],
-        toDate: snapshot['To Date'],
-        startTime: snapshot['Start Time'],
-        endTime: snapshot['End Time'],
-        address: snapshot['Address']);
+        id: snapshot["id"] ?? '',
+        role: snapshot["role"] ?? '',
+        eventName: snapshot["Event Name"] ?? '',
+        volNumber: snapshot["No of Volunteers"] ?? '',
+        type: snapshot['type'] ?? '',
+        eventId: snapshot['Event Id'] ?? '',
+        imagePath: snapshot["Image Path"] ?? '',
+        fromDate: snapshot['From Date'] ?? '',
+        toDate: snapshot['To Date'] ?? '',
+        startTime: snapshot['Start Time'] ?? '',
+        endTime: snapshot['End Time'] ?? '',
+        address: snapshot['Address'] ?? '',
+        vendorId: snapshot['Vendor Id'] ?? '');
   }
 }

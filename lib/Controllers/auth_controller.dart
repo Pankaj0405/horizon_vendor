@@ -16,6 +16,14 @@ class AuthController extends GetxController {
   List<add_event_model.AddEvent> get eventData => _eventData.value;
   final Rx<List<add_volunteers.AddVolunteers>> _volunteerData =
       Rx<List<add_volunteers.AddVolunteers>>([]);
+  final Rx<List<add_volunteers.AddVolunteers>> _volunteerEventData =
+      Rx<List<add_volunteers.AddVolunteers>>([]);
+  List<add_volunteers.AddVolunteers> get volunteerEventData =>
+      _volunteerEventData.value;
+  final Rx<List<add_volunteers.AddVolunteers>> _volunteerTourData =
+      Rx<List<add_volunteers.AddVolunteers>>([]);
+  List<add_volunteers.AddVolunteers> get volunteerTourData =>
+      _volunteerTourData.value;
   final Rx<List<add_event_model.AddEvent>> _tourData =
       Rx<List<add_event_model.AddEvent>>([]);
   List<add_event_model.AddEvent> get tourData => _tourData.value;
@@ -33,7 +41,8 @@ class AuthController extends GetxController {
       String fromDate,
       String toDate,
       String startTime,
-      String endTime) async {
+      String endTime,
+      String vendorId) async {
     try {
       // String id = const Uuid().v1();
       String eventId = const Uuid().v1();
@@ -48,7 +57,8 @@ class AuthController extends GetxController {
           fromDate.isNotEmpty &&
           toDate.isNotEmpty &&
           startTime.isNotEmpty &&
-          endTime.isNotEmpty) {
+          endTime.isNotEmpty &&
+          vendorId.isNotEmpty) {
         add_event_model.AddEvent newEvent = add_event_model.AddEvent(
             address: address,
             description: desc,
@@ -62,7 +72,8 @@ class AuthController extends GetxController {
             fromDate: fromDate,
             toDate: toDate,
             startTime: startTime,
-            endTime: endTime);
+            endTime: endTime,
+            vendorId: vendorId);
         if (type == "Event") {
           await firestore
               .collection('events')
@@ -273,8 +284,12 @@ class AuthController extends GetxController {
   }
 
   void getEvent() async {
-    _eventData.bindStream(
-        firestore.collection('events').snapshots().map((QuerySnapshot query) {
+    _eventData.bindStream(firestore
+        .collection('events')
+        .where('vendorId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .orderBy('From', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
       List<add_event_model.AddEvent> retValue = [];
       for (var element in query.docs) {
         retValue.add(add_event_model.AddEvent.fromSnap(element));
@@ -284,8 +299,12 @@ class AuthController extends GetxController {
   }
 
   void getTour() async {
-    _tourData.bindStream(
-        firestore.collection('tours').snapshots().map((QuerySnapshot query) {
+    _tourData.bindStream(firestore
+        .collection('tours')
+        .where('vendorId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .orderBy('From', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
       List<add_event_model.AddEvent> retValue = [];
       for (var element in query.docs) {
         retValue.add(add_event_model.AddEvent.fromSnap(element));
@@ -305,10 +324,12 @@ class AuthController extends GetxController {
       String toDate,
       String startTime,
       String endTime,
-      String address) async {
+      String address,
+      String vendorId) async {
     try {
       String volunteerId = const Uuid().v1();
       if (eventName.isNotEmpty &&
+          eventId.isNotEmpty &&
           number.isNotEmpty &&
           role.isNotEmpty &&
           imagePath.isNotEmpty &&
@@ -316,7 +337,8 @@ class AuthController extends GetxController {
           toDate.isNotEmpty &&
           startTime.isNotEmpty &&
           endTime.isNotEmpty &&
-          startTime.isNotEmpty) {
+          startTime.isNotEmpty &&
+          vendorId.isNotEmpty) {
         add_volunteers.AddVolunteers volunteers = add_volunteers.AddVolunteers(
             id: volunteerId,
             role: role,
@@ -329,13 +351,14 @@ class AuthController extends GetxController {
             toDate: toDate,
             startTime: startTime,
             endTime: endTime,
-            address: address);
+            address: address,
+            vendorId: vendorId);
         await firestore
             .collection('volunteers')
             .doc(volunteerId)
             .set(volunteers.toJson())
             .then((value) => Get.snackbar(
-                'Alert', ' Volunteers requirement added successfully'));
+                'Success', ' Volunteers requirement added successfully'));
       }
     } catch (e) {
       Get.snackbar('Error adding volunteers requirements!', e.toString());
@@ -345,6 +368,43 @@ class AuthController extends GetxController {
   Future<void> getVolunteers() async {
     _volunteerData.bindStream(firestore
         .collection('volunteers')
+        .where('VendorId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .orderBy('From Date')
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<add_volunteers.AddVolunteers> retValue = [];
+      for (var element in query.docs) {
+        retValue.add(add_volunteers.AddVolunteers.fromSnap(element));
+      }
+      return retValue;
+    }));
+  }
+
+  Future<void> getEventVolunteers() async {
+    _volunteerEventData.bindStream(
+      firestore
+          .collection('volunteers')
+          .where('VendorId', isEqualTo: firebaseAuth.currentUser!.uid)
+          .where('type', isEqualTo: 'Event')
+          .orderBy('From Date', descending: false)
+          .snapshots()
+          .map((QuerySnapshot query) {
+        List<add_volunteers.AddVolunteers> retValue = [];
+        for (var element in query.docs) {
+          retValue.add(add_volunteers.AddVolunteers.fromSnap(element));
+        }
+        return retValue;
+      }),
+    );
+  }
+
+
+  Future<void> getTourVolunteers() async {
+    _volunteerTourData.bindStream(firestore
+        .collection('volunteers')
+        .where('VendorId', isEqualTo: firebaseAuth.currentUser!.uid)
+        .where('type', isEqualTo: 'Tour')
+        .orderBy('From Date', descending: false)
         .snapshots()
         .map((QuerySnapshot query) {
       List<add_volunteers.AddVolunteers> retValue = [];

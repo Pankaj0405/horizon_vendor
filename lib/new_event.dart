@@ -240,7 +240,6 @@ class _AddNewEventState extends State<AddNewEvent>
     }
   }
 
-
   void emptyFields() {
     _addressController.text = "";
     _descController.text = "";
@@ -530,11 +529,11 @@ class _AddNewEventState extends State<AddNewEvent>
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                             readOnly:
-                            true, //set it true, so that user will not able to edit text
+                                true, //set it true, so that user will not able to edit text
                             onTap: () async {
                               TimeOfDay? pickedTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now(),
+                                context: context,
+                                initialTime: TimeOfDay.now(),
                               );
                               // showDatePicker(
                               //     context: context,
@@ -553,8 +552,8 @@ class _AddNewEventState extends State<AddNewEvent>
                                 //you can implement different kind of Date Format here according to your requirement
 
                                 setState(() {
-                                  startTimeController.text =
-                                      pickedTime.format(context); //set output date to TextField value.
+                                  startTimeController.text = pickedTime.format(
+                                      context); //set output date to TextField value.
                                 });
                               } else {
                                 print("Time is not selected");
@@ -590,7 +589,7 @@ class _AddNewEventState extends State<AddNewEvent>
                                   borderRadius: BorderRadius.circular(10),
                                 )),
                             readOnly:
-                            true, //set it true, so that user will not able to edit text
+                                true, //set it true, so that user will not able to edit text
                             onTap: () async {
                               TimeOfDay? pickedTime = await showTimePicker(
                                 context: context,
@@ -613,8 +612,8 @@ class _AddNewEventState extends State<AddNewEvent>
                                 //you can implement different kind of Date Format here according to your requirement
 
                                 setState(() {
-                                  endTimeController.text =
-                                      pickedTime.format(context); //set output date to TextField value.
+                                  endTimeController.text = pickedTime.format(
+                                      context); //set output date to TextField value.
                                 });
                               } else {
                                 print("Time is not selected");
@@ -689,7 +688,8 @@ class _AddNewEventState extends State<AddNewEvent>
                                 fromDateController.text,
                                 toDateController.text,
                                 startTimeController.text,
-                                endTimeController.text);
+                                endTimeController.text,
+                                firebaseAuth.currentUser!.uid);
                             Get.back();
                             emptyFields();
                           },
@@ -760,209 +760,215 @@ class _AddNewEventState extends State<AddNewEvent>
           controller: _tabController,
           children: [
             Obx(
-              () => ListView.builder(
+              () => _authController.tourData.isNotEmpty
+                  ? ListView.builder(
                   shrinkWrap: true,
                   itemCount: _authController.tourData.length,
                   itemBuilder: (BuildContext context, int index) {
                     final tours = _authController.tourData[index];
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Get.to(() => EventScreen(
-                              maxSlots: tours.maxSlots,
-                              address: tours.address,
-                              eventName: tours.eventName,
-                              toDate: tours.toDate,
-                              fromDate: tours.fromDate,
-                              orgName: tours.organizationName,
-                              price: tours.price,
-                              desc: tours.description,
-                              imagePath: tours.imagePath,
-                              startTime: tours.startTime,
-                              endTime: tours.endTime,
-                              id: tours.id,
-                              type: tours.type,));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: double.maxFinite,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(tours.imagePath),
-                                fit: BoxFit.fill,
-                                opacity: 0.6,
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                Get.to(() => EventScreen(
+                                      maxSlots: tours.maxSlots,
+                                      address: tours.address,
+                                      eventName: tours.eventName,
+                                      toDate: tours.toDate,
+                                      fromDate: tours.fromDate,
+                                      orgName: tours.organizationName,
+                                      price: tours.price,
+                                      desc: tours.description,
+                                      imagePath: tours.imagePath,
+                                      startTime: tours.startTime,
+                                      endTime: tours.endTime,
+                                      id: tours.id,
+                                      type: tours.type,
+                                    ));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: double.maxFinite,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(tours.imagePath),
+                                      fit: BoxFit.fill,
+                                      opacity: 0.6,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 2,
+                                          ),
+                                          child: Text(
+                                            tours.eventName,
+                                            style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 2,
+                                          ),
+                                          child: Text(
+                                            '${tours.maxSlots}, ${tours.address}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(
+                                        //     horizontal: 10,
+                                        //     vertical: 2,
+                                        //   ),
+                                        //   child: Text(
+                                        //     'Max-Slots: ${tours.maxSlots}',
+                                        //     style: const TextStyle(
+                                        //       fontSize: 14,
+                                        //       fontWeight: FontWeight.bold,
+                                        //       color: Colors.white,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            tours.description,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(15),
                             ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 2,
-                                    ),
-                                    child: Text(
-                                      tours.eventName,
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 2,
-                                    ),
-                                    child: Text(
-                                      '${tours.maxSlots}, ${tours.address}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.symmetric(
-                                  //     horizontal: 10,
-                                  //     vertical: 2,
-                                  //   ),
-                                  //   child: Text(
-                                  //     'Max-Slots: ${tours.maxSlots}',
-                                  //     style: const TextStyle(
-                                  //       fontSize: 14,
-                                  //       fontWeight: FontWeight.bold,
-                                  //       color: Colors.white,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      tours.description,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Card(
-                      //   color: const Color.fromARGB(255, 7, 159, 159)
-                      //       .withOpacity(0.8),
-                      //   child: Row(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //
-                      //     children: [
-                      //       Padding(
-                      //         padding: const EdgeInsets.only(top:15, bottom: 15, left: 15, right: 5),
-                      //         child: Material(
-                      //           elevation: 15,
-                      //           child: Image.network(
-                      //             tours
-                      //                 .imagePath, // Replace 'image.png' with your image asset path
-                      //             width: 150,
-                      //             height: 150,
-                      //             fit: BoxFit.fill,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Column(
-                      //         crossAxisAlignment: CrossAxisAlignment.start,
-                      //         // mainAxisAlignment: MainAxisAlignment.center,
-                      //         children: [
-                      //           const SizedBox(
-                      //             height: 10,
-                      //           ),
-                      //           SizedBox(
-                      //             width: 150,
-                      //             child: Text(
-                      //               tours.eventName,
-                      //               maxLines: 2,
-                      //               style: const TextStyle(
-                      //                 fontSize: 28,
-                      //                 fontWeight: FontWeight.bold,
-                      //                 overflow: TextOverflow.ellipsis,
-                      //                 color: Colors.white,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //           const SizedBox(height: 8.0),
-                      //           // SizedBox(
-                      //           //   width: 150,
-                      //           //   child: Text(
-                      //           //     'Type: ${tours.type}',
-                      //           //     maxLines: 2,
-                      //           //     style: const TextStyle(
-                      //           //       fontSize: 20,
-                      //           //       fontWeight: FontWeight.w500,
-                      //           //       overflow: TextOverflow.ellipsis,
-                      //           //       color: Colors.white,
-                      //           //     ),
-                      //           //   ),
-                      //           // ),
-                      //           // const SizedBox(height: 8.0),
-                      //           // cardListTile('', events.description),
-                      //           SizedBox(
-                      //             height: 80,
-                      //             width: 150,
-                      //             child: Text(
-                      //               tours.description,
-                      //               maxLines: 2,
-                      //               style: const TextStyle(
-                      //                 fontSize: 18,
-                      //                 overflow: TextOverflow.ellipsis,
-                      //                 fontWeight: FontWeight.w300,
-                      //                 color: Colors.white,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ],
-                      //     // child: Row(
-                      //     //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //     //   children: [
-                      //     //     Container(
-                      //     //       height: 400,
-                      //     //       width: 200,
-                      //     //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
-                      //     //     ),
-                      //     //     Column(
-                      //     //       // crossAxisAlignment: CrossAxisAlignment.center,
-                      //     //       children: [
-                      //     //         cardListTile('Event: ', events.eventName),
-                      //     //         cardListTile('Organized By: ', events.organizationName),
-                      //     //         cardListTile('Description: ', events.description),
-                      //     //       ],
-                      //     //     ),
-                      //     //   ],
-                      //     // ),
-                      //   ),
-                      // ),
-                    );
-                  }),
+                            // Card(
+                            //   color: const Color.fromARGB(255, 7, 159, 159)
+                            //       .withOpacity(0.8),
+                            //   child: Row(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //
+                            //     children: [
+                            //       Padding(
+                            //         padding: const EdgeInsets.only(top:15, bottom: 15, left: 15, right: 5),
+                            //         child: Material(
+                            //           elevation: 15,
+                            //           child: Image.network(
+                            //             tours
+                            //                 .imagePath, // Replace 'image.png' with your image asset path
+                            //             width: 150,
+                            //             height: 150,
+                            //             fit: BoxFit.fill,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Column(
+                            //         crossAxisAlignment: CrossAxisAlignment.start,
+                            //         // mainAxisAlignment: MainAxisAlignment.center,
+                            //         children: [
+                            //           const SizedBox(
+                            //             height: 10,
+                            //           ),
+                            //           SizedBox(
+                            //             width: 150,
+                            //             child: Text(
+                            //               tours.eventName,
+                            //               maxLines: 2,
+                            //               style: const TextStyle(
+                            //                 fontSize: 28,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 overflow: TextOverflow.ellipsis,
+                            //                 color: Colors.white,
+                            //               ),
+                            //             ),
+                            //           ),
+                            //           const SizedBox(height: 8.0),
+                            //           // SizedBox(
+                            //           //   width: 150,
+                            //           //   child: Text(
+                            //           //     'Type: ${tours.type}',
+                            //           //     maxLines: 2,
+                            //           //     style: const TextStyle(
+                            //           //       fontSize: 20,
+                            //           //       fontWeight: FontWeight.w500,
+                            //           //       overflow: TextOverflow.ellipsis,
+                            //           //       color: Colors.white,
+                            //           //     ),
+                            //           //   ),
+                            //           // ),
+                            //           // const SizedBox(height: 8.0),
+                            //           // cardListTile('', events.description),
+                            //           SizedBox(
+                            //             height: 80,
+                            //             width: 150,
+                            //             child: Text(
+                            //               tours.description,
+                            //               maxLines: 2,
+                            //               style: const TextStyle(
+                            //                 fontSize: 18,
+                            //                 overflow: TextOverflow.ellipsis,
+                            //                 fontWeight: FontWeight.w300,
+                            //                 color: Colors.white,
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ],
+                            //     // child: Row(
+                            //     //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //     //   children: [
+                            //     //     Container(
+                            //     //       height: 400,
+                            //     //       width: 200,
+                            //     //       child: imagePath != null? Image.asset(imagePath!.path, fit: BoxFit.fill,) : Container(color: Colors.blue,),
+                            //     //     ),
+                            //     //     Column(
+                            //     //       // crossAxisAlignment: CrossAxisAlignment.center,
+                            //     //       children: [
+                            //     //         cardListTile('Event: ', events.eventName),
+                            //     //         cardListTile('Organized By: ', events.organizationName),
+                            //     //         cardListTile('Description: ', events.description),
+                            //     //       ],
+                            //     //     ),
+                            //     //   ],
+                            //     // ),
+                            //   ),
+                            // ),
+                          );
+
+                  })
+                  : const Center(child: Text('No Tours Added Yet', style:  TextStyle(fontSize: 25),)),
             ),
             Obx(
-              () => ListView.builder(
+              () => _authController.tourData.isNotEmpty
+                  ? ListView.builder(
                   shrinkWrap: true,
                   itemCount: _authController.eventData.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -972,19 +978,20 @@ class _AddNewEventState extends State<AddNewEvent>
                       child: InkWell(
                         onTap: () {
                           Get.to(() => EventScreen(
-                              maxSlots: events.maxSlots,
-                              address: events.address,
-                              eventName: events.eventName,
-                              toDate: events.toDate,
-                              fromDate: events.fromDate,
-                              orgName: events.organizationName,
-                              price: events.price,
-                              desc: events.description,
-                              imagePath: events.imagePath,
-                              startTime: events.startTime,
-                              endTime: events.endTime,
-                              id: events.id,
-                              type: events.type,));
+                                maxSlots: events.maxSlots,
+                                address: events.address,
+                                eventName: events.eventName,
+                                toDate: events.toDate,
+                                fromDate: events.fromDate,
+                                orgName: events.organizationName,
+                                price: events.price,
+                                desc: events.description,
+                                imagePath: events.imagePath,
+                                startTime: events.startTime,
+                                endTime: events.endTime,
+                                id: events.id,
+                                type: events.type,
+                              ));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -1165,7 +1172,8 @@ class _AddNewEventState extends State<AddNewEvent>
                       //   ),
                       // ),
                     );
-                  }),
+                  })
+                  : const Center(child: Text('No Events Added Yet', style:  TextStyle(fontSize: 25),)),
             ),
           ],
         ),
@@ -1177,7 +1185,9 @@ class _AddNewEventState extends State<AddNewEvent>
             color: Colors.white,
           ),
           onPressed: () {
-           firebaseAuth.currentUser==null?Get.snackbar("title", "message"):openBottomSheet();
+            firebaseAuth.currentUser == null
+                ? Get.snackbar("title", "message")
+                : openBottomSheet();
           },
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
