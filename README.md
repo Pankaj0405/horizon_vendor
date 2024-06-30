@@ -25,6 +25,14 @@ Horizon Vendor is a mobile app built using Flutter and Dart, designed to connect
 - Firebase: Firebase is employed for backend services, including authentication, database management, and storage.
 
 - Machine Learning: The app integrates machine learning for fish recognition, enhancing the user experience with educational features.
+## ScreenShot
+
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/37a233db-32c4-4c07-bd2a-1caabfc349ca" height="400" width="200">
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/fd90a216-dc0a-4845-b709-21c03dcc693e" height="400" width="200">
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/e20a2ed1-7999-4f3a-ad66-3c36ef96d2e5" height="400" width="200">
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/cc6fdf3f-9ec8-4c70-8c8c-5b38af7aa1f9" height="400" width="200">
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/c5df5e66-ae44-4de3-8c2e-465554d276f6" height="400" width="200">
+<img src="https://github.com/Pankaj0405/horizon_vendor/assets/91046820/1443397c-7034-41a6-a770-70b03f173c1f" height="400" width="200">
 
 
 ## Getting Started
