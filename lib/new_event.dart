@@ -151,6 +151,7 @@ class _AddNewEventState extends State<AddNewEvent>
         this.image = imageTemp;
         // _infoController.uploadToStorage(this.image!);
       });
+
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
@@ -289,6 +290,9 @@ class _AddNewEventState extends State<AddNewEvent>
 
                           setModalState(() {
                             _showBottomSheet();
+                          });
+                          setState(() {
+
                           });
                         },
                         child: (image != null)

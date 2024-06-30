@@ -830,9 +830,8 @@ class _AddVolunteerState extends State<AddVolunteer>
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            setModalState (() {
                               _authController.addVolunteers(
-                                  eventDropDown,
+                                  typeDropDown == "Event" ? eventDropDown:tourDropDown,
                                   _volunteerController.text,
                                   _roleController.text,
                                   typeDropDown,
@@ -843,10 +842,9 @@ class _AddVolunteerState extends State<AddVolunteer>
                                   _startTimeController.text,
                                   _endTimeController.text,
                                   _addressController.text, firebaseAuth.currentUser!.uid);
-                            });
 
-                            emptyFields();
                             Get.back();
+                            emptyFields();
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(

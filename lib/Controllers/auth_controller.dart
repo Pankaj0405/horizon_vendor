@@ -359,8 +359,10 @@ class AuthController extends GetxController {
             .set(volunteers.toJson())
             .then((value) => Get.snackbar(
                 'Success', ' Volunteers requirement added successfully'));
+        print('success');
       }
     } catch (e) {
+      print('add volunteer erro ${e.toString()}');
       Get.snackbar('Error adding volunteers requirements!', e.toString());
     }
   }
